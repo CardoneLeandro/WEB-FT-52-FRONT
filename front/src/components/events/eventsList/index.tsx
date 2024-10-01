@@ -95,7 +95,7 @@ const EventsList = ({ initialEvents }: EventsListProps) => {
         >
           Página anterior
         </Button>
-        <span className="text-lg font-medium text-gray-600">
+        <span className="text-lg font-medium text-gray-600 cursor-default">
           Página {page} de {totalPages}
         </span>
         <Button

@@ -28,8 +28,9 @@ function NavBar() {
     <div className="w-full shadow-lg">
       <div className="container mx-auto flex justify-between items-center px-4 lg:px-8  mt-2 ">
         <div className="flex flex-row items-center ">
-          <div className=" p-2 flex flex-row items-center gap-2 rounded-md hover:cursor-pointer hover:bg-gray-200 transition duration-300 ease-in-out">
+          <div className=" p-2 flex flex-row items-center gap-2 rounded-md cursor-default">
             <img src="/mjp1.png" alt="img mjp" className="w-[45px] h-[45px]" />
+
             <div className="flex flex-col">
               <h2 className="font-bold text-blue-500">MOVIMIENTO</h2>
               <h2 className="font-bold text-blue-500">JUVENIL PEREGRINOS</h2>
