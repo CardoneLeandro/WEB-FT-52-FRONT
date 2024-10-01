@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import { Button } from '../ui/button';
 interface ILoginUser {
   email: string;
   password: string;
@@ -160,13 +161,14 @@ function LoginForm() {
           </form>
           <div className="flex flex-col items-center gap-4 w-full">
             <div className="flex flex-row items-center gap-4 justify-center w-full mt-10">
-              <button
+              <Button
                 onClick={handleSubmit}
                 type="submit"
-                className="inline-block rounded-md border border-blue-600 bg-blue-600 px-2 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500 w-full max-w-xs"
+                className="inline-block w-full max-w-xs"
+                variant={'outline'}
               >
                 Ingresar
-              </button>
+              </Button>
               <button
                 onClick={handleClickGoogle}
                 type="button"

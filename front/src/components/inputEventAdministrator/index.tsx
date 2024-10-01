@@ -181,7 +181,7 @@ function InputEventAd({
           Cancelar
         </Button>
         <Button
-          className="bg-blue-500 hover:bg-blue-600"
+          className="bg-blue-500 hover:bg-blue-600 transition-colors duration-300 ease-in-out"
           onClick={handleSubmit}
         >
           Crear Evento

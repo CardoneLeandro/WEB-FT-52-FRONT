@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import EventCard from '../eventCard';
-
+import { Button } from '@/components/ui/button';
 export type Event = {
   id: string;
   highlight: boolean;
@@ -88,23 +88,23 @@ const EventsList = ({ initialEvents }: EventsListProps) => {
       </div>
 
       <div className="flex justify-between items-center mt-4">
-        <button
+        <Button
           onClick={handlePrevPage}
           disabled={page === 1}
-          className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300"
+          variant={page === 1 ? 'disabled' : 'default'}
         >
           Página anterior
-        </button>
-        <span>
+        </Button>
+        <span className="text-lg font-medium text-gray-600">
           Página {page} de {totalPages}
         </span>
-        <button
+        <Button
           onClick={handleNextPage}
           disabled={page === totalPages}
-          className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300"
+          variant={page === totalPages ? 'disabled' : 'default'}
         >
           Siguiente página
-        </button>
+        </Button>
       </div>
 
       {loading && <p>Cargando eventos...</p>}

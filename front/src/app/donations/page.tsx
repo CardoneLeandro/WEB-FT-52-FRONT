@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,9 +16,8 @@ import { useAuth } from '@/context/AuthContext';
 import { donate } from '@/app/donations/mercadoPago';
 
 export default function Home() {
+  const { token, userSession } = useAuth();
 
-  const {token, userSession } = useAuth()
-  
   const donateFunction = donate;
 
   async function donation(formData: FormData) {
@@ -31,25 +30,26 @@ export default function Home() {
       creator: userSession?.creatorId,
     };
 
-    const response = await fetch('http://localhost:3003/payments/pay-donations', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      'http://localhost:3003/payments/pay-donations',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(donationData),
       },
-      body: JSON.stringify(donationData),
-    });
+    );
 
-    if(response.ok){
+    if (response.ok) {
       donateFunction({ title, amount });
-      return
+      return;
     }
-
-   
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b  to-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b to-white flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center flex items-center justify-center">
@@ -72,7 +72,7 @@ export default function Home() {
                 type="number"
                 placeholder="Ingresa el monto"
                 required
-                className="w-full"
+                className="w-full border border-gray-400 rounded-md"
               />
             </div>
             <div className="space-y-2">
@@ -83,13 +83,10 @@ export default function Home() {
                 id="message"
                 name="message"
                 placeholder="Escribe un mensaje (opcional)"
-                className="w-full h-24"
+                className="w-full h-24 border-gray-400 rounded-md"
               />
             </div>
-            <Button
-              type="submit"
-              className="w-full bg-blue-500 hover:bg-blue-600"
-            >
+            <Button type="submit" className="w-full">
               Donar Ahora
             </Button>
           </form>

@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 function AboutUs() {
   return (
     <div className="w-full">
@@ -69,9 +70,9 @@ function AboutUs() {
           />
         </div>
         <div className="flex justify-center mt-8">
-          <button className="bg-blue-600 border text-white py-3 px-6 rounded-lg shadow-md hover:bg-white hover:text-blue-600 hover:border-blue-600 hover:font-bold focus:outline-none transition-all mb-10">
+          <Button className=" mb-10">
             <Link href="/login">Únete a Nosotros</Link>
-          </button>
+          </Button>
         </div>
       </div>
     </div>
