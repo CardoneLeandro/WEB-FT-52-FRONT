@@ -76,8 +76,8 @@ const EventCard: React.FC<EventCardProps> = ({
   return (
     <Card className="flex-shrink-0 shadow-md">
       <CardHeader>
-        <div className="flex justify-between items-center">
-          <CardTitle>{title}</CardTitle>
+        <div className="flex justify-between items-center gap-2">
+          <CardTitle className="cursor-default">{title}</CardTitle>
           <button
             onClick={handleHighlightToggle}
             className={`p-2 rounded-full ${
@@ -93,14 +93,14 @@ const EventCard: React.FC<EventCardProps> = ({
             />
           </button>
         </div>
-        <CardDescription>
+        <CardDescription className="cursor-default">
           <time>{new Date(eventDate).toLocaleDateString()}</time>
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="justify-between items-center flex flex-col">
           <div>
-            <p className="flex items-center text-muted-foreground mb-4">
+            <p className="flex items-center text-muted-foreground mb-4 cursor-default">
               <MapPin className="mr-2 h-4 w-4" />
               {eventLocation}
             </p>

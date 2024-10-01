@@ -7,6 +7,7 @@ import { Provider } from '@/components/provider';
 import { use, useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import toast from 'react-hot-toast';
+import { Button } from '@/components/ui/button';
 function SignupForm() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const router = useRouter();
@@ -77,7 +78,6 @@ function SignupForm() {
           });
           router.push('/');
           return;
-          
         } else {
           alert('Error en el registro');
         }
@@ -206,12 +206,9 @@ function SignupForm() {
           </div>
 
           <div className="flex items-center justify-between">
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
-            >
+            <Button type="submit" className="w-full" variant={'default'}>
               Completar Registro
-            </button>
+            </Button>
           </div>
         </form>
       </div>
