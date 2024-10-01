@@ -22,7 +22,13 @@ function FelipeTestPage() {
         <Button variant={'secondary'}>
           <Link href="/">relleno rojo</Link>
         </Button>
-        <h1> variant:</h1>
+        <h1> variant: secondary</h1>
+      </div>
+      <div>
+        <Button variant={'disabled'}>
+          <Link href="/">relleno rojo</Link>
+        </Button>
+        <h1> variant: disabled</h1>
       </div>
     </div>
   );

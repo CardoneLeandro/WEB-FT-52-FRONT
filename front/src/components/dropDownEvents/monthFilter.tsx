@@ -50,7 +50,7 @@ export function ComboboxDemo({ onChange }) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          variant="black"
           role="combobox"
           aria-expanded={open}
           className="w-[200px] justify-between"

@@ -79,18 +79,13 @@ function EventsPage() {
                 placeholder="Buscar eventos"
                 value={search}
                 onChange={handleSearch}
+                className="text-gray-500 font-semibold"
               />
-              <Button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-600 transition-colors duration-300"
-              >
+              <Button type="submit" variant={'default'}>
                 Buscar
               </Button>
               {hasFilters && (
-                <Button
-                  onClick={clearFilters}
-                  className="border bg-transparent text-red-500 border-red-500 hover:bg-red-500 hover:text-white transition-colors duration-300"
-                >
+                <Button onClick={clearFilters} variant={'destructive'}>
                   Limpiar filtros
                 </Button>
               )}

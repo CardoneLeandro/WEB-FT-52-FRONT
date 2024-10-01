@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-
+import { Button } from '../ui/button';
 // Interface para los datos de registro
 interface IRegisterUser {
   name: string;
@@ -282,16 +282,10 @@ function FormRegister() {
                 )}
               </div>
 
-              <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className={`inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring ${
-                    loading ? 'cursor-not-allowed' : ''
-                  }`}
-                >
+              <div className="col-span-6 sm:flex sm:items-center sm:gap-4 mb-10">
+                <Button type="submit" disabled={loading} variant={'outline'}>
                   {loading ? 'Registrando...' : 'Registrarse'}
-                </button>
+                </Button>
 
                 <p className="mt-4 text-sm text-gray-500 sm:mt-0 flex items-center">
                   ¿Ya tienes una cuenta?

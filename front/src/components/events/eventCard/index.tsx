@@ -127,10 +127,7 @@ const EventCard: React.FC<EventCardProps> = ({
       <CardFooter className="flex flex-row gap-x-4 items-center justify-center">
         <HoverCard>
           <HoverCardTrigger asChild>
-            <Button
-              className="text-blue-600 bg-transparent hover:bg-blue-600 hover:text-white border border-blue-500 transition-colors duration-300"
-              onClick={handleViewDetails}
-            >
+            <Button variant={'outline'} onClick={handleViewDetails}>
               Ver detalles
             </Button>
           </HoverCardTrigger>
