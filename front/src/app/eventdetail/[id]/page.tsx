@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import EventCardDetail from '@/components/eventDetail/indext';
+import EventCardDetail from '@/components/events/eventDetail/indext';
 import getEventById from '@/utils/eventsdetail';
 
 interface Event {
@@ -37,7 +37,7 @@ const EventDetailPage = ({ params }: { params: { id: string } }) => {
   console.log('id del evento', params.id);
 
   if (!event) {
-    return <div>Evento no disponible</div>; // Mensaje si el evento no se encuentra
+    return <div>Evento no disponible</div>;
   }
 
   return <EventCardDetail {...event} />;

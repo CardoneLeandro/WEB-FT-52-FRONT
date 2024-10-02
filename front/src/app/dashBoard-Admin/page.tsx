@@ -83,7 +83,6 @@ export default function PanelAdmin() {
                   </CardContent>
                 </Card>
 
-                {/* Upcoming Events Section */}
                 <Card className="shadow-md">
                   <CardHeader>
                     <CardTitle className="cursor-default">

@@ -1,105 +1,102 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { Ban, CheckCircle } from 'lucide-react'
+import { useState } from 'react';
+import AdminListComponent, {
+  Item,
+} from '@/components/adminPanel/adminListComponent';
 
 interface User {
-  id: number
-  name: string
-  email: string
-  isBanned: boolean
+  id: number;
+  name: string;
+  email: string;
+  isActive: boolean;
+  avatarUrl: string;
 }
 
 export default function AdminPanel() {
   const [users, setUsers] = useState<User[]>([
-    { id: 1, name: 'Juan Pérez', email: 'juan@example.com', isBanned: false },
-    { id: 2, name: 'María García', email: 'maria@example.com', isBanned: true },
+    {
+      id: 1,
+      name: 'Juan Pérez',
+      email: 'juan@example.com',
+      isActive: true,
+      avatarUrl: 'https://i.pravatar.cc/150?img=1',
+    },
+    {
+      id: 2,
+      name: 'María García',
+      email: 'maria@example.com',
+      isActive: false,
+      avatarUrl: 'https://i.pravatar.cc/150?img=2',
+    },
     {
       id: 3,
       name: 'Carlos Rodríguez',
       email: 'carlos@example.com',
-      isBanned: false,
+      isActive: true,
+      avatarUrl: 'https://i.pravatar.cc/150?img=3',
     },
-  ])
+    {
+      id: 4,
+      name: 'Ana López',
+      email: 'ana@example.com',
+      isActive: true,
+      avatarUrl: 'https://i.pravatar.cc/150?img=4',
+    },
+    {
+      id: 5,
+      name: 'Pedro Sánchez',
+      email: 'pedro@example.com',
+      isActive: false,
+      avatarUrl: 'https://i.pravatar.cc/150?img=5',
+    },
+    {
+      id: 6,
+      name: 'Laura Martínez',
+      email: 'laura@example.com',
+      isActive: true,
+      avatarUrl: 'https://i.pravatar.cc/150?img=6',
+    },
+  ]);
 
-  const handleBanUser = (userId: number) => {
+  const handleToggleAction = (user: Item) => {
     setUsers(
-      users.map((user) =>
-        user.id === userId ? { ...user, isBanned: true } : user,
+      users.map((u) =>
+        u.id === Number(user.id) ? { ...u, isActive: !u.isActive } : u,
       ),
-    )
-  }
+    );
+  };
 
-  const handleUnbanUser = (userId: number) => {
-    setUsers(
-      users.map((user) =>
-        user.id === userId ? { ...user, isBanned: false } : user,
-      ),
-    )
-  }
+  const getToggleLabel = (isActive: boolean) =>
+    isActive ? 'Banear' : 'Desbanear';
 
   return (
-    <div className='container mx-auto py-10'>
-      <h1 className='text-2xl font-bold mb-5'>
-        Panel de Administración de Usuarios
-      </h1>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nombre</TableHead>
-            <TableHead>Correo Electrónico</TableHead>
-            <TableHead>Estado</TableHead>
-            <TableHead>Acciones</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {users.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell>{user.name}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>
-                {user.isBanned ? (
-                  <span className='text-red-500'>Baneado</span>
-                ) : (
-                  <span className='text-green-500'>Activo</span>
-                )}
-              </TableCell>
-              <TableCell>
-                {user.isBanned ? (
-                  <Button
-                    onClick={() => handleUnbanUser(user.id)}
-                    variant='outline'
-                    size='sm'
-                    className='flex items-center'
-                  >
-                    <CheckCircle className='mr-2 h-4 w-4' />
-                    Desbanear
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={() => handleBanUser(user.id)}
-                    variant='outline'
-                    size='sm'
-                    className='flex items-center text-red-500 hover:text-red-700'
-                  >
-                    <Ban className='mr-2 h-4 w-4' />
-                    Banear
-                  </Button>
-                )}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="flex flex-col min-h-screen">
+      <div className="bg-gradient-to-r from-blue-500 to-green-500 py-10">
+        <div className="container mx-auto px-4">
+          <h1 className="text-2xl font-bold text-white">
+            Panel de Administración de Usuarios
+          </h1>
+        </div>
+      </div>
+      <div className="flex-grow bg-gray-100 py-6">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl">
+            <AdminListComponent
+              type="user"
+              items={users.map((user) => ({
+                id: user.id.toString(),
+                title: user.name,
+                description: user.email,
+                isActive: user.isActive,
+                avatarUrl: user.avatarUrl,
+              }))}
+              onToggleAction={handleToggleAction}
+              getToggleLabel={getToggleLabel}
+            />
+          </div>
+        </div>
+      </div>
     </div>
-  )
+  );
 }

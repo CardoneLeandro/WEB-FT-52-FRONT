@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex  min-h-screen mb-10">
       {/* Sidebar */}
-      <div className="w-64 h-full flex flex-col justify-between border-e bg-white">
+      <div className="w-64 h-full flex flex-col justify-between border-e bg-white-">
         <div className="px-4 py-6">
           <span className="sr-only">Home</span>
           <div className="flex flex-row">
@@ -36,7 +36,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               General
             </li>
 
-            {/* Eventos Menu */}
             <li>
               <div>
                 <button
@@ -75,7 +74,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     </li>
                     <li>
                       <Link
-                        href="dashboard-Admin/events/currentevents"
+                        href="dashBoard-Admin/events/currentevents"
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
                         Eventos vigentes
@@ -94,7 +93,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </li>
 
-            {/* Donaciones Menu */}
             <li>
               <div>
                 <button
@@ -136,7 +134,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </li>
 
-            {/* Posteos Menu */}
             <li>
               <div>
                 <button
@@ -194,7 +191,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </li>
 
-            {/* Usuarios Menu */}
             <li>
               <div>
                 <button
@@ -225,7 +221,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   <ul className="mt-2 space-y-1 px-4">
                     <li>
                       <a
-                        href="#"
+                        href="/dashBoard-Admin/controlUsuarios"
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
                         Lista de usuarios
