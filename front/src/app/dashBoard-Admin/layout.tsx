@@ -19,7 +19,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen mb-20">
       {/* Sidebar */}
-      <div className="w-64 flex flex-col border-e bg-white min-h-screen justify-between mb-44">
+      <div className="w-64 flex flex-col border-e bg-white min-h-screen justify-between  p-4 mb-44">
+        <Button variant={'default'}>
+          <Link href="/">Volver a inicio</Link>
+        </Button>
         <div className="flex-1 px-4 py-6">
           <span className="sr-only">Home</span>
           <div className="flex flex-row justify-center"></div>
@@ -241,10 +244,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         {/* Fixed footer with "Go Home" and "Logout" buttons */}
         <div className="  flex flex-col gap-2 justify-center px-4 mb-10">
-          <Button variant={'outline'}>
-            <Link href="/">Volver a inicio</Link>
-          </Button>
-
           <Button variant={'destructive'} onClick={() => handleLogOut()}>
             Cerrar sesión
           </Button>
