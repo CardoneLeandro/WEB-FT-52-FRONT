@@ -29,20 +29,7 @@ export default function Home() {
       title,
       creator: userSession?.creatorId,
     };
-
-    const response = await fetch(
-      'http://localhost:3003/payments/pay-donations',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(donationData),
-      },
-    );
-
-    if (response.ok) {
+      
       donateFunction({ title, amount });
       return;
     }

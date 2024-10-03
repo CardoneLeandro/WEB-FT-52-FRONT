@@ -22,22 +22,30 @@ interface Session {
   address: string | undefined;
   donations: Donation[];
 }
+interface PaymentInfo {
+  title: string;
+  amaunt: string;
+}
 
 interface AuthContextType {
   token: string | null;
   userSession: Session | null;
+  paymentInfo: PaymentInfo | null;
   setToken: (token: string | null) => void;
   setSession: (userSession: Session | null) => void;
   setDonation: (donation: Donation) => void;
+  setPaymentInfo: (payment: PaymentInfo | null) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
   token: null,
   userSession: null,
+  paymentInfo: null,
   setToken: () => {},
   setSession: () => {},
   setDonation: () => {},
+  setPaymentInfo: () => {},
   logout: () => {},
 });
 
@@ -62,7 +70,6 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         setSession(storedSession);
         setToken(storedToken);
       } else {
-      
         setSession(null);
         localStorage.removeItem('userSession');
         setToken(null);
@@ -82,6 +89,13 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         return prevSession;
       });
     }
+  };
+
+  const handleSetPayment = (params: PaymentInfo | null) => {
+    if (params === null) {
+      setPaymentInfo(null);
+    }
+    setPaymentInfo(params);
   };
 
   const handleSetToken = (newToken: string | null) => {
@@ -121,6 +135,8 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         setSession: handleUserData,
         setDonation: handleSetDonations,
         logout,
+        paymentInfo,
+        setPaymentInfo: handleSetPayment,
       }}
     >
       {children}
