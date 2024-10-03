@@ -8,10 +8,13 @@ import { useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
+import { useSession } from 'next-auth/react';
 function SignupForm() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const router = useRouter();
   const { userSession, setSession, setToken } = useAuth();
+
+  const { data: session } = useSession();
 
   useEffect(() => {
     console.log(
@@ -56,7 +59,7 @@ function SignupForm() {
     onSubmit: async (values) => {
       try {
         const formData = {
-          providerAccountId: userSession?.providerAccountId,
+          providerAccountId: session?.user.providerAccountId,
           email: userSession?.email,
           ...values,
         };

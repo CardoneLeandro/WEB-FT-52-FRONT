@@ -47,22 +47,23 @@ export default function PanelAdmin() {
   const { userSession } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 ">
-      <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 ">
-        <div className="max-w-7xl mx-auto">
-          <Card className="shadow-xl">
-            <CardHeader className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center rounded-t-xl">
-              <Avatar className=" w-16 h-16 shadow-xl">
-                <AvatarImage src={userSession?.image} alt="User Image" />
-                <AvatarFallback>{userSession?.image}</AvatarFallback>
-              </Avatar>
-              <CardTitle className="text-3xl font-bold text-white cursor-default">
-                {userSession?.name}
-              </CardTitle>
-            </CardHeader>
+    <div className="min-h-screen bg-gray-100">
+      {/* Header con gradiente y estilos */}
+      <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center rounded-t-xl py-10">
+        <div className="container mx-auto">
+          <h1 className="text-2xl font-bold text-white">
+            Panel de Administración de Usuarios
+          </h1>
+        </div>
+      </div>
+
+      {/* Contenido principal */}
+      <div className="flex-grow bg-gray-100 py-6">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <Card>
             <CardContent className="p-6 rounded-b-xl shadow-xl">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* User Information Section */}
+                {/* Sección de Información del Usuario */}
                 <Card className="shadow-md">
                   <CardHeader>
                     <CardTitle>Información del Usuario</CardTitle>
@@ -83,7 +84,7 @@ export default function PanelAdmin() {
                   </CardContent>
                 </Card>
 
-                {/* Upcoming Events Section */}
+                {/* Sección de Próximos Eventos */}
                 <Card className="shadow-md">
                   <CardHeader>
                     <CardTitle className="cursor-default">

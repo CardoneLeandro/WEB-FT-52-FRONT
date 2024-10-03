@@ -76,22 +76,8 @@ const EventCard: React.FC<EventCardProps> = ({
   return (
     <Card className="flex-shrink-0 shadow-md">
       <CardHeader>
-        <div className="flex justify-between items-center gap-2">
-          <CardTitle className="cursor-default">{title}</CardTitle>
-          <button
-            onClick={handleHighlightToggle}
-            className={`p-2 rounded-full ${
-              highlighted
-                ? 'bg-yellow-400 text-yellow-600'
-                : 'bg-gray-200 text-gray-500'
-            }`}
-          >
-            <StarIcon
-              className={`h-6 w-6 transition-transform duration-300 ${
-                highlighted ? 'text-yellow-600' : 'text-gray-500'
-              }`}
-            />
-          </button>
+        <div className="flex justify-between items-center">
+          <CardTitle>{title}</CardTitle>
         </div>
         <CardDescription className="cursor-default">
           <time>{new Date(eventDate).toLocaleDateString()}</time>

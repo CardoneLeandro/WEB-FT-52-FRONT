@@ -62,7 +62,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         setSession(storedSession);
         setToken(storedToken);
       } else {
-        // Si no hay token, limpiar sesiÃ³n y localStorage
+      
         setSession(null);
         localStorage.removeItem('userSession');
         setToken(null);
