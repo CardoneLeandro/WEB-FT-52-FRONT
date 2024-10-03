@@ -98,7 +98,6 @@ export default function Home({ initialEvents }) {
   };
 
   useEffect(() => {
-    // Verifica si la sesión del usuario está en estado "pending"
     if (userSession?.status === 'pending') {
       redirect.push('/formpage');
     }
@@ -153,23 +152,23 @@ export default function Home({ initialEvents }) {
                 <CardDescription className="text-gray-600">
                   <div className="flex items-center mt-2">
                     <CalendarIcon className="mr-2 text-blue-500" />
-                    <span>15 de Julio, 2024</span>
+                    <h1>15 de Julio, 2024</h1>
                   </div>
                   <div className="flex items-center mt-2">
                     <MapPinIcon className="mr-2 text-blue-500" />
-                    <span>Parque Central</span>
+                    <h1>Parque Central</h1>
                   </div>
                   <div className="flex items-center mt-2">
                     <ClockIcon className="mr-2 text-blue-500" />
-                    <span>20:00 - 23:00</span>
+                    <h1>20:00 - 23:00</h1>
                   </div>
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700">
+                <div className="text-gray-700">
                   Disfruta de una noche llena de rock con las mejores bandas
                   locales. Habrá comida, bebidas y mucha diversión.
-                </p>
+                </div>
               </CardContent>
               <CardFooter>
                 <Button className="bg-blue-500 text-white hover:bg-blue-600 transition-colors">
