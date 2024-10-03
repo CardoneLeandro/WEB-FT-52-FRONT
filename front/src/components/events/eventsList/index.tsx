@@ -17,9 +17,17 @@ export type Event = {
 
 export type EventsListProps = {
   initialEvents: Event[];
+  selectedMonth?: string;
+  selectedYear?: string;
+  search?: string;
 };
 
-const EventsList = ({ initialEvents }: EventsListProps) => {
+const EventsList = ({
+  initialEvents,
+  selectedMonth,
+  selectedYear,
+  search,
+}: EventsListProps) => {
   const [events, setEvents] = useState<Event[]>(initialEvents || []);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -29,9 +37,14 @@ const EventsList = ({ initialEvents }: EventsListProps) => {
     const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
     setLoading(true);
     try {
-      const res = await fetch(
-        `http://localhost:3003/events?page=${page}&limit=3`,
-      );
+      let url = `http://localhost:3003/events?page=${page}&limit=6`;
+
+      // Añadir parámetros de búsqueda y filtrado a la URL
+      if (selectedMonth) url += `&month=${selectedMonth}`;
+      if (selectedYear) url += `&year=${selectedYear}`;
+      if (search) url += `&title=${search}`;
+
+      const res = await fetch(url);
       const data = await res.json();
 
       setEvents(data.events);
@@ -45,7 +58,7 @@ const EventsList = ({ initialEvents }: EventsListProps) => {
 
   useEffect(() => {
     fetchEvents(page);
-  }, [page]);
+  }, [page, selectedMonth, selectedYear, search]);
 
   const handleNextPage = () => {
     if (page < totalPages) {

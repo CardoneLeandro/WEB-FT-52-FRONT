@@ -35,11 +35,11 @@ const year = [
 ];
 interface ComboboxDemoYearProps {
   onChange: (year: string) => void;
+  value: string;
 }
 
-export function ComboboxDemoYear({ onChange }: ComboboxDemoYearProps) {
+export function ComboboxDemoYear({ onChange, value }: ComboboxDemoYearProps) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('');
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -68,7 +68,6 @@ export function ComboboxDemoYear({ onChange }: ComboboxDemoYearProps) {
                   value={option.value}
                   onSelect={(currentValue) => {
                     const newValue = currentValue === value ? '' : currentValue;
-                    setValue(newValue);
                     onChange(newValue);
                     setOpen(false);
                   }}

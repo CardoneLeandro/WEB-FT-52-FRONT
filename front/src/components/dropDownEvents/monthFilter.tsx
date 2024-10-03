@@ -34,15 +34,16 @@ const meses = [
   { value: '12', label: 'Diciembre' },
 ];
 
-export function ComboboxDemo({ onChange }) {
-  // Asegúrate de que onChange se pase como prop
+export function ComboboxDemo({ onChange, value }) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('');
-
+  const [selectedValue, setSelectedValue] = React.useState(value || '');
+  React.useEffect(() => {
+    setSelectedValue(value);
+  }, [value]);
   const handleSelect = (currentValue) => {
     const newValue = currentValue === value ? '' : currentValue;
-    setValue(newValue);
-    onChange(newValue); // Llamamos a onChange con el mes seleccionado
+    setSelectedValue(newValue);
+    onChange(newValue);
     setOpen(false);
   };
 
@@ -55,8 +56,8 @@ export function ComboboxDemo({ onChange }) {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value
-            ? meses.find((mes) => mes.value === value)?.label
+          {selectedValue
+            ? meses.find((mes) => mes.value === selectedValue)?.label
             : 'Filtrar por mes...'}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -71,7 +72,7 @@ export function ComboboxDemo({ onChange }) {
                 <CommandItem
                   key={mes.value}
                   value={mes.value}
-                  onSelect={() => handleSelect(mes.value)} // Asegúrate de que se llame handleSelect
+                  onSelect={() => handleSelect(mes.value)}
                 >
                   <Check
                     className={cn(
