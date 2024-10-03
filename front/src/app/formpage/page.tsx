@@ -3,8 +3,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Provider } from '@/components/provider';
-import { use, useEffect } from 'react';
+
+import { useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
@@ -33,21 +33,24 @@ function SignupForm() {
     },
     validationSchema: Yup.object({
       password: Yup.string()
-        .min(8, 'La contraseña debe tener al menos 8 caracteres')
+        .min(8, 'Tu contraseña debe tener al menos 8 caracteres.')
         .matches(
           /[A-Z]/,
-          'La contraseña debe contener al menos una letra mayuscula',
+          'Agrega al menos una letra mayúscula en tu contraseña.',
         )
-        .matches(/[0-9]/, 'La contraseña debe contener al menos un numero')
-        .required('La contraseña es obligatoria'),
+        .matches(/[0-9]/, 'Incluye al menos un número en tu contraseña.')
+        .required('No olvides confirmar tu contraseña.'),
       confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Las contraseñas deben coincidir')
+        .oneOf(
+          [Yup.ref('password'), null],
+          'Las contraseñas no coinciden, verifica nuevamente.',
+        )
         .required('Debe confirmar su contraseña'),
       phone: Yup.string()
         .matches(/^[0-9]+$/, 'El teléfono debe contener solo números')
         .min(10, 'El teléfono debe tener al menos 10 dígitos')
-        .required('El teléfono es obligatorio'),
-      address: Yup.string().required('La dirección es obligatoasdaria'),
+        .required('Por favor, ingresa tu número de teléfono.'),
+      address: Yup.string().required('Por favor, ingresa tu dirección.'),
     }),
 
     onSubmit: async (values) => {
