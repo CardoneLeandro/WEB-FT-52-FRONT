@@ -73,7 +73,7 @@ const featuredEvents = [
   },
 ];
 
-export default function Home() {
+export default function Home({ initialEvents }) {
   const redirect = useRouter();
   const [events, setEvents] = useState([]);
   const { token, userSession } = useAuth();
@@ -98,9 +98,9 @@ export default function Home() {
   };
 
   useEffect(() => {
+    // Verifica si la sesión del usuario está en estado "pending"
     if (userSession?.status === 'pending') {
       redirect.push('/formpage');
-      return;
     }
     if (events.length === 0) {
       getEvents();
@@ -185,8 +185,8 @@ export default function Home() {
         <h2 className="text-3xl font-bold mb-6 text-gray-800">
           Próximos Eventos
         </h2>
-        <div className="flex flex-col items-center space-y-6">
-          <EventsList events={events} />
+        <div className="flex flex-row mx-auto p-2">
+          <EventsList initialEvents={initialEvents} showLimitedEvents={true} />
         </div>
         <div className="flex justify-center mt-6">
           <Link href="/eventsPage" passHref>
