@@ -89,7 +89,7 @@ export default function EventsPage() {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center rounded-t-xl py-10">
+      <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center  py-10">
         <div className="container mx-auto">
           <h1 className="text-2xl font-bold">
             Panel de Administración de Eventos
