@@ -1,28 +1,37 @@
 import React from 'react';
 import {
   Card,
-  CardTitle,
   CardContent,
-  CardFooter,
   CardDescription,
+  CardTitle,
 } from '@/components/ui/card';
 import Image from 'next/image';
 
-type featuredEventProps = {
+interface FeaturedEventProps {
   imgSrc: string;
   description: string;
   title: string;
-};
+}
 
-function FeaturedEventCard({ imgSrc, description, title }: featuredEventProps) {
+export default function FeaturedEventCard({
+  imgSrc,
+  description,
+  title,
+}: FeaturedEventProps) {
   return (
-    <Card className="w-1/2 max-w-[350px] shadow-lg ">
-      <CardContent className="pt-6  ">
-        <CardTitle className="mb-4 cursor-default">{title}</CardTitle>
-        <div className="relative aspect-[16/9] w-full ">
-          <Image className="rounded-xl" src={imgSrc} fill alt={title} />
-          <div className="absolute bottom-0 p-4 bg-gray-700 opacity-0 h-full w-full hover:opacity-80 transition-all rounded-xl ">
-            <CardDescription className=" text-white font-semibold cursor-default6">
+    <Card className="w-full max-w-[350px] shadow-lg">
+      <CardContent className="pt-6 space-y-4">
+        <CardTitle className="cursor-default">{title}</CardTitle>
+        <div className="relative aspect-[16/9] w-full">
+          <Image
+            className="rounded-xl object-cover"
+            src={imgSrc}
+            fill
+            alt={title}
+            sizes="(max-width: 350px) 100vw, 350px"
+          />
+          <div className="absolute inset-0 p-4 bg-gray-700 bg-opacity-0 hover:bg-opacity-80 transition-all duration-300 rounded-xl flex items-end">
+            <CardDescription className="text-white font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               {description}
             </CardDescription>
           </div>
@@ -31,5 +40,3 @@ function FeaturedEventCard({ imgSrc, description, title }: featuredEventProps) {
     </Card>
   );
 }
-
-export default FeaturedEventCard;

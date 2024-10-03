@@ -89,6 +89,10 @@ function FormRegister() {
         'RESULTADO DEL CONDICIONAL DE ESTADO DE USER, DATA.USER',
         data.user,
       );
+      console.log(
+        'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+        data,
+      );
       if (response.ok) {
         window.alert('Registro exitoso');
         setSession(data.user);
