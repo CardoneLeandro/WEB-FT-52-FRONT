@@ -14,17 +14,17 @@ interface Session {
   id: string;
   name: string;
   email: string;
-  image: string | undefined;
+  image: string | null;
   providerAccountId: string;
   creatorId: string;
-  status: string | undefined;
-  phone: string | undefined;
-  address: string | undefined;
+  status: string | null;
+  phone: string;
+  address: string;
   donations: Donation[];
 }
-interface PaymentInfo {
-  title: string;
-  amaunt: string;
+export interface PaymentInfo {
+  title: string | null;
+  amount: number | null;
 }
 
 interface AuthContextType {
@@ -54,6 +54,7 @@ export const useAuth = () => useContext(AuthContext);
 const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const [userSession, setSession] = useState<Session | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
 
   useEffect(() => {
     console.log('useEffect de context');
@@ -77,13 +78,13 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     }
   }, []);
 
-  const handleSetDonations = (user: any) => {
-    if (user.donations && user.donations.length > 0) {
+  const handleSetDonations = (donation:Donation) => {
+    if (donation) {
       setSession((prevSession) => {
         if (prevSession) {
           return {
             ...prevSession,
-            donations: [...prevSession.donations, ...user.donations],
+            donations: [...prevSession.donations, donation],
           };
         }
         return prevSession;

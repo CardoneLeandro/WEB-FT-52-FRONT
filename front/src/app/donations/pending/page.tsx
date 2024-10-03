@@ -7,13 +7,13 @@ import { useEffect, useState } from 'react';
 
 
 
-export default function PaymentSuccess() {
+export default function PaymentPending() {
   const redirect = useRouter()
   const port = process.env.NEXT_PUBLIC_APP_API_PORT
   const [disabled, setDisabled] = useState(true);
   
   const pay = async (params:any, token:string|null) => {
-    const response = await fetch(`http://localhost:${port}/payments/pay-donations/success`, {
+    const response = await fetch(`http://localhost:${port}/payments/pay-donations/pending`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

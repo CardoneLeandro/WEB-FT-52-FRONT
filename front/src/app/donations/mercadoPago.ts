@@ -12,7 +12,9 @@ export const donate = async({title, amount}:{title: string, amount: number}) => 
   const preference = await new Preference(client).create({
     body: {
       back_urls:{
+        
       success:'https://web-ft-52-back-1.onrender.com/donations/webhook?source_news=webhooks',
+
       failure:'https://www.google.com.ar/',
       pending: 'https://www.youtube.com.ar/'
       },

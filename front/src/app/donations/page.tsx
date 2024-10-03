@@ -16,24 +16,18 @@ import { useAuth } from '@/context/AuthContext';
 import { donate } from '@/app/donations/mercadoPago';
 
 export default function Home() {
-  const { token, userSession } = useAuth();
+  const {setPaymentInfo} = useAuth();
 
   const donateFunction = donate;
 
   async function donation(formData: FormData) {
-    const title = formData.get('message') as string;
-    const amount = Number(formData.get('amount'));
-
-    const donationData = {
-      amount,
-      title,
-      creator: userSession?.creatorId,
-    };
-      
-      donateFunction({ title, amount });
-      return;
+    const title:string = formData.get('message') as string;
+    const amount:number = Number(formData.get('amount'));
+    setPaymentInfo({ title, amount });
+    donateFunction({ title, amount });
+    return;
     }
-  }
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b to-white flex items-center justify-center p-4">
