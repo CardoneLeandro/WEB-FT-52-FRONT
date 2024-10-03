@@ -13,14 +13,16 @@ function EventsPage() {
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
 
-  const getEvents = async (month = '', year = '') => {
+  const getEvents = async (month = '', year = '', title = '') => {
     try {
       let url = 'http://localhost:3003/events';
 
-      if (month || year) {
-        const params = new URLSearchParams();
-        if (month) params.append('month', month);
-        if (year) params.append('year', year);
+      const params = new URLSearchParams();
+      if (month) params.append('month', month);
+      if (year) params.append('year', year);
+      if (title) params.append('title', title);
+
+      if (params.toString()) {
         url += `?${params.toString()}`;
       }
 
@@ -38,12 +40,10 @@ function EventsPage() {
     }
   };
 
-  // useEffect para cargar los eventos la primera vez o cuando cambian mes/año
   useEffect(() => {
-    getEvents(selectedMonth, selectedYear); // Llamar a getEvents con los valores de mes y año
-  }, [selectedMonth, selectedYear]);
+    getEvents(selectedMonth, selectedYear, search);
+  }, [selectedMonth, selectedYear, search]);
 
-  // Función para manejar la búsqueda por título
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearch(value);
@@ -53,14 +53,14 @@ function EventsPage() {
       );
       setFilteredEvents(filtered);
     } else {
-      setFilteredEvents(events); // Reiniciar a todos los eventos si la búsqueda está vacía
+      setFilteredEvents(events);
     }
   };
   const clearFilters = () => {
     setSelectedMonth('');
     setSelectedYear('');
     setSearch('');
-    setFilteredEvents(events); // Restablecer la lista de eventos filtrados
+    setFilteredEvents(events);
   };
   const hasFilters = selectedMonth || selectedYear || search;
   return (
@@ -71,8 +71,8 @@ function EventsPage() {
         </h1>
         <div className="flex flex-row gap-2 justify-start mt-4">
           <div className="flex flex-row gap-6">
-            <ComboboxDemo onChange={setSelectedMonth} />
-            <ComboboxDemoYear onChange={setSelectedYear} />
+            <ComboboxDemo onChange={setSelectedMonth} value={selectedMonth} />
+            <ComboboxDemoYear onChange={setSelectedYear} value={selectedYear} />
             <div className="flex w-auto max-w-sm items-center space-x-2">
               <Input
                 type="text"
@@ -81,9 +81,9 @@ function EventsPage() {
                 onChange={handleSearch}
                 className="text-gray-500 font-semibold"
               />
-              <Button type="submit" variant={'default'}>
+              {/* <Button type="submit" variant={'default'}>
                 Buscar
-              </Button>
+              </Button> */}
               {hasFilters && (
                 <Button onClick={clearFilters} variant={'destructive'}>
                   Limpiar filtros
@@ -98,7 +98,11 @@ function EventsPage() {
               <EventAlert />
             </div>
           ) : (
-            <EventsList events={filteredEvents} />
+            <EventsList
+              selectedMonth={selectedMonth}
+              selectedYear={selectedYear}
+              search={search}
+            />
           )}
         </div>
       </div>

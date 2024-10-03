@@ -45,37 +45,17 @@ const featuredEvents = [
   },
 ];
 
-export default function Home() {
+export default function Home({ initialEvents }) {
   const redirect = useRouter();
-  // const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  // const openModal = () => setIsModalOpen(true);
-  // const closeModal = () => setIsModalOpen(false);
-  const [events, setEvents] = useState([]);
-  const { token, userSession } = useAuth();
 
-  const getEvents = async () => {
-    const response = await fetch('http://localhost:3003/events');
-    if (response.status !== 200) {
-      throw new Error('Error fetching events');
-    }
-    const data = await response.json();
-    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@', data);
-    setEvents(data.events);
-    return;
-  };
+  const { userSession } = useAuth();
+
   useEffect(() => {
+    // Verifica si la sesión del usuario está en estado "pending"
     if (userSession?.status === 'pending') {
       redirect.push('/formpage');
-      return;
     }
-    console.log('USE EFFECT EN HOME "/"', { TOKEN: token, userSession });
-    if (events.length === 0) {
-      getEvents();
-    }
-    console.log('USE EFFECT EN HOME DE EVENTOS "/"', events);
-    console.log('datos del usuario logeado', userSession);
-  }),
-    [token, userSession, events];
+  }, [userSession, redirect]);
 
   return (
     <div className="w-full">
@@ -84,7 +64,7 @@ export default function Home() {
           Próximos Eventos
         </h2>
         <div className="flex flex-row mx-auto p-2">
-          <EventsList events={events} />
+          <EventsList initialEvents={initialEvents} showLimitedEvents={true} />
         </div>
 
         <Link
