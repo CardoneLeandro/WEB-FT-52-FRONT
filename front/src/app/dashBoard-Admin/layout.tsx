@@ -25,10 +25,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex flex-row justify-center"></div>
 
           <ul className="mt-6 space-y-1">
+           <Link href="/dashBoard-Admin">
             <li className="block rounded-lg  px-4 py-2 text-sm font-medium text-gray-700">
               PERFIL DEL ADMINISTRADOR
             </li>
-
+            </Link>
             <li>
               <div>
                 <button
@@ -59,7 +60,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   <ul className="mt-2 space-y-1 px-4">
                     <li>
                       <Link
-                        href="dashBoard-Admin/events/editEvent"
+                        href="/dashBoard-Admin/events/editEvent"
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
                         Crear y editar Eventos
@@ -67,7 +68,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     </li>
                     <li>
                       <Link
-                        href="dashBoard-Admin/events/currentevents"
+                        href="/dashBoard-Admin/events/currentevents"
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
                         Eventos vigentes
@@ -75,7 +76,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     </li>
                     <li>
                       <Link
-                        href="/eventAssitance"
+                        href="/dashBoard-Admin/events/eventassistance"
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
                         Asistencia de eventos
@@ -115,12 +116,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 {activeMenu === 'donaciones' && (
                   <ul className="mt-2 space-y-1 px-4">
                     <li>
-                      <a
-                        href="#"
+                      <Link
+                        href="/dashBoard-Admin/donations"
+
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
                         Historial de donaciones
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 )}
@@ -214,7 +216,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   <ul className="mt-2 space-y-1 px-4">
                     <li>
                       <a
-                        href="/dashBoard-Admin/controlUsuarios"
+                        href="/dashBoard-Admin/usercontrol"
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
                         Agregar y eliminar usuarios
@@ -222,7 +224,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     </li>
                     <li>
                       <a
-                        href="/dashBoard-Admin/controlUsuarios"
+                        href="/dashBoard-Admin/usercontrol"
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
                         Lista de usuarios
