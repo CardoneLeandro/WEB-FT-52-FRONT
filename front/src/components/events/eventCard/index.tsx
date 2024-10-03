@@ -79,14 +79,14 @@ const EventCard: React.FC<EventCardProps> = ({
         <div className="flex justify-between items-center">
           <CardTitle>{title}</CardTitle>
         </div>
-        <CardDescription>
+        <CardDescription className="cursor-default">
           <time>{new Date(eventDate).toLocaleDateString()}</time>
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="justify-between items-center flex flex-col">
           <div>
-            <p className="flex items-center text-muted-foreground mb-4">
+            <p className="flex items-center text-muted-foreground mb-4 cursor-default">
               <MapPin className="mr-2 h-4 w-4" />
               {eventLocation}
             </p>

@@ -74,7 +74,7 @@ export default function Home() {
   return (
     <div className="w-full">
       <div className=" container flex flex-col ">
-        <h2 className="text-3xl font-bold text-gray-500 mb-8 items-start mt-4">
+        <h2 className="text-3xl font-bold text-gray-500 mb-8 items-start mt-4 cursor-default">
           Próximos Eventos
         </h2>
         <div className="flex flex-row mx-auto p-2">
@@ -90,7 +90,7 @@ export default function Home() {
         </Link>
 
         <div className="flex flex-col px-2 ">
-          <h2 className="text-3xl font-bold text-gray-500 mb-8 items-start mt-4">
+          <h2 className="text-3xl font-bold text-gray-500 mb-8 items-start mt-4 cursor-default">
             Eventos destacados
           </h2>
           <div className="mb-4 flex content-center flex-col lg:flex-row gap-4 w-full flex-wrap max-w-[760px] mx-auto justify-between">

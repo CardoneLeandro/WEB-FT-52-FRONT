@@ -1,39 +1,32 @@
 'use client';
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-
+import { Button } from '@/components/ui/button';
+import { signOut } from 'next-auth/react';
+import { useAuth } from '@/context/AuthContext';
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
   const toggleMenu = (menuName: string) => {
     setActiveMenu((prevMenu) => (prevMenu === menuName ? null : menuName));
   };
+  const { logout } = useAuth();
+  const handleLogOut = () => {
+    signOut({ callbackUrl: '/' });
+    logout();
+  };
 
   return (
-    <div className="flex  min-h-screen mb-10">
+    <div className="flex min-h-screen mb-20">
       {/* Sidebar */}
       <div className="w-64 h-full flex flex-col justify-between border-e bg-white-">
         <div className="px-4 py-6">
           <span className="sr-only">Home</span>
-          <div className="flex flex-row">
-            <Image
-              alt="Descripción de la imagen"
-              src="/image/Logo.png"
-              width={35}
-              height={25}
-            />
-            <a
-              href="/"
-              className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-            >
-              Volver a inicio
-            </a>
-          </div>
+          <div className="flex flex-row justify-center"></div>
 
           <ul className="mt-6 space-y-1">
-            <li className="block rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700">
-              General
+            <li className="block rounded-lg  px-4 py-2 text-sm font-medium text-gray-700">
+              PERFIL DEL ADMINISTRADOR
             </li>
 
             <li>
@@ -224,6 +217,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         href="/dashBoard-Admin/controlUsuarios"
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
+                        Agregar y eliminar usuarios
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="/dashBoard-Admin/controlUsuarios"
+                        className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                      >
                         Lista de usuarios
                       </a>
                     </li>
@@ -233,11 +234,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </li>
           </ul>
         </div>
-        <button className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-          Cerrar sesion
-        </button>
+
+        {/* Fixed footer with "Go Home" and "Logout" buttons */}
+        <div className="  flex flex-col gap-2 justify-center px-4 mb-10">
+          <Button variant={'outline'}>
+            <Link href="/">Volver a inicio</Link>
+          </Button>
+
+          <Button variant={'destructive'} onClick={() => handleLogOut()}>
+            Cerrar sesión
+          </Button>
+        </div>
       </div>
 
+      {/* Content */}
       <div className="flex-1">{children}</div>
     </div>
   );
