@@ -12,7 +12,7 @@ export default function PaymentFailed() {
           tu información e intenta nuevamente.
         </p>
         <Link
-          href="/checkout"
+          href="/donations"
           className="inline-block px-6 py-2 text-white bg-red-500 rounded hover:bg-red-600 transition-colors"
         >
           Intentar de nuevo

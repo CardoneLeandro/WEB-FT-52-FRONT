@@ -1,12 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-// import { ButtonIcon } from '@radix-ui/react-icons'
 import EventsList from '../components/events/eventsList';
 import FeaturedEventCard from '../components/events/featuredEventCard';
-// import { Button } from '../components/ui/button'
 import { Calendar } from 'lucide-react';
-// import { useState } from 'react'
 import Link from 'next/link';
 
 import { useAuth } from '@/context/AuthContext';
@@ -47,9 +44,6 @@ const featuredEvents = [
 
 export default function Home() {
   const redirect = useRouter();
-  // const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  // const openModal = () => setIsModalOpen(true);
-  // const closeModal = () => setIsModalOpen(false);
   const [events, setEvents] = useState([]);
   const { token, userSession } = useAuth();
 
