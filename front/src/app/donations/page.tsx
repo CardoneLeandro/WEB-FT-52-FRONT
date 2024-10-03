@@ -31,7 +31,7 @@ export default function Home() {
     };
 
     const response = await fetch(
-      'http://localhost:3003/payments/pay-donations',
+      'https://web-ft-52-back-1.onrender.com/payments/pay-donations',
       {
         method: 'POST',
         headers: {

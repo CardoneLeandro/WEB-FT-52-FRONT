@@ -61,13 +61,16 @@ function FormRegister() {
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:${port}/auth/signup`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `https://web-ft-52-back-1.onrender.com/auth/signup`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(values),
           },
-          body: JSON.stringify(values),
-        });
+        );
 
         const data = await response.json();
         if (response.ok) {

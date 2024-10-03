@@ -67,14 +67,17 @@ function InputEventAd({
     };
 
     try {
-      const response = await fetch(`http://localhost:${port}/events`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `https://web-ft-52-back-1.onrender.com/events`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(eventData),
         },
-        body: JSON.stringify(eventData),
-      });
+      );
 
       console.log('Respuesta del servidor:', response);
 

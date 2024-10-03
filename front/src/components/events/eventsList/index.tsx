@@ -39,7 +39,7 @@ const EventsList = ({
     const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
     setLoading(true);
     try {
-      let url = `http://localhost:3003/events?page=${page}&limit=6`;
+      let url = `https://web-ft-52-back-1.onrender.com/events?page=${page}&limit=6`;
 
       if (selectedMonth) url += `&month=${selectedMonth}`;
       if (selectedYear) url += `&year=${selectedYear}`;

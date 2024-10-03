@@ -65,7 +65,7 @@ function SignupForm() {
         };
         console.log('FORMDATA =================================>:', formData);
         const response = await fetch(
-          `http://localhost:${port}/auth/auth0/completeregister`,
+          `https://web-ft-52-back-1.onrender.com/auth/auth0/completeregister`,
           {
             method: 'POST',
             headers: {

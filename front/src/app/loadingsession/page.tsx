@@ -50,7 +50,7 @@ export default function LoadingSessions() {
   const postUserSessionData = async (userObject: IUserObject) => {
     try {
       const response = await fetch(
-        `http://localhost:${port}/auth/auth0/signup`,
+        `https://web-ft-52-back-1.onrender.com/auth/auth0/signup`,
         {
           method: 'POST',
           headers: {

@@ -28,7 +28,9 @@ export default function EventsPage() {
 
   const getEvents = async () => {
     try {
-      const response = await fetch('http://localhost:3003/events');
+      const response = await fetch(
+        'https://web-ft-52-back-1.onrender.com//events',
+      );
       if (response.status !== 200) {
         throw new Error('Error fetching events');
       }
@@ -59,7 +61,7 @@ export default function EventsPage() {
   const handleUpdateEvent = async (updatedEvent: Item) => {
     try {
       const response = await fetch(
-        `http://localhost:3003/auth/events/edit/${updatedEvent.id}`,
+        `https://web-ft-52-back-1.onrender.com/auth/events/edit/${updatedEvent.id}`,
         {
           method: 'POST',
           headers: {

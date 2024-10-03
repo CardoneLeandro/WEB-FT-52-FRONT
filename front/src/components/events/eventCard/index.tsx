@@ -47,16 +47,19 @@ const EventCard: React.FC<EventCardProps> = ({
     setHighlighted(!highlighted);
 
     try {
-      const response = await fetch('http://localhost:3000/events/highlight', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'https://web-ft-52-back-1.onrender.com/events/highlight',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            eventId: id,
+            highlight: !highlighted,
+          }),
         },
-        body: JSON.stringify({
-          eventId: id,
-          highlight: !highlighted,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Error al actualizar el estado del evento');
