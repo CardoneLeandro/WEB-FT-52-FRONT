@@ -22,12 +22,19 @@ declare module 'next-auth' {
   }
 }
 
+// Verificar si las variables de entorno están configuradas
+if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+  throw new Error(
+    'Las variables de entorno GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET deben estar configuradas',
+  );
+}
+
 // Definir las opciones de autenticación
 const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
   callbacks: {
@@ -54,6 +61,12 @@ const authOptions: NextAuthOptions = {
 
       return session;
     },
+  },
+  secret: process.env.NEXTAUTH_SECRET as string, // Asegúrate de configurar esta variable de entorno
+  pages: {
+    signIn: '/signin', // Página de inicio de sesión
+    signOut: '/signout', // Página de cierre de sesión
+    error: '/error', // Página de error
   },
 };
 
