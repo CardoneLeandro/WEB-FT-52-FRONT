@@ -125,6 +125,9 @@ const EventCard: React.FC<EventCardProps> = ({
           {highlighted ? 'Quitar destacado' : 'Destacar evento'}
         </Button>
       </CardFooter>
+      <div className="text-white">
+        <h1>quitar despues</h1>
+      </div>
     </Card>
   );
 };
