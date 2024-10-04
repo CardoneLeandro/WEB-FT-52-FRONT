@@ -12,7 +12,7 @@ function EditEvent() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center rounded-t-xl py-10">
+      <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center rounded-t-xl py-10 text-white">
         <div className="container mx-auto">
           <h1 className="text-2xl font-bold text-white">
             Panel de Administración de Eventos

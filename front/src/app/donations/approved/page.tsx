@@ -1,51 +1,54 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import { PaymentInfo, useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/AuthContext';
 import { CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-
-
 export default function PaymentSuccess() {
-  const redirect = useRouter()
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT
+  const redirect = useRouter();
+  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const [disabled, setDisabled] = useState(true);
-  
-  const pay = async (params:any, token:string|null) => {
-    const response = await fetch(`http://localhost:${port}/payments/pay-donations/success`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+
+  const pay = async (params: any, token: string | null) => {
+    const response = await fetch(
+      `http://localhost:${port}/payments/pay-donations/success`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(params),
       },
-      body: JSON.stringify(params),
-    });
+    );
     const data = await response.json();
     return data;
-    }
-  
+  };
 
   useEffect(() => {
-    const { userSession, token, paymentInfo, setPaymentInfo, setDonation} = useAuth();
+    const { userSession, token, paymentInfo, setPaymentInfo, setDonation } =
+      useAuth();
     const paymentData = {
       creator: userSession?.creatorId,
       title: paymentInfo?.title,
       amount: paymentInfo?.amount,
-    }
-      
-    pay(paymentData, token).then((data) => {
-      if(data.ok){
-        setDonation(data.donation)
-        setPaymentInfo(null)
-        setDisabled(false)
-      }
-    }).catch((error) => {
-      window.alert(`ERROR AL REGISTRAR EL PAGO EN LA BASE DE DATOS ${error}`,);
-      redirect.push('/')
-    });
-  }
-),[]
+    };
+
+    pay(paymentData, token)
+      .then((data) => {
+        if (data.ok) {
+          setDonation(data.donation);
+          setPaymentInfo(null);
+          setDisabled(false);
+        }
+      })
+      .catch((error) => {
+        window.alert(`ERROR AL REGISTRAR EL PAGO EN LA BASE DE DATOS ${error}`);
+        redirect.push('/');
+      });
+  }),
+    [];
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -60,8 +63,8 @@ export default function PaymentSuccess() {
           de tu transacción.
         </p>
         <Button
-        disabled={disabled}
-        onClick={() => redirect.push('/')}
+          disabled={disabled}
+          onClick={() => redirect.push('/')}
           className="inline-block px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors"
         >
           Volver al inicio

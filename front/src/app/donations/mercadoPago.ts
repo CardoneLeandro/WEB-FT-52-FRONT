@@ -13,7 +13,7 @@ export const donate = async({title, amount}:{title: string, amount: number}) => 
     body: {
       back_urls:{
         
-      success:'https://web-ft-52-back-1.onrender.com/donations/webhook?source_news=webhooks',
+      success:'http://localhost:3000/donations/approved',
 
       failure:'https://www.google.com.ar/',
       pending: 'https://www.youtube.com.ar/'
