@@ -1,7 +1,8 @@
-import NextAuth, { NextAuthOptions, DefaultSession } from 'next-auth';
+import { NextAuthOptions } from 'next-auth';
+import NextAuth from 'next-auth/next';
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google';
 
-// Extendemos las interfaces para añadir campos personalizados a la sesión y JWT
+// Extender las interfaces para personalizar la sesión y el JWT
 declare module 'next-auth' {
   interface Session {
     accessToken?: string;
@@ -11,7 +12,7 @@ declare module 'next-auth' {
       image?: string;
       providerAccountId?: string;
       profile?: GoogleProfile;
-    } & DefaultSession['user'];
+    };
   }
 
   interface JWT {
@@ -21,12 +22,12 @@ declare module 'next-auth' {
   }
 }
 
-// Definimos las opciones de autenticación
-export const authOptions: NextAuthOptions = {
+// Definir las opciones de autenticación
+const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
   callbacks: {
@@ -41,16 +42,22 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      session.accessToken = token.accessToken as string | undefined;
-      session.user.providerAccountId = token.providerAccountId as
-        | string
-        | undefined;
-      session.user.profile = token.profile as GoogleProfile | undefined;
+      session.accessToken = token.accessToken;
+
+      // Verificamos si el token tiene providerAccountId y profile para evitar errores de tipo
+      if (token.providerAccountId) {
+        session.user.providerAccountId = token.providerAccountId;
+      }
+      if (token.profile) {
+        session.user.profile = token.profile as GoogleProfile;
+      }
+
       return session;
     },
   },
 };
 
-// Aquí exportamos las rutas de API correctamente según Next.js 13+
+// Manejadores de las rutas para Next.js 13 API Routes
 const handler = NextAuth(authOptions);
+
 export { handler as GET, handler as POST };
