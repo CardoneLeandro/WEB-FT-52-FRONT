@@ -1,40 +1,40 @@
 'use client';
-
+import React from 'react';
 import { useState } from 'react';
-import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+// import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+// import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+// import {
+//   Table,
+//   TableBody,
+//   TableCell,
+//   TableHead,
+//   TableHeader,
+//   TableRow,
+// } from '@/components/ui/table';
+// import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
 
-const aportes = [
-  {
-    aporte: 'Donación',
-    paymentStatus: 'Paid',
-    totalAmount: '$250.00',
-    paymentMethod: 'Credit Card',
-  },
-  {
-    aporte: 'Donación',
-    paymentStatus: 'Pending',
-    totalAmount: '$150.00',
-    paymentMethod: 'PayPal',
-  },
-  {
-    aporte: 'Donación',
-    paymentStatus: 'Unpaid',
-    totalAmount: '$350.00',
-    paymentMethod: 'Bank Transfer',
-  },
-];
+// const aportes = [
+//   {
+//     aporte: 'Donación',
+//     paymentStatus: 'Paid',
+//     totalAmount: '$250.00',
+//     paymentMethod: 'Credit Card',
+//   },
+//   {
+//     aporte: 'Donación',
+//     paymentStatus: 'Pending',
+//     totalAmount: '$150.00',
+//     paymentMethod: 'PayPal',
+//   },
+//   {
+//     aporte: 'Donación',
+//     paymentStatus: 'Unpaid',
+//     totalAmount: '$350.00',
+//     paymentMethod: 'Bank Transfer',
+//   },
+// ];
 
 const upcomingEvents = [
   { id: 1, name: 'Evento 1', date: '2023-07-15' },
@@ -43,7 +43,7 @@ const upcomingEvents = [
 ];
 
 export default function PanelAdmin() {
-  const [showDonations, setShowDonations] = useState(false);
+  // const [showDonations, setShowDonations] = useState(false);
   const { userSession } = useAuth();
 
   return (

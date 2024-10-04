@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
 import { useSession } from 'next-auth/react';
 function SignupForm() {
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+  // const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const router = useRouter();
   const { userSession, setSession, setToken } = useAuth();
 

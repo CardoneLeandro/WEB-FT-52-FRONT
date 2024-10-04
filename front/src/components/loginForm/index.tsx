@@ -20,7 +20,7 @@ interface ILoginError {
 }
 
 function LoginForm() {
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+  // const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const route = useRouter();
 
   const { setToken, setSession } = useAuth();

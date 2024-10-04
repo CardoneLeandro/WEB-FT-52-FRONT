@@ -29,7 +29,7 @@ function InputEventAd({
     console.log('useEffect ejecutado con userSession:', userSession);
   }, [userSession, token]);
 
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+  // const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
   const handleSubmit = async () => {
     console.log('@@@@@@@@@@@@@@@', userSession);

@@ -22,7 +22,9 @@ interface Session {
   address: string | undefined;
   donations: Donation[];
 }
-
+interface UserWithDonations extends Session {
+  donations: Donation[];
+}
 interface AuthContextType {
   token: string | null;
   userSession: Session | null;
@@ -62,7 +64,6 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         setSession(storedSession);
         setToken(storedToken);
       } else {
-      
         setSession(null);
         localStorage.removeItem('userSession');
         setToken(null);
@@ -70,7 +71,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     }
   }, []);
 
-  const handleSetDonations = (user: any) => {
+  const handleSetDonations = (user: UserWithDonations) => {
     if (user.donations && user.donations.length > 0) {
       setSession((prevSession) => {
         if (prevSession) {

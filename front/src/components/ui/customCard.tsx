@@ -1,9 +1,9 @@
-import * as React from "react";
-import Image from "next/image";
-import * as cruz from "@/public/images/cruz.jpeg";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/src/components/ui/card";
-import { Button } from "@/src/components/ui/button";
-import { Label } from "@/src/components/ui/label";
+import * as React from 'react';
+import Image from 'next/image';
+import * as cruz from '@/public/images/cruz.jpeg';
+import { Card, CardContent, CardFooter } from '@/src/components/ui/card';
+import { Button } from '@/src/components/ui/button';
+import { Label } from '@/src/components/ui/label';
 
 export function CustomCard() {
   return (
@@ -23,11 +23,11 @@ export function CustomCard() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col space-y-1.5 font-thin mt-4"> 
+                <div className="flex flex-col space-y-1.5 font-thin mt-4">
                   <Label htmlFor="name">Nombre del evento:</Label>
                 </div>
 
-                <div className="flex flex-col space-y-3 font-semibold mt-4"> 
+                <div className="flex flex-col space-y-3 font-semibold mt-4">
                   <Label htmlFor="date">Fecha:</Label>
                 </div>
 

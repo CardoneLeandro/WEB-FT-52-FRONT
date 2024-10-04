@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import AdminListComponent, {
   Item,
 } from '@/components/adminPanel/adminListComponent';
-
+import React from 'react';
 interface Event {
   id: number;
   highlight: boolean;
@@ -24,7 +24,7 @@ export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [eventEdit, setEventEdit] = useState<string>('');
+  // const [eventEdit, setEventEdit] = useState<string>('');
 
   const getEvents = async () => {
     try {

@@ -19,7 +19,7 @@ interface IRegisterUser {
 }
 
 function FormRegister() {
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+  // const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const { setToken, setSession } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);

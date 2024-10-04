@@ -13,7 +13,7 @@ interface IUserObject {
 }
 
 export default function LoadingSessions() {
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+  // const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const { setToken, setSession, userSession } = useAuth();
   const router = useRouter();
   const { data: session, status } = useSession();

@@ -1,4 +1,15 @@
-export async function register(dataNewUser: IRegisterUser, setToken: (token: string) => void, setSession: (user: any) => void, redirect: any) {
+interface IUser {
+  id: number;
+  name: string;
+  email: string;
+}
+
+export async function register(
+  dataNewUser: IRegisterUser,
+  setToken: (token: string) => void,
+  setSession: (user: IUser) => void,
+  redirect: { push: (path: string) => void },
+) {
   const APIURL = process.env.NEXT_PUBLIC_API_URL_POST_USER;
 
   try {

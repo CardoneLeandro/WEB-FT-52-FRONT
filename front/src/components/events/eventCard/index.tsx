@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { MapPin, StarIcon } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { HoverCard, HoverCardTrigger } from '@/components/ui/hover-card';
 
 interface EventCardProps {
@@ -29,22 +29,22 @@ interface EventCardProps {
 
 const EventCard: React.FC<EventCardProps> = ({
   id,
-  key,
+  // key,
   highlight,
-  createDate,
-  status,
+  // createDate,
+  // status,
   title,
   eventDate,
   eventLocation,
-  price,
-  stock,
+  // price,
+  // stock,
   images,
 }) => {
   const router = useRouter();
   const [highlighted, setHighlighted] = useState(highlight);
 
-  const handleHighlightToggle = async () => {
-    setHighlighted(!highlighted);
+  // const handleHighlightToggle = async () => {
+  //   setHighlighted(!highlighted);
 
     try {
       const response = await fetch(

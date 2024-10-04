@@ -1,6 +1,6 @@
 'use client';
 import InputEventAd from '@/components/inputEventAdministrator';
-import CardPreview from '@/components/inputEventAdministrator/cardPreview';
+// import CardPreview from '@/components/inputEventAdministrator/cardPreview';
 import React, { useState } from 'react';
 
 function EditEvent() {
@@ -8,7 +8,7 @@ function EditEvent() {
   const [eventDate, setEventDate] = useState('');
   const [eventLocation, setEventLocation] = useState('');
   const [description, setDescription] = useState('');
-  const [images, setImages] = useState<string | null>(null);
+  // const [images, setImages] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-gray-100">
