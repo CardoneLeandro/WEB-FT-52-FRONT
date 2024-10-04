@@ -128,6 +128,12 @@ const EventCard: React.FC<EventCardProps> = ({
       <div className="text-white">
         <h1>quitar despues</h1>
       </div>
+      <div className="text-white">
+        <h1>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius tempora
+          autem, quibusdam quos totam iusto?
+        </h1>
+      </div>
     </Card>
   );
 };
