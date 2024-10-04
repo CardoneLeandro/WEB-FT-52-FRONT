@@ -27,13 +27,14 @@ const EventDetailPage = ({ params }: { params: { id: string } }) => {
         const fetchedEvent = await getEventById(params.id);
         setEvent(fetchedEvent);
       } catch (error) {
-        console.error('Error fetching event:', error);
+        window.console.error('error', error);
       }
     };
 
     fetchEvent();
   }, [params.id]);
 
+  
   console.log('id del evento', params.id);
 
   if (!event) {
