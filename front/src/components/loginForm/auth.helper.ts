@@ -2,8 +2,6 @@
 
 import { useAuth } from '@/context/AuthContext';
 
-// const API_URL_USER_POST = process.env.NEXT_PUBLIC_API_URL_POST_USER_AUT;
-
 interface IUserObject {
   providerAccountId: string;
   email: string;
@@ -12,8 +10,7 @@ interface IUserObject {
   image: string;
 }
 
-const { setToken, setSession } = useAuth();
-
+// Función para enviar los datos del usuario
 export const postUserSessionData = async (userObject: IUserObject) => {
   try {
     const response = await fetch(
@@ -33,11 +30,27 @@ export const postUserSessionData = async (userObject: IUserObject) => {
 
     const data = await response.json();
     console.log('Datos enviados exitosamente al backend.', data);
-    setToken(data.token);
-    setSession(data.user);
+
     return data;
   } catch (error) {
     console.error('Error al enviar los datos al backend:', error);
     throw error;
   }
+};
+
+// Hook personalizado para manejar la sesión
+export const usePostUserSession = () => {
+  const { setToken, setSession } = useAuth();
+
+  const handlePostUserSession = async (userObject: IUserObject) => {
+    try {
+      const data = await postUserSessionData(userObject);
+      setToken(data.token); // Establece el token de autenticación
+      setSession(data.user); // Establece la sesión del usuario
+    } catch (error) {
+      console.error('Error al manejar la sesión del usuario:', error);
+    }
+  };
+
+  return { handlePostUserSession };
 };
