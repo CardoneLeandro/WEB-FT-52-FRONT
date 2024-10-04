@@ -43,8 +43,8 @@ const EventCard: React.FC<EventCardProps> = ({
   const router = useRouter();
   const [highlighted, setHighlighted] = useState(highlight);
 
-  // const handleHighlightToggle = async () => {
-  //   setHighlighted(!highlighted);
+  const handleHighlightToggle = async () => {
+    setHighlighted(!highlighted);
 
     try {
       const response = await fetch(
@@ -121,6 +121,9 @@ const EventCard: React.FC<EventCardProps> = ({
             </Button>
           </HoverCardTrigger>
         </HoverCard>
+        <Button variant={'outline'} onClick={handleHighlightToggle}>
+          {highlighted ? 'Quitar destacado' : 'Destacar evento'}
+        </Button>
       </CardFooter>
     </Card>
   );
