@@ -11,7 +11,7 @@ export default function PaymentPending() {
   const redirect = useRouter()
   const port = process.env.NEXT_PUBLIC_APP_API_PORT
   const [disabled, setDisabled] = useState(true);
-  
+  const { userSession, token, paymentInfo, setPaymentInfo, setDonation} = useAuth();
   const pay = async (params:any, token:string|null) => {
     const response = await fetch(`http://localhost:${port}/payments/pay-donations/pending`, {
       method: 'POST',
@@ -27,7 +27,7 @@ export default function PaymentPending() {
   
 
   useEffect(() => {
-    const { userSession, token, paymentInfo, setPaymentInfo, setDonation} = useAuth();
+    
     const paymentData = {
       creator: userSession?.creatorId,
       title: paymentInfo?.title,

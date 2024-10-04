@@ -11,8 +11,10 @@ export default function PaymentSuccess() {
   const redirect = useRouter()
   const port = process.env.NEXT_PUBLIC_APP_API_PORT
   const [disabled, setDisabled] = useState(true);
+  const { userSession, token, paymentInfo, setPaymentInfo, setDonation} = useAuth();
   
   const pay = async (params:any, token:string|null) => {
+    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@', params)
     const response = await fetch(`http://localhost:${port}/payments/pay-donations/success`, {
       method: 'POST',
       headers: {
@@ -26,26 +28,30 @@ export default function PaymentSuccess() {
     }
   
 
-  useEffect(() => {
-    const { userSession, token, paymentInfo, setPaymentInfo, setDonation} = useAuth();
-    const paymentData = {
-      creator: userSession?.creatorId,
-      title: paymentInfo?.title,
-      amount: paymentInfo?.amount,
-    }
-      
-    pay(paymentData, token).then((data) => {
-      if(data.ok){
-        setDonation(data.donation)
-        setPaymentInfo(null)
-        setDisabled(false)
-      }
-    }).catch((error) => {
-      window.alert(`ERROR AL REGISTRAR EL PAGO EN LA BASE DE DATOS ${error}`,);
-      redirect.push('/')
-    });
-  }
-),[]
+    useEffect(() => {
+      if (!paymentInfo) return;
+      console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',paymentInfo, token)
+      const paymentData = {
+        creator: userSession?.creatorId,
+        title: paymentInfo?.title,
+        amount: paymentInfo?.amount,
+      };
+    
+      pay(paymentData, token)
+      .then((data) => {
+        if (data.ok) {
+          const {donation} = data
+          setDonation(donation);
+          setPaymentInfo(null);
+          setDisabled(false);
+          window.alert('¡Gracias por tu donación!');
+          redirect.push('/');
+        }
+      }).catch((error) => {
+        window.alert(`ERROR AL REGISTRAR EL PAGO EN LA BASE DE DATOS ${error}`);
+        redirect.push('/');
+      });
+    }, [paymentInfo, userSession, token])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">

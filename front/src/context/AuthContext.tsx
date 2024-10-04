@@ -34,7 +34,7 @@ interface AuthContextType {
   setToken: (token: string | null) => void;
   setSession: (userSession: Session | null) => void;
   setDonation: (donation: Donation) => void;
-  setPaymentInfo: (payment: PaymentInfo | null) => void;
+  setPaymentInfo: (paymentInfo: PaymentInfo | null) => void;
   logout: () => void;
 }
 
@@ -57,28 +57,27 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
 
   useEffect(() => {
-    console.log('useEffect de context');
+    // Cargar datos del localStorage
+    const storedToken = localStorage.getItem('token');
+    const storedSession = JSON.parse(localStorage.getItem('userSession') || 'null');
+    const storedPaymentInfo = JSON.parse(localStorage.getItem('paymentInfo') || 'null');
 
-    console.log('useEffect de context');
+    if (storedToken && storedSession) {
+      setSession(storedSession);
+      setToken(storedToken);
+    } else {
+      setSession(null);
+      localStorage.removeItem('userSession');
+      setToken(null);
+    }
 
-    if (typeof window !== 'undefined') {
-      const storedToken = localStorage.getItem('token');
-      const storedSession = JSON.parse(
-        localStorage.getItem('userSession') || 'null',
-      );
-
-      if (storedToken && storedSession) {
-        setSession(storedSession);
-        setToken(storedToken);
-      } else {
-        setSession(null);
-        localStorage.removeItem('userSession');
-        setToken(null);
-      }
+    // Cargar paymentInfo desde localStorage
+    if (storedPaymentInfo) {
+      setPaymentInfo(storedPaymentInfo);
     }
   }, []);
 
-  const handleSetDonations = (donation:Donation) => {
+  const handleSetDonations = (donation: Donation) => {
     if (donation) {
       setSession((prevSession) => {
         if (prevSession) {
@@ -93,10 +92,12 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   };
 
   const handleSetPayment = (params: PaymentInfo | null) => {
-    if (params === null) {
-      setPaymentInfo(null);
-    }
     setPaymentInfo(params);
+    if (params) {
+      localStorage.setItem('paymentInfo', JSON.stringify(params)); // Guardar en localStorage
+    } else {
+      localStorage.removeItem('paymentInfo'); // Limpiar localStorage si es null
+    }
   };
 
   const handleSetToken = (newToken: string | null) => {
@@ -105,6 +106,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
       setSession(null);
       localStorage.removeItem('token');
       localStorage.removeItem('userSession');
+      localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo también si no hay token
     } else {
       localStorage.setItem('token', newToken);
     }
@@ -116,6 +118,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
       setToken(null);
       localStorage.removeItem('token');
       localStorage.removeItem('userSession');
+      localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo también si no hay sesión
     } else {
       localStorage.setItem('userSession', JSON.stringify(userSession));
     }
@@ -126,7 +129,9 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     setSession(null);
     localStorage.removeItem('token');
     localStorage.removeItem('userSession');
+    localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo al cerrar sesión
   };
+
   return (
     <AuthContext.Provider
       value={{
