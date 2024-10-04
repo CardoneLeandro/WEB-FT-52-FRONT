@@ -25,7 +25,7 @@ function NavBar() {
     setMenuOpen(!menuOpen);
   };
   return (
-    <div className="w-full shadow-lg ">
+    <div className="w-full shadow-lg">
       <div className="container mx-auto flex justify-between items-center px-4 lg:px-8  mt-2 ">
         <div className="flex flex-row items-center ">
           <div className=" p-2 flex flex-row items-center gap-2 rounded-md cursor-default">
@@ -51,7 +51,7 @@ function NavBar() {
             href="/aboutUs"
             className="hover:cursor-pointer hover:bg-gray-200 font-bold text-blue-500 hover:text-blue-600 p-2 rounded-md transition duration-300 ease-in-out"
           >
-            Nuestra comunidad
+            Nuestra Comunidad
           </Link>
           <Link
             onClick={() => setDropDownMenu(false)}
@@ -110,7 +110,7 @@ function NavBar() {
             href="/aboutUs"
             className="block py-2 hover:bg-gray-200 text-blue-500 font-light rounded-md transition duration-300 ease-in-out"
           >
-            Nuestra comunidad
+            Nuestra Comunidad
           </Link>
           <Link
             href="/donations"
