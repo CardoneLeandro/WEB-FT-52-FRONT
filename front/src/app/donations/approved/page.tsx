@@ -14,7 +14,6 @@ export default function PaymentSuccess() {
   const { userSession, token, paymentInfo, setPaymentInfo, setDonation} = useAuth();
   
   const pay = async (params:any, token:string|null) => {
-    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@', params)
     const response = await fetch(`http://localhost:${port}/payments/pay-donations/success`, {
       method: 'POST',
       headers: {
@@ -30,7 +29,6 @@ export default function PaymentSuccess() {
 
     useEffect(() => {
       if (!paymentInfo) return;
-      console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',paymentInfo, token)
       const paymentData = {
         creator: userSession?.creatorId,
         title: paymentInfo?.title,
