@@ -22,7 +22,7 @@ interface Session {
   address: string;
   donations: Donation[];
 }
-export interface PaymentInfo {
+interface PaymentInfo {
   title: string | null;
   amount: number | null;
 }
@@ -48,7 +48,6 @@ const AuthContext = createContext<AuthContextType>({
   setPaymentInfo: () => {},
   logout: () => {},
 });
-
 export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AdminListComponent, {
   Item,
 } from '@/components/adminPanel/adminListComponent';
+import { useAuth } from '@/context/AuthContext';
 
 interface User {
   id: number;
@@ -14,50 +15,31 @@ interface User {
 }
 
 export default function AdminPanel() {
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: 1,
-      name: 'Juan Pérez',
-      email: 'juan@example.com',
-      isActive: true,
-      avatarUrl: 'https://i.pravatar.cc/150?img=1',
-    },
-    {
-      id: 2,
-      name: 'María García',
-      email: 'maria@example.com',
-      isActive: false,
-      avatarUrl: 'https://i.pravatar.cc/150?img=2',
-    },
-    {
-      id: 3,
-      name: 'Carlos Rodríguez',
-      email: 'carlos@example.com',
-      isActive: true,
-      avatarUrl: 'https://i.pravatar.cc/150?img=3',
-    },
-    {
-      id: 4,
-      name: 'Ana López',
-      email: 'ana@example.com',
-      isActive: true,
-      avatarUrl: 'https://i.pravatar.cc/150?img=4',
-    },
-    {
-      id: 5,
-      name: 'Pedro Sánchez',
-      email: 'pedro@example.com',
-      isActive: false,
-      avatarUrl: 'https://i.pravatar.cc/150?img=5',
-    },
-    {
-      id: 6,
-      name: 'Laura Martínez',
-      email: 'laura@example.com',
-      isActive: true,
-      avatarUrl: 'https://i.pravatar.cc/150?img=6',
-    },
-  ]);
+  const [users, setUsers] = useState<User[]>([]);
+  const { userSession } = useAuth();
+
+  // Función para obtener los usuarios
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch('http://localhost:3003/users', {
+        headers: {},
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setUsers(data);
+      } else {
+        console.error('Error fetching users:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (userSession) {
+      fetchUsers();
+    }
+  }, [userSession]);
 
   const handleToggleAction = (user: Item) => {
     setUsers(
