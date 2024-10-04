@@ -25,6 +25,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
+    "@react-google-maps/api": "^2.19.3",
     "@strapi/provider-upload-cloudinary": "^4.25.11",
     "@tanstack/react-table": "^8.20.5",
     "@types/tailwindcss": "^3.0.11",
