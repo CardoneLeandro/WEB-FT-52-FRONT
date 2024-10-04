@@ -1,4 +1,3 @@
-'use client';
 import React, { useEffect, useState } from 'react';
 import { DatePickerDemo } from './datePicker';
 import { Input } from '@/components/ui/input';
@@ -7,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import IInputEventAdProps from '@/interfaces/IInputEventAdProps';
 import toast from 'react-hot-toast';
+import GoogleMap from '../GoogleMaps';
 
 function InputEventAd({
   title,
@@ -24,6 +24,7 @@ function InputEventAd({
 }: Partial<IInputEventAdProps>) {
   const { token, userSession } = useAuth();
   const [image, setImage] = useState<string>('');
+  const [showMap, setShowMap] = useState<boolean>(false); 
 
   useEffect(() => {
     console.log('useEffect ejecutado con userSession:', userSession);
@@ -32,12 +33,9 @@ function InputEventAd({
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
   const handleSubmit = async () => {
-    console.log('@@@@@@@@@@@@@@@', userSession);
     const creatorId = userSession?.creatorId;
 
-    // Validaciones
     if (!title || !eventDate || !eventLocation || !description || !image) {
-      console.error('Todos los campos son obligatorios.');
       toast.error('Todos los campos son obligatorios.', {
         position: 'bottom-center',
       });
@@ -45,7 +43,6 @@ function InputEventAd({
     }
 
     if (!creatorId) {
-      console.error('Se requiere un "creatorId".');
       toast.error('Se requiere autenticación para crear un evento.', {
         position: 'bottom-center',
       });
@@ -76,32 +73,30 @@ function InputEventAd({
         body: JSON.stringify(eventData),
       });
 
-      console.log('Respuesta del servidor:', response);
-
       if (response.status === 201) {
-        console.log('Evento creado exitosamente');
         toast.success('El evento se ha creado exitosamente', {
           position: 'bottom-center',
         });
       } else {
-        console.error('Error al crear el evento');
         toast.error('Error al crear el evento', {
           position: 'bottom-center',
         });
       }
     } catch (error) {
-      console.error('Error:', error);
       toast.error('Ha ocurrido un error al crear el evento', {
         position: 'bottom-center',
       });
+      window.console.error('error', error);
     }
+  };
+
+  const toggleMap = () => {
+    setShowMap(true); 
   };
 
   return (
     <div className="p-4 space-y-4">
-      <h1 className="font-bold text-[28px] text-gray-500 mb-4">
-        Crear evento:
-      </h1>
+      <h1 className="font-bold text-[28px] text-gray-500 mb-4">Crear evento:</h1>
 
       <div className="flex flex-row gap-8">
         <div className="w-1/2">
@@ -113,12 +108,23 @@ function InputEventAd({
               onChange={(e) => setTitle!(e.target.value)}
             />
             <DatePickerDemo onChange={(date: string) => setEventDate!(date)} />
-            <Input
-              type="text"
-              placeholder="Ubicación"
-              className="bg-white"
-              onChange={(e) => setEventLocation!(e.target.value)}
-            />
+
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={toggleMap}
+                className="bg-blue-500 text-white hover:bg-blue-600"
+              >
+                Buscar Ubicación
+              </Button>
+              <Input
+                type="text"
+                placeholder="Ubicación"
+                className="bg-white flex-grow"
+                value={eventLocation}
+                onChange={(e) => setEventLocation!(e.target.value)}
+              />
+            </div>
+
             <Input
               type="text"
               placeholder="Descripción del evento"
@@ -129,29 +135,32 @@ function InputEventAd({
               type="number"
               placeholder="Costo del evento"
               className="bg-white"
-              defaultValue={0}
+              defaultValue={''}
               onChange={(e) => setPrice!(e.target.value)}
             />
             <Input
               type="number"
               placeholder="Capacidad de asistentes"
-              defaultValue={0}
+              defaultValue={''}
               className="bg-white"
               onChange={(e) => setStock!(e.target.value)}
             />
-
             <InputFile
               onImageUpload={(imageUrl: string) => {
                 setImage(imageUrl);
               }}
             />
+             
+          {showMap && (
+            <div className="mt-4 w-full items-start"> 
+              <GoogleMap setEventLocation={setEventLocation} />
+            </div>
+          )}
           </div>
         </div>
 
-        <div className="w-1/2">
-          <h2 className="font-bold text-[24px] text-gray-500 mb-2">
-            Previsualización:
-          </h2>
+        <div className="w-1/2 flex flex-col items-start"> 
+          <h2 className="font-bold text-[24px] text-gray-500 mb-2">Previsualización:</h2>
           <div className="border p-4 rounded-lg shadow-lg max-w-sm">
             <img
               src={image || 'https://via.placeholder.com/400'}
@@ -159,20 +168,14 @@ function InputEventAd({
               className="w-full h-48 object-contain rounded-lg"
             />
             <div className="p-4">
-              <h2 className="font-bold text-xl mb-2">
-                {title || 'Nombre del evento'}
-              </h2>
-              <p className="text-gray-700">
-                {eventDate || 'Fecha no definida'}
-              </p>
-              <p className="text-gray-700">
-                {eventLocation || 'Ubicación no definida'}
-              </p>
-              <p className="text-gray-600 mt-2">
-                {description || 'Descripción no disponible'}
-              </p>
+              <h2 className="font-bold text-xl mb-2">{title || 'Nombre del evento'}</h2>
+              <p className="text-gray-700">{eventDate || 'Fecha no definida'}</p>
+              <p className="text-gray-700">{eventLocation || 'Ubicación no definida'}</p>
+              <p className="text-gray-600 mt-2">{description || 'Descripción no disponible'}</p>
             </div>
           </div>
+
+         
         </div>
       </div>
 
