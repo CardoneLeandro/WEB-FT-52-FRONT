@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AdminListComponent, {
   Item,
 } from '@/components/adminPanel/adminListComponent';
@@ -17,6 +17,29 @@ interface User {
 export default function AdminPanel() {
   const [users, setUsers] = useState<User[]>([]);
   const { userSession } = useAuth();
+
+  // Función para obtener los usuarios
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch('http://localhost:3003/users', {
+        headers: {},
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setUsers(data);
+      } else {
+        console.error('Error fetching users:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (userSession) {
+      fetchUsers();
+    }
+  }, [userSession]);
 
   const handleToggleAction = (user: Item) => {
     setUsers(
