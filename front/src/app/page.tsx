@@ -73,7 +73,7 @@ const featuredEvents = [
   },
 ];
 
-export default function Home({ initialEvents }) {
+export function Home({ initialEvents }) {
   const redirect = useRouter();
   const [events, setEvents] = useState([]);
   const { token, userSession } = useAuth();
@@ -230,3 +230,5 @@ export default function Home({ initialEvents }) {
     </div>
   );
 }
+
+export default Home;
