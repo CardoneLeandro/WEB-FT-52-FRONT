@@ -15,7 +15,7 @@ interface Event {
 export default async function getEventById(id: string) {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT || 3003;
   try {
-    const res = await fetch(`http://localhost:${port}/events/getone?id=${id}`, {
+    const res = await fetch(`http://localhost:${port}/events/getone/${id}`, {
       cache: 'no-store',
     });
 
