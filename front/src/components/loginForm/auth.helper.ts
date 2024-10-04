@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/context/AuthContext';
 
-const API_URL_USER_POST = process.env.NEXT_PUBLIC_API_URL_POST_USER_AUT;
+// const API_URL_USER_POST = process.env.NEXT_PUBLIC_API_URL_POST_USER_AUT;
 
 interface IUserObject {
   providerAccountId: string;

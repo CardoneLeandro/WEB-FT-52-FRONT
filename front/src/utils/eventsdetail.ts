@@ -13,7 +13,7 @@ interface Event {
 }
 
 export default async function getEventById(id: string) {
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT || 3003;
+  // const port = process.env.NEXT_PUBLIC_APP_API_PORT || 3003;
   try {
     const res = await fetch(
       `https://web-ft-52-back-1.onrender.com/events/getone?id=${id}`,
