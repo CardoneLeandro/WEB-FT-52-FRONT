@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@mercadopago/sdk-react": "^0.0.19",
-    "@next/swc-win32-x64-msvc": "^14.2.12",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.1",
