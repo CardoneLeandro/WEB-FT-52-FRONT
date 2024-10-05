@@ -30,7 +30,7 @@ interface AuthContextType {
   userSession: Session | null;
   setToken: (token: string | null) => void;
   setSession: (userSession: Session | null) => void;
-  setDonation: (donation: Donation) => void;
+  setDonation: (user: UserWithDonations) => void;
   logout: () => void;
 }
 
