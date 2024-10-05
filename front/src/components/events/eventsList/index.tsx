@@ -2,18 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import EventCard from '../eventCard';
 import { Button } from '@/components/ui/button';
-export type Event = {
-  id: string;
-  highlight: boolean;
-  createDate: Date;
-  status: string;
-  title: string;
-  eventDate: Date;
-  eventLocation: string;
-  price: number;
-  stock: number;
-  images: string[];
-};
+import { Event } from '@/interfaces/IEvent';
 
 export type EventsListProps = {
   initialEvents: Event[];

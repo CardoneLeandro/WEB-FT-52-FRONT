@@ -1,4 +1,5 @@
 'use client';
+import { Event } from '@/interfaces/IEvent';
 import { ComboboxDemo } from '@/components/dropDownEvents/monthFilter';
 import { ComboboxDemoYear } from '@/components/dropDownEvents/yearFilter';
 import EventsList from '@/components/events/eventsList';
@@ -7,9 +8,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import EventAlert from '@/components/events/eventAlert';
 function EventsPage() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [search, setSearch] = useState('');
-  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
 
@@ -44,7 +45,7 @@ function EventsPage() {
     getEvents(selectedMonth, selectedYear, search);
   }, [selectedMonth, selectedYear, search]);
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
     if (value.length > 1) {
@@ -99,6 +100,7 @@ function EventsPage() {
             </div>
           ) : (
             <EventsList
+              initialEvents={filteredEvents}
               selectedMonth={selectedMonth}
               selectedYear={selectedYear}
               search={search}
