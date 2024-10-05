@@ -1,5 +1,5 @@
 'use client';
-
+import { Event } from '../components/events/eventsList';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
@@ -72,17 +72,13 @@ const featuredEvents = [
       'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
   },
 ];
-interface EventProps {
-  title: string;
-  description: string;
-  imgSrc: string;
-}
+// interface EventProps {
+//   title: string;
+//   description: string;
+//   imgSrc: string;
+// }
 
-export default function Home({
-  initialEvents,
-}: {
-  initialEvents: EventProps[];
-}) {
+export default function Home({ initialEvents }: { initialEvents: Event[] }) {
   const redirect = useRouter();
   const [events, setEvents] = useState([]);
   const { token, userSession } = useAuth();
