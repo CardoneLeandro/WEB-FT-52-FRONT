@@ -99,7 +99,7 @@ export default function Home({
   const getEvents = async () => {
     try {
       const response = await fetch(
-        'https://web-ft-52-back-1.onrender.com//events',
+        'https://web-ft-52-back-1.onrender.com/events',
       );
       if (!response.ok) {
         throw new Error('Error fetching events');
