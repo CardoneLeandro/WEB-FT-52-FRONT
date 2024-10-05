@@ -6,7 +6,7 @@ import AdminListComponent, {
 } from '@/components/adminPanel/adminListComponent';
 
 interface Event {
-  id: number;
+  id: string;
   highlight: boolean;
   createDate: Date;
   status: string;
@@ -24,7 +24,6 @@ export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [eventEdit, setEventEdit] = useState<string>('');
 
   const getEvents = async () => {
     try {
@@ -48,13 +47,47 @@ export default function EventsPage() {
   const handleToggleAction = (event: Item) => {
     setEvents(
       events.map((e) =>
-        e.id === Number(event.id) ? { ...e, isActive: !e.isActive } : e,
+        e.id === event.id ? { ...e, isActive: !e.isActive } : e,
       ),
     );
   };
 
   const getToggleLabel = (isActive: boolean) =>
     isActive ? 'No destacar' : 'Destacar';
+
+  const handleToggleHighlight = async (event: Item) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3003/auth/events/highlight/${event.id}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            highlight: !event.highlight, // Cambia el estado de highlight
+          }),
+        },
+      );
+
+      if (response.status !== 200) {
+        throw new Error('Error updating highlight status');
+      }
+
+      const updatedEventData = await response.json();
+
+      // Actualiza el estado de eventos
+      setEvents((prevEvents) =>
+        prevEvents.map((e) =>
+          e.id === event.id
+            ? { ...e, highlight: updatedEventData.highlight }
+            : e,
+        ),
+      );
+    } catch (err) {
+      setError('No se pudo actualizar el estado de destacar.');
+    }
+  };
 
   const handleUpdateEvent = async (updatedEvent: Item) => {
     try {
@@ -65,7 +98,14 @@ export default function EventsPage() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(updatedEvent),
+          body: JSON.stringify({
+            title: updatedEvent.title,
+            description: updatedEvent.description,
+            eventDate: updatedEvent.eventDate,
+            eventLocation: updatedEvent.eventLocation,
+            price: updatedEvent.cost,
+            stock: updatedEvent.stock,
+          }),
         },
       );
 
@@ -77,7 +117,7 @@ export default function EventsPage() {
 
       setEvents(
         events.map((event) =>
-          event.id === Number(updatedEvent.id)
+          event.id === updatedEvent.id
             ? { ...event, ...updatedEventData }
             : event,
         ),
@@ -89,9 +129,9 @@ export default function EventsPage() {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center  py-10">
+      <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center py-10">
         <div className="container mx-auto">
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-2xl font-bold text-white">
             Panel de Administración de Eventos
           </h1>
         </div>
@@ -112,6 +152,7 @@ export default function EventsPage() {
                   title: event.title,
                   description: event.description,
                   isActive: event.isActive,
+                  highlight: event.highlight,
                   image: event.images[0] || '/default-event-image.jpg',
                   eventDate: new Date(event.eventDate)
                     .toISOString()

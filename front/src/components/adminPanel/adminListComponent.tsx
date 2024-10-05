@@ -19,6 +19,7 @@ export interface Item {
   eventLocation?: string;
   stock?: number;
   cost?: number;
+  highlight: boolean;
 }
 
 interface AdminListComponentProps {
