@@ -8,7 +8,6 @@ function EditEvent() {
   const [eventDate, setEventDate] = useState('');
   const [eventLocation, setEventLocation] = useState('');
   const [description, setDescription] = useState('');
-  // const [images, setImages] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -29,7 +28,6 @@ function EditEvent() {
           setEventDate={setEventDate}
           setEventLocation={setEventLocation}
           setDescription={setDescription}
-          setImages={setImages}
         />
       </div>
     </div>
