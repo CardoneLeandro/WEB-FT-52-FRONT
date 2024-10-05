@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Image from 'next/image';
 import * as cruz from '@/public/images/cruz.jpeg';
-import { Card, CardContent, CardFooter } from '@/src/components/ui/card';
-import { Button } from '@/src/components/ui/button';
-import { Label } from '@/src/components/ui/label';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 export function CustomCard() {
   return (
