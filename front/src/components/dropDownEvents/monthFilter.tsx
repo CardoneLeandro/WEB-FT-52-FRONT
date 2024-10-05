@@ -33,14 +33,18 @@ const meses = [
   { value: '11', label: 'Noviembre' },
   { value: '12', label: 'Diciembre' },
 ];
+interface ComboboxProps {
+  onChange: (value: string) => void;
+  value: string;
+}
 
-export function ComboboxDemo({ onChange, value }) {
+export function ComboboxDemo({ onChange, value }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(value || '');
   React.useEffect(() => {
     setSelectedValue(value);
   }, [value]);
-  const handleSelect = (currentValue) => {
+  const handleSelect = (currentValue: string) => {
     const newValue = currentValue === value ? '' : currentValue;
     setSelectedValue(newValue);
     onChange(newValue);
