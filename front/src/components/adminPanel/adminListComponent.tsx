@@ -17,6 +17,8 @@ export interface Item {
   image?: string;
   eventDate?: string;
   eventLocation?: string;
+  stock?: number;
+  cost?: number;
 }
 
 interface AdminListComponentProps {
@@ -149,9 +151,6 @@ export default function AdminListComponent({
                 {type === 'event' && (
                   <Button onClick={handleEditEvent}>Editar</Button>
                 )}
-                <Button variant="outline" onClick={() => setSelectedItem(null)}>
-                  Cancelar selección
-                </Button>
               </div>
             </div>
           )}
@@ -194,6 +193,28 @@ export default function AdminListComponent({
                   })
                 }
                 placeholder="Ubicación del evento"
+              />
+              <Input
+                value={editingEvent.stock || ''}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    stock: parseInt(e.target.value, 10),
+                  })
+                }
+                placeholder="Stock disponible"
+                type="number"
+              />
+              <Input
+                value={editingEvent.cost || ''}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    cost: parseFloat(e.target.value),
+                  })
+                }
+                placeholder="Costo del evento"
+                type="number"
               />
               <div className="flex space-x-2">
                 <Button onClick={handleUpdateEvent}>Guardar cambios</Button>
