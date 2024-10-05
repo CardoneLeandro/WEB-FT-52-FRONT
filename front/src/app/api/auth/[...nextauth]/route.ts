@@ -49,12 +49,14 @@ const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      session.accessToken = token.accessToken;
+      if (typeof token.accessToken === 'string') {
+        session.accessToken = token.accessToken;
+      }
 
-      // Verificamos si el token tiene providerAccountId y profile para evitar errores de tipo
-      if (token.providerAccountId) {
+      if (typeof token.providerAccountId === 'string') {
         session.user.providerAccountId = token.providerAccountId;
       }
+
       if (token.profile) {
         session.user.profile = token.profile as GoogleProfile;
       }
