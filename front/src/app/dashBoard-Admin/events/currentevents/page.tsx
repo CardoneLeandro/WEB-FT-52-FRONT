@@ -29,7 +29,7 @@ export default function EventsPage() {
   const getEvents = async () => {
     try {
       const response = await fetch(
-        'https://web-ft-52-back-1.onrender.com//events',
+        'https://web-ft-52-back-1.onrender.com/events',
       );
       if (response.status !== 200) {
         throw new Error('Error fetching events');
