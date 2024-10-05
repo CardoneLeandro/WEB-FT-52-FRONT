@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { GoogleMap, LoadScript, Marker, Autocomplete } from '@react-google-maps/api';
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  Autocomplete,
+} from '@react-google-maps/api';
 
 const containerStyle = {
   width: '100%',
   height: '400px',
 };
 
-
 const center = {
   lat: -32.889458,
   lng: -68.845839,
 };
-
 
 const mendozaBounds = {
   north: -32.0,
@@ -21,14 +24,14 @@ const mendozaBounds = {
 };
 
 function MyMap({ setEventLocation }) {
-  const [markerPosition, setMarkerPosition] = useState(center); 
+  const [markerPosition, setMarkerPosition] = useState(center);
   const [autocomplete, setAutocomplete] = useState(null);
 
   const handleMapClick = (event) => {
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
     const newLocation = `${lat}, ${lng}`;
-    setMarkerPosition({ lat, lng }); 
+    setMarkerPosition({ lat, lng });
     setEventLocation(newLocation);
   };
 
@@ -40,32 +43,39 @@ function MyMap({ setEventLocation }) {
     if (autocomplete !== null) {
       const place = autocomplete.getPlace();
       const address = place.formatted_address;
-      setEventLocation(address); 
+
+      const location = place.geometry.location;
+      const newLocation = `${location.lat()}, ${location.lng()}`;
+
+      setMarkerPosition({ lat: location.lat(), lng: location.lng() });
+      setEventLocation(address);
     } else {
       console.log('Autocomplete is not loaded yet!');
     }
   };
 
   return (
-    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY} libraries={['places']}>
+    <LoadScript
+      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+      libraries={['places']}
+    >
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
         zoom={12}
         onClick={handleMapClick}
       >
-       
         <Autocomplete
           onLoad={onLoadAutocomplete}
           onPlaceChanged={onPlaceChanged}
           options={{
-            bounds: mendozaBounds, 
+            bounds: mendozaBounds,
             componentRestrictions: { country: 'ar' },
           }}
         >
           <input
             type="text"
-            placeholder="Busca una ubicación"
+            placeholder="Busca una ubicacion..."
             className="autocomplete-input"
             style={{
               boxSizing: `border-box`,
@@ -78,10 +88,10 @@ function MyMap({ setEventLocation }) {
               fontSize: `14px`,
               outline: `none`,
               textOverflow: `ellipses`,
-              position: "absolute",
-              left: "50%",
-              marginLeft: "-120px",
-              top: "10px",
+              position: 'absolute',
+              left: '50%',
+              marginLeft: '-120px',
+              top: '10px',
             }}
           />
         </Autocomplete>
