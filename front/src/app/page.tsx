@@ -76,9 +76,9 @@ interface EventProps {
   title: string;
   description: string;
   imgSrc: string;
-  highlight: boolean;
-  createDate: Date;
-  status: string;
+  // highlight: boolean;
+  // createDate: Date;
+  // status: string;
 }
 
 export default function Home({
