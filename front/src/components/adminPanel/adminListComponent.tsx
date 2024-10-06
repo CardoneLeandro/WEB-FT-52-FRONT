@@ -12,7 +12,7 @@ export interface Item {
   id: string;
   title: string;
   description: string;
-  isActive?: boolean;
+  status: string; // Cambié a string para reflejar el estado del backend (e.g. 'active', 'banned')
   avatarUrl?: string;
   image?: string;
   eventDate?: string;
@@ -26,7 +26,7 @@ interface AdminListComponentProps {
   type: ItemType;
   items: Item[];
   onToggleAction: (item: Item) => void;
-  getToggleLabel: (isActive: boolean) => string;
+  getToggleLabel: (status: string) => string; // Cambié a status
   onUpdateEvent?: (updatedEvent: Item) => void;
 }
 
@@ -48,6 +48,8 @@ export default function AdminListComponent({
         return 'Usuarios';
       case 'post':
         return 'Donaciones';
+      default:
+        return '';
     }
   };
 
@@ -56,7 +58,7 @@ export default function AdminListComponent({
       onToggleAction(selectedItem);
       setSelectedItem({
         ...selectedItem,
-        isActive: !selectedItem.isActive,
+        status: selectedItem.status === 'banned' ? 'active' : 'banned', // Cambié para alternar el status
       });
     }
   };
@@ -147,7 +149,7 @@ export default function AdminListComponent({
               </div>
               <div className="flex space-x-2">
                 <Button onClick={handleToggleAction}>
-                  {getToggleLabel(selectedItem.isActive || false)}
+                  {getToggleLabel(selectedItem?.status || '')}{' '}
                 </Button>
                 {type === 'event' && (
                   <Button onClick={handleEditEvent}>Editar</Button>
@@ -175,7 +177,7 @@ export default function AdminListComponent({
                 placeholder="Descripción"
               />
               <Input
-                value={editingEvent.eventDate}
+                value={editingEvent.eventDate || ''}
                 onChange={(e) =>
                   setEditingEvent({
                     ...editingEvent,
@@ -186,7 +188,7 @@ export default function AdminListComponent({
                 type="date"
               />
               <Input
-                value={editingEvent.eventLocation}
+                value={editingEvent.eventLocation || ''}
                 onChange={(e) =>
                   setEditingEvent({
                     ...editingEvent,

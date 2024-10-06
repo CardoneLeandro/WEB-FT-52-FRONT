@@ -10,8 +10,8 @@ interface User {
   id: string;
   name: string;
   email: string;
-  status: string; // Actual estado del usuario (ACTIVE, BANNED, etc.)
-  previousStatus?: string; // Guardará el estado anterior antes de ser baneado
+  status: string;
+  previousStatus?: string;
   avatarUrl: string;
 }
 
@@ -31,7 +31,7 @@ export default function AdminPanel() {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log('Fetched users:', data); // Depuración
+        console.log('Fetched users:', data);
         setUsers(data);
         setFilteredUsers(data);
       } else {
@@ -52,17 +52,16 @@ export default function AdminPanel() {
     const currentUser = users.find((u) => u.id === user.id);
 
     if (!currentUser) {
-      console.error('User not found'); // Depuración
+      console.error('User not found');
       return;
     }
 
     const newStatus =
       currentUser.status === 'banned'
-        ? currentUser.previousStatus || 'active' // Restaurar estado previo
-        : 'banned'; // Bannear usuario
+        ? currentUser.previousStatus || 'active' // Restaurar estado previo si estaba baneado
+        : 'banned'; // Si no estaba baneado, se banea
 
     try {
-      console.log(`Changing status for user ${user.id} to ${newStatus}`); // Depuración
       const response = await fetch(
         `http://localhost:3003/auth/user/ban/${user.id}`,
         {
@@ -74,9 +73,8 @@ export default function AdminPanel() {
       );
 
       if (response.ok) {
-        console.log('Status updated successfully'); // Depuración
-        setUsers(
-          users.map((u) =>
+        setUsers((prevUsers) =>
+          prevUsers.map((u) =>
             u.id === user.id
               ? { ...u, status: newStatus, previousStatus: currentUser.status }
               : u,
@@ -150,11 +148,12 @@ export default function AdminPanel() {
                 id: user.id.toString(),
                 title: user.name,
                 description: user.email,
-                isActive: user.status !== 'banned', // Actualiza con el nuevo campo de estado
+                isActive: user.status !== 'banned', // Cambié para reflejar si está baneado o no
                 avatarUrl: user.avatarUrl,
+                status: user.status, // Asegúrate de pasar el status aquí para que el label funcione correctamente
               }))}
               onToggleAction={handleToggleAction}
-              getToggleLabel={(user) => getToggleLabel(user.status)}
+              getToggleLabel={getToggleLabel}
             />
           </div>
         </div>
