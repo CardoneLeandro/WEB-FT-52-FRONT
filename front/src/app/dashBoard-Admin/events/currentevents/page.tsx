@@ -164,7 +164,6 @@ export default function EventsPage() {
                   eventAdress: event.eventAdress,
                   price: event.price,
                   stock: event.stock,
-                  highlight: event.highlight,
                 }))}
                 onToggleAction={handleToggleAction}
                 getToggleLabel={getToggleLabel}
