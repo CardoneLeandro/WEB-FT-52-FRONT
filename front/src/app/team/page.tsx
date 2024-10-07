@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { GithubIcon } from 'lucide-react';
+import { IoLogoGithub } from 'react-icons/io5';
 import Link from 'next/link';
 
 const developers = [
@@ -144,7 +144,7 @@ function DeveloperCard({ name, github }) {
       </div>
       <Button variant="outline" size="sm" asChild>
         <Link href={github} target="_blank" rel="noopener noreferrer">
-          <GithubIcon className="mr-2 h-4 w-4" />
+          <IoLogoGithub className="mr-2 h-4 w-4" />
           Ver perfil
         </Link>
       </Button>
