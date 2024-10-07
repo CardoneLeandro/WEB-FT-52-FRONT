@@ -1,10 +1,9 @@
-'use client';
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
+import GoogleMaps from '../GoogleMaps';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 export type ItemType = 'event' | 'user' | 'post';
 
@@ -12,18 +11,22 @@ export interface Item {
   id: string;
   title: string;
   description: string;
-  isActive?: boolean;
+  status: string;
   avatarUrl?: string;
   image?: string;
   eventDate?: string;
+  price?: string;
   eventLocation?: string;
+  eventAdress?: string;
+  stock?: string;
+  highlight: boolean;
 }
 
 interface AdminListComponentProps {
   type: ItemType;
   items: Item[];
   onToggleAction: (item: Item) => void;
-  getToggleLabel: (isActive: boolean) => string;
+  getToggleLabel: (status: string) => string;
   onUpdateEvent?: (updatedEvent: Item) => void;
 }
 
@@ -45,6 +48,8 @@ export default function AdminListComponent({
         return 'Usuarios';
       case 'post':
         return 'Donaciones';
+      default:
+        return '';
     }
   };
 
@@ -53,7 +58,7 @@ export default function AdminListComponent({
       onToggleAction(selectedItem);
       setSelectedItem({
         ...selectedItem,
-        isActive: !selectedItem.isActive,
+        status: selectedItem.status === 'banned' ? 'active' : 'banned',
       });
     }
   };
@@ -76,10 +81,16 @@ export default function AdminListComponent({
     setEditingEvent(null);
   };
 
+  const handleLocationChange = (newLocation: string) => {
+    if (editingEvent) {
+      setEditingEvent({ ...editingEvent, eventLocation: newLocation });
+    }
+  };
+
   return (
-    <div className="flex max-h-[calc(100vh-100px)] overflow-hidden">
-      <Card className="w-full max-w-4xl mx-auto flex">
-        <div className="w-1/2 border-r">
+    <div className="flex max-h-[calc(200vh-200px)] overflow-hidden">
+      <Card className="w-full max-w-5xl mx-auto flex">
+        <div className="w-1/3 border-r">
           <CardHeader>
             <CardTitle>{getTitle()}</CardTitle>
           </CardHeader>
@@ -106,7 +117,7 @@ export default function AdminListComponent({
             </div>
           </CardContent>
         </div>
-        <div className="w-1/2 p-4">
+        <div className="w-2/3 p-4">
           {selectedItem && !editingEvent && (
             <div className="space-y-4">
               <div className="flex items-center space-x-4">
@@ -138,25 +149,32 @@ export default function AdminListComponent({
                       <p className="text-sm text-gray-500">
                         Ubicación: {selectedItem.eventLocation}
                       </p>
+                      <p className="text-sm text-gray-500">
+                        Dirección: {selectedItem.eventAdress}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Precio: {selectedItem.price}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Capacidad: {selectedItem.stock}
+                      </p>
                     </>
                   )}
                 </div>
               </div>
               <div className="flex space-x-2">
                 <Button onClick={handleToggleAction}>
-                  {getToggleLabel(selectedItem.isActive || false)}
+                  {getToggleLabel(selectedItem.status)}
                 </Button>
                 {type === 'event' && (
                   <Button onClick={handleEditEvent}>Editar</Button>
                 )}
-                <Button variant="outline" onClick={() => setSelectedItem(null)}>
-                  Cancelar selección
-                </Button>
               </div>
             </div>
           )}
+
           {editingEvent && (
-            <div className="space-y-4">
+            <div className="space-y-4 p-6">
               <Input
                 value={editingEvent.title}
                 onChange={(e) =>
@@ -175,7 +193,7 @@ export default function AdminListComponent({
                 placeholder="Descripción"
               />
               <Input
-                value={editingEvent.eventDate}
+                value={editingEvent.eventDate || ''}
                 onChange={(e) =>
                   setEditingEvent({
                     ...editingEvent,
@@ -186,16 +204,51 @@ export default function AdminListComponent({
                 type="date"
               />
               <Input
-                value={editingEvent.eventLocation}
+                value={editingEvent.stock}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    stock: e.target.value,
+                  })
+                }
+                placeholder="Capacidad de asistentes"
+                type="number"
+              />
+              <Input
+                value={editingEvent.price}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    price: e.target.value,
+                  })
+                }
+                placeholder="Costo del evento"
+                type="number"
+              />
+              <Input
+                value={editingEvent.eventAdress}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    eventAdress: e.target.value,
+                  })
+                }
+                placeholder="Dirección del evento"
+              />
+              <Input
+                value={editingEvent.eventLocation || ''}
                 onChange={(e) =>
                   setEditingEvent({
                     ...editingEvent,
                     eventLocation: e.target.value,
                   })
                 }
-                placeholder="Ubicación del evento"
+                placeholder="Link de ubicación en Google"
               />
-              <div className="flex space-x-2">
+              <div className="mt-4">
+                <GoogleMaps setEventLocation={handleLocationChange} />
+              </div>
+              <div className="flex space-x-2 mt-4">
                 <Button onClick={handleUpdateEvent}>Guardar cambios</Button>
                 <Button variant="outline" onClick={handleCancelEdit}>
                   Cancelar edición

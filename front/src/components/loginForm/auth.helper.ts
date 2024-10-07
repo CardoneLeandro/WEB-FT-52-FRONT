@@ -16,7 +16,7 @@ const { setToken, setSession } = useAuth();
 
 export const postUserSessionData = async (userObject: IUserObject) => {
   try {
-    const response = await fetch('http://localhost:3005/auth/auth0/signup', {
+    const response = await fetch('http://localhost:3003/users/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
