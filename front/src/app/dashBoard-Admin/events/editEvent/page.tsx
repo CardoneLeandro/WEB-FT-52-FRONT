@@ -1,6 +1,5 @@
 'use client';
 import InputEventAd from '@/components/inputEventAdministrator';
-import CardPreview from '@/components/inputEventAdministrator/cardPreview';
 import React, { useState } from 'react';
 
 function EditEvent() {

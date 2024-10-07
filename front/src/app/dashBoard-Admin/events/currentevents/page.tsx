@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import AdminListComponent, { Item } from '@/components/adminPanel/adminListComponent';
+import AdminListComponent, {
+  Item,
+} from '@/components/adminPanel/adminListComponent';
 import { useAuth } from '@/context/AuthContext';
 
 interface Event {
@@ -24,8 +26,7 @@ export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [eventEdit, setEventEdit] = useState<string>('');
-  const { token, userSession } = useAuth();
+  const { userSession, token } = useAuth();
 
   const getEvents = async () => {
     try {
@@ -46,41 +47,50 @@ export default function EventsPage() {
     getEvents();
   }, []);
 
-  const handleToggleAction = async (event: Item) => {
-    try {
-      // Actualizamos el campo "highlight" del evento
-      const updatedEvent = { ...event, highlight: !event.highlight };
+  const handleToggleAction = (event: Item) => {
+    setEvents(
+      events.map((e) =>
+        e.id === event.id ? { ...e, isActive: !e.isActive } : e,
+      ),
+    );
+  };
 
-      // Hacemos la solicitud PATCH al backend
+  const getToggleLabel = (isActive: boolean) =>
+    isActive ? 'No destacar' : 'Destacar';
+
+  const handleToggleHighlight = async (event: Item) => {
+    try {
       const response = await fetch(
-        `http://localhost:3003/auth/events/edit/${event.id}`,
+        `http://localhost:3003/auth/events/highlight/${event.id}`,
         {
-          method: 'PATCH',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ highlight: updatedEvent.highlight }),
+          body: JSON.stringify({
+            highlight: !event.highlight, // Cambia el estado de highlight
+          }),
         },
       );
 
       if (response.status !== 200) {
-        throw new Error('Error al actualizar el estado del evento.');
+        throw new Error('Error updating highlight status');
       }
 
-      // Si la actualización es exitosa, actualizamos el estado local de eventos
-      setEvents(
-        events.map((e) =>
-          e.id === event.id ? { ...e, highlight: updatedEvent.highlight } : e,
+      const updatedEventData = await response.json();
+
+      // Actualiza el estado de eventos
+      setEvents((prevEvents) =>
+        prevEvents.map((e) =>
+          e.id === event.id
+            ? { ...e, highlight: updatedEventData.highlight }
+            : e,
         ),
       );
-    } catch (error) {
-      setError('No se pudo destacar el evento.');
+    } catch (err) {
+      setError('No se pudo actualizar el estado de destacar.');
     }
   };
-
-  const getToggleLabel = (highlight: boolean) =>
-    highlight ? 'No destacar' : 'Destacar';
 
   const handleUpdateEvent = async (updatedEvent: Item) => {
     try {
@@ -92,7 +102,14 @@ export default function EventsPage() {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(updatedEvent),
+          body: JSON.stringify({
+            title: updatedEvent.title,
+            description: updatedEvent.description,
+            eventDate: updatedEvent.eventDate,
+            eventLocation: updatedEvent.eventLocation,
+            price: updatedEvent.price,
+            stock: updatedEvent.stock,
+          }),
         },
       );
 
@@ -104,7 +121,9 @@ export default function EventsPage() {
       console.log(updatedEventData);
       setEvents(
         events.map((event) =>
-          event.id === updatedEvent.id ? { ...event, ...updatedEventData } : event,
+          event.id === updatedEvent.id
+            ? { ...event, ...updatedEventData }
+            : event,
         ),
       );
     } catch (err) {
@@ -116,7 +135,7 @@ export default function EventsPage() {
     <div>
       <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center py-10">
         <div className="container mx-auto">
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-2xl font-bold text-white">
             Panel de Administración de Eventos
           </h1>
         </div>
@@ -137,8 +156,11 @@ export default function EventsPage() {
                   title: event.title,
                   description: event.description,
                   isActive: event.isActive,
+                  highlight: event.highlight,
                   image: event.images[0] || '/default-event-image.jpg',
-                  eventDate: new Date(event.eventDate).toISOString().split('T')[0],
+                  eventDate: new Date(event.eventDate)
+                    .toISOString()
+                    .split('T')[0],
                   eventAdress: event.eventAdress,
                   price: event.price,
                   stock: event.stock,

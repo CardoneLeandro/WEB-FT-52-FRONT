@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import GoogleMaps from '../GoogleMaps';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 export type ItemType = 'event' | 'user' | 'post';
 
@@ -12,22 +13,22 @@ export interface Item {
   id: string;
   title: string;
   description: string;
-  isActive?: boolean;
+  status: string; // Cambié a string para reflejar el estado del backend (e.g. 'active', 'banned')
   avatarUrl?: string;
   image?: string;
   eventDate?: string;
-  highlight?: boolean;
-  stock?: string;
   price?: string;
   eventLocation?: string;
   eventAdress?: string;
+  stock?: number;
+  highlight: boolean;
 }
 
 interface AdminListComponentProps {
   type: ItemType;
   items: Item[];
   onToggleAction: (item: Item) => void;
-  getToggleLabel: (isActive: boolean) => string;
+  getToggleLabel: (status: string) => string; // Cambié a status
   onUpdateEvent?: (updatedEvent: Item) => void;
 }
 
@@ -59,7 +60,7 @@ export default function AdminListComponent({
       onToggleAction(selectedItem);
       setSelectedItem({
         ...selectedItem,
-        isActive: !selectedItem.isActive,
+        status: selectedItem.status === 'banned' ? 'active' : 'banned', // Cambié para alternar el status
       });
     }
   };
@@ -120,6 +121,48 @@ export default function AdminListComponent({
         </div>
         <div className="w-2/3 p-4">
           {selectedItem && !editingEvent && (
+            <div className="space-y-4">
+              <div className="flex items-center space-x-4">
+                {type === 'event' ? (
+                  <img
+                    className="w-16 h-16 object-cover rounded-full"
+                    src={selectedItem.image || '/default-event-image.jpg'}
+                    alt={selectedItem.title}
+                  />
+                ) : (
+                  <Avatar className="w-16 h-16">
+                    <AvatarImage
+                      src={selectedItem.avatarUrl}
+                      alt={selectedItem.title}
+                    />
+                    <AvatarFallback>
+                      {selectedItem.title.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+                <div>
+                  <h2 className="text-xl font-bold">{selectedItem.title}</h2>
+                  <p className="text-gray-500">{selectedItem.description}</p>
+                  {type === 'event' && (
+                    <>
+                      <p className="text-sm text-gray-500">
+                        Fecha: {selectedItem.eventDate}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Ubicación: {selectedItem.eventLocation}
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="flex space-x-2">
+                <Button onClick={handleToggleAction}>
+                  {getToggleLabel(selectedItem?.status || '')}{' '}
+                </Button>
+                {type === 'event' && (
+                  <Button onClick={handleEditEvent}>Editar</Button>
+                )}
+              </div>
             <div>
               <h2 className="text-xl font-bold">{selectedItem.title}</h2>
               <p>{selectedItem.description}</p>
@@ -165,7 +208,7 @@ export default function AdminListComponent({
               />
               <label className="pt-4">Fecha</label>
               <Input
-                value={editingEvent.eventDate}
+                value={editingEvent.eventDate || ''}
                 onChange={(e) =>
                   setEditingEvent({
                     ...editingEvent,
@@ -213,7 +256,7 @@ export default function AdminListComponent({
 
               <label className="m-2">Link de la ubicación en Google</label>
               <Input
-                value={editingEvent.eventLocation}
+                value={editingEvent.eventLocation || ''}
                 onChange={(e) =>
                   setEditingEvent({
                     ...editingEvent,
@@ -227,6 +270,28 @@ export default function AdminListComponent({
                 <GoogleMaps setEventLocation={handleLocationChange} />
               </div>
 
+              <Input
+                value={editingEvent.stock || ''}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    stock: parseInt(e.target.value, 10),
+                  })
+                }
+                placeholder="Stock disponible"
+                type="number"
+              />
+              <Input
+                value={editingEvent.cost || ''}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    cost: parseFloat(e.target.value),
+                  })
+                }
+                placeholder="Costo del evento"
+                type="number"
+              />
               <div className="flex space-x-2 mt-4">
                 <Button onClick={handleUpdateEvent}>Guardar cambios</Button>
                 <Button variant="outline" onClick={handleCancelEdit}>
