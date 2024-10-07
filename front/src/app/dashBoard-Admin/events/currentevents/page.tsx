@@ -68,7 +68,7 @@ export default function EventsPage() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            highlight: !event.highlight, // Cambia el estado de highlight
+            highlight: !event.highlight,
           }),
         },
       );
@@ -93,14 +93,14 @@ export default function EventsPage() {
   };
 
   const handleUpdateEvent = async (updatedEvent: Item) => {
-    console.log("Esto es lo que envio", {
+    console.log('Esto es lo que envio', {
       title: updatedEvent.title,
       description: updatedEvent.description,
       eventDate: updatedEvent.eventDate,
       eventLocation: updatedEvent.eventLocation,
       price: updatedEvent.price,
       stock: updatedEvent.stock,
-    })
+    });
     try {
       const response = await fetch(
         `http://localhost:3003/auth/events/edit/${updatedEvent.id}`,

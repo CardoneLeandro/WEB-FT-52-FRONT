@@ -13,6 +13,7 @@ interface User {
   status: string;
   previousStatus?: string;
   avatarUrl: string;
+  isAdmin: boolean;
 }
 
 export default function AdminPanel() {
@@ -61,8 +62,8 @@ export default function AdminPanel() {
 
     const newStatus =
       currentUser.status === 'banned'
-        ? currentUser.previousStatus || 'active' // Restaurar estado previo si estaba baneado
-        : 'banned'; // Si no estaba baneado, se banea
+        ? currentUser.previousStatus || 'active'
+        : 'banned';
 
     try {
       const response = await fetch(
@@ -77,12 +78,16 @@ export default function AdminPanel() {
       );
 
       if (response.ok) {
+        const updatedUser = {
+          ...currentUser,
+          status: newStatus,
+          previousStatus: currentUser.status,
+        };
         setUsers((prevUsers) =>
-          prevUsers.map((u) =>
-            u.id === user.id
-              ? { ...u, status: newStatus, previousStatus: currentUser.status }
-              : u,
-          ),
+          prevUsers.map((u) => (u.id === user.id ? updatedUser : u)),
+        );
+        setFilteredUsers((prevUsers) =>
+          prevUsers.map((u) => (u.id === user.id ? updatedUser : u)),
         );
       } else {
         console.error('Error updating user status:', response.statusText);
@@ -92,8 +97,47 @@ export default function AdminPanel() {
     }
   };
 
+  const handleToggleAdminRole = async (user: Item) => {
+    const currentUser = users.find((u) => u.id === user.id);
+
+    if (!currentUser) {
+      console.error('User not found');
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:3003/auth/user/role/administrator/${user.id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (response.ok) {
+        const updatedUser = { ...currentUser, isAdmin: !currentUser.isAdmin };
+        setUsers((prevUsers) =>
+          prevUsers.map((u) => (u.id === user.id ? updatedUser : u)),
+        );
+        setFilteredUsers((prevUsers) =>
+          prevUsers.map((u) => (u.id === user.id ? updatedUser : u)),
+        );
+      } else {
+        console.error('Error updating user admin role:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error updating user admin role:', error);
+    }
+  };
+
   const getToggleLabel = (userStatus: string) =>
     userStatus === 'banned' ? 'Desbannear' : 'Banear';
+
+  const getAdminToggleLabel = (isAdmin: boolean) =>
+    isAdmin ? 'Quitar Admin' : 'Hacer Admin';
 
   useEffect(() => {
     const filtered = users
@@ -155,9 +199,12 @@ export default function AdminPanel() {
                 isActive: user.status !== 'banned',
                 avatarUrl: user.avatarUrl,
                 status: user.status,
+                isAdmin: user.isAdmin,
               }))}
               onToggleAction={handleToggleAction}
+              onToggleAdminRole={handleToggleAdminRole}
               getToggleLabel={getToggleLabel}
+              getAdminToggleLabel={getAdminToggleLabel}
             />
           </div>
         </div>
