@@ -11,16 +11,16 @@ function NavBar() {
   const [dropDownMenu, setDropDownMenu] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { userSession } = useAuth();
+  const { userSession , token } = useAuth();
 
   const handleDropDownMenu = () => {
     setDropDownMenu(!dropDownMenu);
   };
 
   useEffect(() => {
-    console.log('navbar', userSession);
+    console.log('navbar', userSession ,"!!!!!!!" ,token);
   }),
-    [userSession];
+    [userSession , token];
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
   };
