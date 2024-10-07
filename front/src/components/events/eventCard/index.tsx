@@ -22,7 +22,7 @@ interface EventCardProps {
   title: string;
   eventDate: Date;
   eventLocation: string;
-  eventAdress: string; 
+  eventAddress: string; 
   price: number;
   stock: number;
   images: string;
@@ -37,7 +37,7 @@ const EventCard: React.FC<EventCardProps> = ({
   title,
   eventDate,
   eventLocation,
-  eventAdress,
+  eventAddress,
   price,
   stock,
   images,
@@ -132,9 +132,10 @@ const EventCard: React.FC<EventCardProps> = ({
       <CardContent>
         <div className="justify-between items-center flex flex-col">
           <div>
-            <p>Dirección: {eventAdress}</p>
+            <p>Dirección: {eventAddress}</p>
             {eventLocation ? (
               <p className="flex items-center mb-4 cursor-pointer">
+                Google Maps                       
               <a
                 href={googleMapsLink} 
                 target="_blank"

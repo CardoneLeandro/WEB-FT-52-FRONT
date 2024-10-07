@@ -66,7 +66,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         href="/dashBoard-Admin/events/editEvent"
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
-                        Crear y editar Eventos
+                        Crear Eventos
                       </Link>
                     </li>
                     <li>
@@ -74,16 +74,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         href="/dashBoard-Admin/events/currentevents"
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
-                        Eventos vigentes
+                        Ver y Editar Eventos
                       </Link>
                     </li>
                     <li>
-                      <Link
+                      {/* <Link
                         href="/dashBoard-Admin/events/eventassistance"
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
                         Asistencia de eventos
-                      </Link>
+                      </Link> */}
                     </li>
                   </ul>
                 )}
@@ -131,7 +131,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </li>
 
-            <li>
+            {/* <li>
               <div>
                 <button
                   onClick={() => toggleMenu('posteos')}
@@ -186,7 +186,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   </ul>
                 )}
               </div>
-            </li>
+            </li> */}
 
             <li>
               <div>

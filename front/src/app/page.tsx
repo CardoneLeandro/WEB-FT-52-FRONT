@@ -87,6 +87,7 @@ export default function Home({ initialEvents }) {
   const getEvents = async () => {
     try {
       const response = await fetch('http://localhost:3003/events');
+
       if (!response.ok) {
         throw new Error('Error fetching events');
       }

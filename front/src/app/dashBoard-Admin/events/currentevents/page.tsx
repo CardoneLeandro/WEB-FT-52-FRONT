@@ -14,7 +14,7 @@ interface Event {
   title: string;
   eventDate: Date;
   eventLocation: string;
-  eventAdress: string;
+  eventAddress: string;
   price: string;
   stock: string;
   images: string[];
@@ -93,6 +93,14 @@ export default function EventsPage() {
   };
 
   const handleUpdateEvent = async (updatedEvent: Item) => {
+    console.log("Esto es lo que envio", {
+      title: updatedEvent.title,
+      description: updatedEvent.description,
+      eventDate: updatedEvent.eventDate,
+      eventLocation: updatedEvent.eventLocation,
+      price: updatedEvent.price,
+      stock: updatedEvent.stock,
+    })
     try {
       const response = await fetch(
         `http://localhost:3003/auth/events/edit/${updatedEvent.id}`,
@@ -107,6 +115,7 @@ export default function EventsPage() {
             description: updatedEvent.description,
             eventDate: updatedEvent.eventDate,
             eventLocation: updatedEvent.eventLocation,
+            eventAddress: updatedEvent.eventAddress,
             price: updatedEvent.price,
             stock: updatedEvent.stock,
           }),
@@ -161,7 +170,7 @@ export default function EventsPage() {
                   eventDate: new Date(event.eventDate)
                     .toISOString()
                     .split('T')[0],
-                  eventAdress: event.eventAdress,
+                  eventAddress: event.eventAddress,
                   price: event.price,
                   stock: event.stock,
                 }))}
