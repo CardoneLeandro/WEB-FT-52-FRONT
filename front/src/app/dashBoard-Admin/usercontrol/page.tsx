@@ -148,9 +148,9 @@ export default function AdminPanel() {
                 id: user.id.toString(),
                 title: user.name,
                 description: user.email,
-                isActive: user.status !== 'banned', // Cambié para reflejar si está baneado o no
+                isActive: user.status !== 'banned',
                 avatarUrl: user.avatarUrl,
-                status: user.status, // Asegúrate de pasar el status aquí para que el label funcione correctamente
+                status: user.status,
               }))}
               onToggleAction={handleToggleAction}
               getToggleLabel={getToggleLabel}
