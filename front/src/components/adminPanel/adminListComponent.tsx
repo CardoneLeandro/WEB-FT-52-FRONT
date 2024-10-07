@@ -1,5 +1,3 @@
-'use client';
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,14 +11,14 @@ export interface Item {
   id: string;
   title: string;
   description: string;
-  status: string; // Cambié a string para reflejar el estado del backend (e.g. 'active', 'banned')
+  status: string;
   avatarUrl?: string;
   image?: string;
   eventDate?: string;
   price?: string;
   eventLocation?: string;
   eventAdress?: string;
-  stock?: number;
+  stock?: string;
   highlight: boolean;
 }
 
@@ -28,7 +26,7 @@ interface AdminListComponentProps {
   type: ItemType;
   items: Item[];
   onToggleAction: (item: Item) => void;
-  getToggleLabel: (status: string) => string; // Cambié a status
+  getToggleLabel: (status: string) => string;
   onUpdateEvent?: (updatedEvent: Item) => void;
 }
 
@@ -60,7 +58,7 @@ export default function AdminListComponent({
       onToggleAction(selectedItem);
       setSelectedItem({
         ...selectedItem,
-        status: selectedItem.status === 'banned' ? 'active' : 'banned', // Cambié para alternar el status
+        status: selectedItem.status === 'banned' ? 'active' : 'banned',
       });
     }
   };
@@ -151,43 +149,32 @@ export default function AdminListComponent({
                       <p className="text-sm text-gray-500">
                         Ubicación: {selectedItem.eventLocation}
                       </p>
+                      <p className="text-sm text-gray-500">
+                        Dirección: {selectedItem.eventAdress}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Precio: {selectedItem.price}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Capacidad: {selectedItem.stock}
+                      </p>
                     </>
                   )}
                 </div>
               </div>
               <div className="flex space-x-2">
                 <Button onClick={handleToggleAction}>
-                  {getToggleLabel(selectedItem?.status || '')}{' '}
+                  {getToggleLabel(selectedItem.status)}
                 </Button>
                 {type === 'event' && (
                   <Button onClick={handleEditEvent}>Editar</Button>
                 )}
               </div>
-            <div>
-              <h2 className="text-xl font-bold">{selectedItem.title}</h2>
-              <p>{selectedItem.description}</p>
-              <Button onClick={handleToggleAction}>
-                {getToggleLabel(selectedItem.isActive || false)}
-              </Button>
-              {type === 'event' && (
-                <div className="mt-4">
-                  <h3 className="text-lg">Detalles del Evento</h3>
-                  <p>Fecha: {selectedItem.eventDate}</p>
-                  <p>Dirección: {selectedItem.eventAdress}</p>
-                  <p>Precio: {selectedItem.price}</p>
-                  <p>Capacidad: {selectedItem.stock}</p>
-
-                  <Button className="mt-2" onClick={handleEditEvent}>
-                    Editar Evento
-                  </Button>
-                </div>
-              )}
             </div>
           )}
 
           {editingEvent && (
             <div className="space-y-4 p-6">
-              <label className="mt-4">Título</label>
               <Input
                 value={editingEvent.title}
                 onChange={(e) =>
@@ -195,7 +182,6 @@ export default function AdminListComponent({
                 }
                 placeholder="Título"
               />
-              <label>Descripción</label>
               <Input
                 value={editingEvent.description}
                 onChange={(e) =>
@@ -206,7 +192,6 @@ export default function AdminListComponent({
                 }
                 placeholder="Descripción"
               />
-              <label className="pt-4">Fecha</label>
               <Input
                 value={editingEvent.eventDate || ''}
                 onChange={(e) =>
@@ -218,7 +203,6 @@ export default function AdminListComponent({
                 placeholder="Fecha del evento"
                 type="date"
               />
-              <label>Capacidad de asistentes</label>
               <Input
                 value={editingEvent.stock}
                 onChange={(e) =>
@@ -230,7 +214,6 @@ export default function AdminListComponent({
                 placeholder="Capacidad de asistentes"
                 type="number"
               />
-              <label>Costo del evento</label>
               <Input
                 value={editingEvent.price}
                 onChange={(e) =>
@@ -242,7 +225,6 @@ export default function AdminListComponent({
                 placeholder="Costo del evento"
                 type="number"
               />
-              <label>Dirección del Evento</label>
               <Input
                 value={editingEvent.eventAdress}
                 onChange={(e) =>
@@ -253,8 +235,6 @@ export default function AdminListComponent({
                 }
                 placeholder="Dirección del evento"
               />
-
-              <label className="m-2">Link de la ubicación en Google</label>
               <Input
                 value={editingEvent.eventLocation || ''}
                 onChange={(e) =>
@@ -265,33 +245,9 @@ export default function AdminListComponent({
                 }
                 placeholder="Link de ubicación en Google"
               />
-
               <div className="mt-4">
                 <GoogleMaps setEventLocation={handleLocationChange} />
               </div>
-
-              <Input
-                value={editingEvent.stock || ''}
-                onChange={(e) =>
-                  setEditingEvent({
-                    ...editingEvent,
-                    stock: parseInt(e.target.value, 10),
-                  })
-                }
-                placeholder="Stock disponible"
-                type="number"
-              />
-              <Input
-                value={editingEvent.cost || ''}
-                onChange={(e) =>
-                  setEditingEvent({
-                    ...editingEvent,
-                    cost: parseFloat(e.target.value),
-                  })
-                }
-                placeholder="Costo del evento"
-                type="number"
-              />
               <div className="flex space-x-2 mt-4">
                 <Button onClick={handleUpdateEvent}>Guardar cambios</Button>
                 <Button variant="outline" onClick={handleCancelEdit}>

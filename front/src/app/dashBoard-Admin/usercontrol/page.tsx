@@ -22,12 +22,15 @@ export default function AdminPanel() {
     'all' | 'active' | 'inactive'
   >('all');
   const [nameFilter, setNameFilter] = useState('');
-  const { userSession } = useAuth();
+  const { userSession, token } = useAuth();
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:3003/users', {
-        headers: {},
+      const response = await fetch('http://localhost:3003/auth/user/get/all', {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (response.ok) {
         const data = await response.json();
@@ -68,6 +71,7 @@ export default function AdminPanel() {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
         },
       );
