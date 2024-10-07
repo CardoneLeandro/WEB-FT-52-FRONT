@@ -10,7 +10,7 @@ interface EventCardProps {
   title: string;
   eventDate: Date;
   eventLocation: string; 
-  eventAdress: string;
+  eventAddress: string;
   description: string;
   price: number;
   stock: number;
@@ -24,7 +24,7 @@ const EventCardDetail: React.FC<EventCardProps> = ({
   status,
   eventDate,
   eventLocation, 
-  eventAdress,
+  eventAddress,
   stock,
   price,
   description,
@@ -80,9 +80,9 @@ const EventCardDetail: React.FC<EventCardProps> = ({
     if (coordinates.length > 0) {
       fetchAddress();
     } else {
-      setAddress(eventAdress); 
+      setAddress(eventAddress); 
     }
-  }, [eventLocation, eventAdress]);
+  }, [eventLocation, eventAddress]);
 
   return (
     <div className="flex justify-center p-4">
@@ -105,7 +105,7 @@ const EventCardDetail: React.FC<EventCardProps> = ({
             <p className="text-gray-700 font-semibold">{description}</p>
             <div className="space-y-2 mt-2">
               <div className="flex flex-row items-center gap-2 text-gray-700">
-                <p className="font-bold">Ubicación: {address || eventAdress}</p>
+                <p className="font-bold">Ubicación: {address || eventAddress}</p>
                 {eventLocation && (
                   <a
                     href={googleMapsLink}

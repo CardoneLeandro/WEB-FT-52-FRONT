@@ -10,7 +10,7 @@ export type Event = {
   title: string;
   eventDate: Date;
   eventLocation: string;
-  eventAdress: string;
+  eventAddress: string;
   price: number;
   stock: number;
   images: string[];
@@ -99,7 +99,7 @@ const EventsList = ({
             title={event.title}
             eventDate={event.eventDate}
             eventLocation={event.eventLocation}
-            eventAdress={event.eventAdress}
+            eventAddress={event.eventAddress}
             price={event.price}
             stock={event.stock}
             images={

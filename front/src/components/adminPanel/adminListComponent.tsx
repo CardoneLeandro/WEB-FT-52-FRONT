@@ -17,7 +17,7 @@ export interface Item {
   eventDate?: string;
   price?: string;
   eventLocation?: string;
-  eventAdress?: string;
+  eventAddress?: string;
   stock?: string;
   highlight: boolean;
 }
@@ -150,7 +150,7 @@ export default function AdminListComponent({
                         Ubicación: {selectedItem.eventLocation}
                       </p>
                       <p className="text-sm text-gray-500">
-                        Dirección: {selectedItem.eventAdress}
+                        Dirección: {selectedItem.eventAddress}
                       </p>
                       <p className="text-sm text-gray-500">
                         Precio: {selectedItem.price}
@@ -226,11 +226,11 @@ export default function AdminListComponent({
                 type="number"
               />
               <Input
-                value={editingEvent.eventAdress}
+                value={editingEvent.eventAddress}
                 onChange={(e) =>
                   setEditingEvent({
                     ...editingEvent,
-                    eventAdress: e.target.value,
+                    eventAddress: e.target.value,
                   })
                 }
                 placeholder="Dirección del evento"

@@ -10,7 +10,7 @@ function EditEvent() {
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [images, setImages] = useState<string | null>(null);
-  const [eventAdress, setEventAddress] = useState('');
+  const [eventAddress, setEventAddress] = useState('');
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -26,7 +26,7 @@ function EditEvent() {
           title={title}
           eventDate={eventDate}
           eventLocation={eventLocation}
-          eventAdress={eventAdress}
+          eventAddress={eventAddress}
           description={description}
           stock={stock}
           price={price}

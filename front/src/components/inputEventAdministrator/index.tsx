@@ -16,7 +16,7 @@ function InputEventAd({
   description,
   price,
   stock,
-  eventAdress,
+  eventAddress,
   setTitle,
   setEventDate,
   setEventLocation,
@@ -40,7 +40,7 @@ function InputEventAd({
     const creatorId = userSession?.creatorId;
 
     
-    if (!title || !eventDate || !eventLocation || !description || !image || !eventAdress) {
+    if (!title || !eventDate || !eventLocation || !description || !image || !eventAddress) {
       toast.error('Todos los campos son obligatorios.', {
         position: 'bottom-center',
       });
@@ -65,7 +65,7 @@ function InputEventAd({
       description,
       eventDate: eventDateConverted,
       eventLocation: googleMapsLink,
-      eventAdress,
+      eventAddress,
       images: [image],
       stock: stock || 0,
       price: price || 0,
@@ -136,11 +136,11 @@ function InputEventAd({
                 onClick={toggleMap}
                 className="bg-blue-500 text-white hover:bg-blue-600"
               >
-                Buscar Ubicación
+                Generar Link
               </Button>
               <Input
                 type="text"
-                placeholder="Generar Link de GoogleMaps"
+                placeholder="Link generado por GoogleMaps"
                 className="bg-white flex-grow"
                 value={eventLocation}
                 onChange={(e) => setEventLocation!(e.target.value)}
@@ -197,7 +197,7 @@ function InputEventAd({
                 {eventDate || 'Fecha no definida'}
               </p>
               <p className="text-gray-700">
-                {eventAdress || 'Ubicación no definida'}
+                {eventAddress || 'Ubicación no definida'}
               </p>
               <p className="text-gray-600 mt-2">
                 {description || 'Descripción no disponible'}

@@ -4,9 +4,9 @@ interface IInputEventAdProps {
   eventLocation: string;
   description: string;
   images: [string] | null;
-  eventAdress: string
+  eventAddress: string
   price: string;
-  stock: string ;
+  stock: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   setEventDate: React.Dispatch<React.SetStateAction<string>>;
   setEventLocation: React.Dispatch<React.SetStateAction<string>>;
