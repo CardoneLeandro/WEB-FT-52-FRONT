@@ -1,9 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import AdminListComponent, {
-  Item,
-} from '@/components/adminPanel/adminListComponent';
+import AdminListComponent, { Item } from '@/components/adminPanel/adminListComponent';
 import { useAuth } from '@/context/AuthContext';
 
 interface Event {
@@ -28,6 +26,7 @@ export default function EventsPage() {
   const [error, setError] = useState<string | null>(null);
   const [eventEdit, setEventEdit] = useState<string>('');
   const { token, userSession } = useAuth();
+
   const getEvents = async () => {
     try {
       const response = await fetch('http://localhost:3003/events');
@@ -47,16 +46,41 @@ export default function EventsPage() {
     getEvents();
   }, []);
 
-  const handleToggleAction = (event: Item) => {
-    setEvents(
-      events.map((e) =>
-        e.id ===event.id ? { ...e, isActive: !e.isActive } : e,
-      ),
-    );
+  const handleToggleAction = async (event: Item) => {
+    try {
+      // Actualizamos el campo "highlight" del evento
+      const updatedEvent = { ...event, highlight: !event.highlight };
+
+      // Hacemos la solicitud PATCH al backend
+      const response = await fetch(
+        `http://localhost:3003/auth/events/edit/${event.id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ highlight: updatedEvent.highlight }),
+        },
+      );
+
+      if (response.status !== 200) {
+        throw new Error('Error al actualizar el estado del evento.');
+      }
+
+      // Si la actualización es exitosa, actualizamos el estado local de eventos
+      setEvents(
+        events.map((e) =>
+          e.id === event.id ? { ...e, highlight: updatedEvent.highlight } : e,
+        ),
+      );
+    } catch (error) {
+      setError('No se pudo destacar el evento.');
+    }
   };
 
-  const getToggleLabel = (isActive: boolean) =>
-    isActive ? 'No destacar' : 'Destacar';
+  const getToggleLabel = (highlight: boolean) =>
+    highlight ? 'No destacar' : 'Destacar';
 
   const handleUpdateEvent = async (updatedEvent: Item) => {
     try {
@@ -77,23 +101,20 @@ export default function EventsPage() {
       }
 
       const updatedEventData = await response.json();
-      console.log(updatedEventData)
+      console.log(updatedEventData);
       setEvents(
         events.map((event) =>
-          event.id === updatedEvent.id
-            ? { ...event, ...updatedEventData }
-            : event,
+          event.id === updatedEvent.id ? { ...event, ...updatedEventData } : event,
         ),
       );
     } catch (err) {
-
       setError('No se pudo actualizar el evento.');
     }
   };
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center  py-10">
+      <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center py-10">
         <div className="container mx-auto">
           <h1 className="text-2xl font-bold">
             Panel de Administración de Eventos
@@ -117,14 +138,11 @@ export default function EventsPage() {
                   description: event.description,
                   isActive: event.isActive,
                   image: event.images[0] || '/default-event-image.jpg',
-                  eventDate: new Date(event.eventDate)
-                    .toISOString()
-                    .split('T')[0],
-                
+                  eventDate: new Date(event.eventDate).toISOString().split('T')[0],
                   eventAdress: event.eventAdress,
                   price: event.price,
                   stock: event.stock,
-                 
+                  highlight: event.highlight,
                 }))}
                 onToggleAction={handleToggleAction}
                 getToggleLabel={getToggleLabel}

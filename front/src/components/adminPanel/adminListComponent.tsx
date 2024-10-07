@@ -16,6 +16,7 @@ export interface Item {
   avatarUrl?: string;
   image?: string;
   eventDate?: string;
+  highlight?: boolean;
   stock?: string;
   price?: string;
   eventLocation?: string;
@@ -90,7 +91,7 @@ export default function AdminListComponent({
   return (
     <div className="flex max-h-[calc(200vh-200px)] overflow-hidden">
       <Card className="w-full max-w-5xl mx-auto flex">
-        <div className="w-1/2 border-r">
+        <div className="w-1/3 border-r">
           <CardHeader>
             <CardTitle>{getTitle()}</CardTitle>
           </CardHeader>
@@ -117,7 +118,7 @@ export default function AdminListComponent({
             </div>
           </CardContent>
         </div>
-        <div className="w-1/2 p-4">
+        <div className="w-2/3 p-4">
           {selectedItem && !editingEvent && (
             <div>
               <h2 className="text-xl font-bold">{selectedItem.title}</h2>
@@ -132,7 +133,7 @@ export default function AdminListComponent({
                   <p>Dirección: {selectedItem.eventAdress}</p>
                   <p>Precio: {selectedItem.price}</p>
                   <p>Capacidad: {selectedItem.stock}</p>
-                  <p>Ubicación en Google: {selectedItem.eventLocation}</p>
+
                   <Button className="mt-2" onClick={handleEditEvent}>
                     Editar Evento
                   </Button>
