@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
+import GoogleMaps from '../GoogleMaps';
 
 export type ItemType = 'event' | 'user' | 'post';
 
@@ -16,7 +16,10 @@ export interface Item {
   avatarUrl?: string;
   image?: string;
   eventDate?: string;
+  stock?: string;
+  price?: string;
   eventLocation?: string;
+  eventAdress?: string;
 }
 
 interface AdminListComponentProps {
@@ -45,6 +48,8 @@ export default function AdminListComponent({
         return 'Usuarios';
       case 'post':
         return 'Donaciones';
+      default:
+        return '';
     }
   };
 
@@ -76,9 +81,15 @@ export default function AdminListComponent({
     setEditingEvent(null);
   };
 
+  const handleLocationChange = (newLocation: string) => {
+    if (editingEvent) {
+      setEditingEvent({ ...editingEvent, eventLocation: newLocation });
+    }
+  };
+
   return (
-    <div className="flex max-h-[calc(100vh-100px)] overflow-hidden">
-      <Card className="w-full max-w-4xl mx-auto flex">
+    <div className="flex max-h-[calc(200vh-200px)] overflow-hidden">
+      <Card className="w-full max-w-5xl mx-auto flex">
         <div className="w-1/2 border-r">
           <CardHeader>
             <CardTitle>{getTitle()}</CardTitle>
@@ -108,55 +119,31 @@ export default function AdminListComponent({
         </div>
         <div className="w-1/2 p-4">
           {selectedItem && !editingEvent && (
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4">
-                {type === 'event' ? (
-                  <img
-                    className="w-16 h-16 object-cover rounded-full"
-                    src={selectedItem.image || '/default-event-image.jpg'}
-                    alt={selectedItem.title}
-                  />
-                ) : (
-                  <Avatar className="w-16 h-16">
-                    <AvatarImage
-                      src={selectedItem.avatarUrl}
-                      alt={selectedItem.title}
-                    />
-                    <AvatarFallback>
-                      {selectedItem.title.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                )}
-                <div>
-                  <h2 className="text-xl font-bold">{selectedItem.title}</h2>
-                  <p className="text-gray-500">{selectedItem.description}</p>
-                  {type === 'event' && (
-                    <>
-                      <p className="text-sm text-gray-500">
-                        Fecha: {selectedItem.eventDate}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Ubicación: {selectedItem.eventLocation}
-                      </p>
-                    </>
-                  )}
+            <div>
+              <h2 className="text-xl font-bold">{selectedItem.title}</h2>
+              <p>{selectedItem.description}</p>
+              <Button onClick={handleToggleAction}>
+                {getToggleLabel(selectedItem.isActive || false)}
+              </Button>
+              {type === 'event' && (
+                <div className="mt-4">
+                  <h3 className="text-lg">Detalles del Evento</h3>
+                  <p>Fecha: {selectedItem.eventDate}</p>
+                  <p>Dirección: {selectedItem.eventAdress}</p>
+                  <p>Precio: {selectedItem.price}</p>
+                  <p>Capacidad: {selectedItem.stock}</p>
+                  <p>Ubicación en Google: {selectedItem.eventLocation}</p>
+                  <Button className="mt-2" onClick={handleEditEvent}>
+                    Editar Evento
+                  </Button>
                 </div>
-              </div>
-              <div className="flex space-x-2">
-                <Button onClick={handleToggleAction}>
-                  {getToggleLabel(selectedItem.isActive || false)}
-                </Button>
-                {type === 'event' && (
-                  <Button onClick={handleEditEvent}>Editar</Button>
-                )}
-                <Button variant="outline" onClick={() => setSelectedItem(null)}>
-                  Cancelar selección
-                </Button>
-              </div>
+              )}
             </div>
           )}
+
           {editingEvent && (
-            <div className="space-y-4">
+            <div className="space-y-4 p-6">
+              <label className="mt-4">Título</label>
               <Input
                 value={editingEvent.title}
                 onChange={(e) =>
@@ -164,6 +151,7 @@ export default function AdminListComponent({
                 }
                 placeholder="Título"
               />
+              <label>Descripción</label>
               <Input
                 value={editingEvent.description}
                 onChange={(e) =>
@@ -174,6 +162,7 @@ export default function AdminListComponent({
                 }
                 placeholder="Descripción"
               />
+              <label className="pt-4">Fecha</label>
               <Input
                 value={editingEvent.eventDate}
                 onChange={(e) =>
@@ -185,6 +174,43 @@ export default function AdminListComponent({
                 placeholder="Fecha del evento"
                 type="date"
               />
+              <label>Capacidad de asistentes</label>
+              <Input
+                value={editingEvent.stock}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    stock: e.target.value,
+                  })
+                }
+                placeholder="Capacidad de asistentes"
+                type="number"
+              />
+              <label>Costo del evento</label>
+              <Input
+                value={editingEvent.price}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    price: e.target.value,
+                  })
+                }
+                placeholder="Costo del evento"
+                type="number"
+              />
+              <label>Dirección del Evento</label>
+              <Input
+                value={editingEvent.eventAdress}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    eventAdress: e.target.value,
+                  })
+                }
+                placeholder="Dirección del evento"
+              />
+
+              <label className="m-2">Link de la ubicación en Google</label>
               <Input
                 value={editingEvent.eventLocation}
                 onChange={(e) =>
@@ -193,9 +219,14 @@ export default function AdminListComponent({
                     eventLocation: e.target.value,
                   })
                 }
-                placeholder="Ubicación del evento"
+                placeholder="Link de ubicación en Google"
               />
-              <div className="flex space-x-2">
+
+              <div className="mt-4">
+                <GoogleMaps setEventLocation={handleLocationChange} />
+              </div>
+
+              <div className="flex space-x-2 mt-4">
                 <Button onClick={handleUpdateEvent}>Guardar cambios</Button>
                 <Button variant="outline" onClick={handleCancelEdit}>
                   Cancelar edición

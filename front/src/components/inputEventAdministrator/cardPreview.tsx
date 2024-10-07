@@ -5,6 +5,7 @@ function CardPreview({
   title,
   eventDate,
   eventLocation,
+  eventAdress,
   description,
   image,
 }: PreviewCardProps) {
@@ -27,7 +28,7 @@ function CardPreview({
             </h2>
             <p className="text-gray-700">{eventDate || 'Fecha no definida'}</p>
             <p className="text-gray-700">
-              {eventLocation || 'Ubicación no definida'}
+              {eventAdress || 'Ubicación no definida'}
             </p>
             <p className="text-gray-600 mt-2">
               {description || 'Descripción no disponible'}

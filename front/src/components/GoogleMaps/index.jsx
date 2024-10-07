@@ -1,10 +1,5 @@
-import React, { useState } from 'react';
-import {
-  GoogleMap,
-  LoadScript,
-  Marker,
-  Autocomplete,
-} from '@react-google-maps/api';
+import React, { useState, useRef } from 'react';
+import { GoogleMap, LoadScript, Marker, Autocomplete } from '@react-google-maps/api';
 
 const containerStyle = {
   width: '100%',
@@ -24,14 +19,15 @@ const mendozaBounds = {
 };
 
 function MyMap({ setEventLocation }) {
-  const [markerPosition, setMarkerPosition] = useState(center);
+  const [markerPosition, setMarkerPosition] = useState(center); 
   const [autocomplete, setAutocomplete] = useState(null);
+  const mapRef = useRef(null); // Referencia para el mapa
 
   const handleMapClick = (event) => {
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
     const newLocation = `${lat}, ${lng}`;
-    setMarkerPosition({ lat, lng });
+    setMarkerPosition({ lat, lng }); 
     setEventLocation(newLocation);
   };
 
@@ -42,40 +38,49 @@ function MyMap({ setEventLocation }) {
   const onPlaceChanged = () => {
     if (autocomplete !== null) {
       const place = autocomplete.getPlace();
-      const address = place.formatted_address;
 
-      const location = place.geometry.location;
-      const newLocation = `${location.lat()}, ${location.lng()}`;
+      if (place.geometry) {
+        const location = place.geometry.location;
+        const newLocation = `${location.lat()}, ${location.lng()}`;
 
-      setMarkerPosition({ lat: location.lat(), lng: location.lng() });
-      setEventLocation(address);
+        // Mover el marcador a la nueva ubicación
+        setMarkerPosition({ lat: location.lat(), lng: location.lng() });
+        setEventLocation(newLocation);
+
+        // Centrar el mapa en la nueva ubicación seleccionada
+        if (mapRef.current) {
+          mapRef.current.panTo({ lat: location.lat(), lng: location.lng() }); // Aquí centramos el mapa
+        }
+      }
     } else {
       console.log('Autocomplete is not loaded yet!');
     }
   };
 
+  const onLoadMap = (map) => {
+    mapRef.current = map; 
+  };
+
   return (
-    <LoadScript
-      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-      libraries={['places']}
-    >
+    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY} libraries={['places']}>
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
         zoom={12}
         onClick={handleMapClick}
+        onLoad={onLoadMap} 
       >
         <Autocomplete
           onLoad={onLoadAutocomplete}
           onPlaceChanged={onPlaceChanged}
           options={{
-            bounds: mendozaBounds,
+            bounds: mendozaBounds, 
             componentRestrictions: { country: 'ar' },
           }}
         >
           <input
             type="text"
-            placeholder="Busca una ubicacion..."
+            placeholder="Busca una ubicación"
             className="autocomplete-input"
             style={{
               boxSizing: `border-box`,
@@ -88,10 +93,10 @@ function MyMap({ setEventLocation }) {
               fontSize: `14px`,
               outline: `none`,
               textOverflow: `ellipses`,
-              position: 'absolute',
-              left: '50%',
-              marginLeft: '-120px',
-              top: '10px',
+              position: "absolute",
+              left: "50%",
+              marginLeft: "-120px",
+              top: "10px",
             }}
           />
         </Autocomplete>

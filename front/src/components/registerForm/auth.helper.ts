@@ -1,8 +1,8 @@
 export async function register(dataNewUser: IRegisterUser, setToken: (token: string) => void, setSession: (user: any) => void, redirect: any) {
-  const APIURL = process.env.NEXT_PUBLIC_API_URL_POST_USER;
+  const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
 
   try {
-    const response = await fetch(`${APIURL}`, {
+    const response = await fetch(`http://localhost:${PORT}/users/auth/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

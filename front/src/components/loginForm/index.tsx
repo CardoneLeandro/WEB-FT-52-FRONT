@@ -38,7 +38,7 @@ function LoginForm() {
       console.log('Formulario válido. Enviando datos...');
 
       try {
-        const response = await fetch(`http://localhost:${port}/auth/login`, {
+        const response = await fetch(`http://localhost:${port}/users/auth/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

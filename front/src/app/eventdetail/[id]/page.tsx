@@ -12,6 +12,7 @@ interface Event {
   title: string;
   eventDate: Date;
   eventLocation: string;
+  eventAdress: string;
   description: string;
   price: number;
   stock: number;

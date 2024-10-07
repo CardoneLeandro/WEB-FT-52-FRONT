@@ -12,7 +12,7 @@ import { useSession } from 'next-auth/react';
 function SignupForm() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const router = useRouter();
-  const { userSession, setSession, setToken } = useAuth();
+  const { userSession, setSession, setToken , token } = useAuth();
 
   const { data: session } = useSession();
 
@@ -65,11 +65,13 @@ function SignupForm() {
         };
         console.log('FORMDATA =================================>:', formData);
         const response = await fetch(
-          `http://localhost:${port}/auth/auth0/completeregister`,
+          `http://localhost:${port}/users/auth0/completeregister`,
+          
           {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify(formData),
           },

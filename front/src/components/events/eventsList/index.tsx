@@ -10,6 +10,7 @@ export type Event = {
   title: string;
   eventDate: Date;
   eventLocation: string;
+  eventAdress: string;
   price: number;
   stock: number;
   images: string[];
@@ -74,12 +75,12 @@ const EventsList = ({
   };
   const filteredEvents = showLimitedEvents
     ? events
-        .filter((event) => new Date(event.eventDate) >= new Date()) // Solo eventos futuros
+        .filter((event) => new Date(event.eventDate) >= new Date()) 
         .sort(
           (a, b) =>
             new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime(),
-        ) // Ordenar por fecha más cercana
-        .slice(0, 3) // Mostrar solo 3 eventos
+        ) 
+        .slice(0, 3) 
     : events;
   if (!Array.isArray(filteredEvents) || filteredEvents.length === 0) {
     return <div>No se encontraron eventos.</div>;
@@ -98,6 +99,7 @@ const EventsList = ({
             title={event.title}
             eventDate={event.eventDate}
             eventLocation={event.eventLocation}
+            eventAdress={event.eventAdress}
             price={event.price}
             stock={event.stock}
             images={

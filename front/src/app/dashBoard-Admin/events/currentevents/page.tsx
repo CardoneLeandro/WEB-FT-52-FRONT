@@ -4,17 +4,19 @@ import { useState, useEffect } from 'react';
 import AdminListComponent, {
   Item,
 } from '@/components/adminPanel/adminListComponent';
+import { useAuth } from '@/context/AuthContext';
 
 interface Event {
-  id: number;
+  id: string;
   highlight: boolean;
   createDate: Date;
   status: string;
   title: string;
   eventDate: Date;
   eventLocation: string;
-  price: number;
-  stock: number;
+  eventAdress: string;
+  price: string;
+  stock: string;
   images: string[];
   description: string;
   isActive: boolean;
@@ -25,7 +27,7 @@ export default function EventsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [eventEdit, setEventEdit] = useState<string>('');
-
+  const { token, userSession } = useAuth();
   const getEvents = async () => {
     try {
       const response = await fetch('http://localhost:3003/events');
@@ -48,7 +50,7 @@ export default function EventsPage() {
   const handleToggleAction = (event: Item) => {
     setEvents(
       events.map((e) =>
-        e.id === Number(event.id) ? { ...e, isActive: !e.isActive } : e,
+        e.id ===event.id ? { ...e, isActive: !e.isActive } : e,
       ),
     );
   };
@@ -61,9 +63,10 @@ export default function EventsPage() {
       const response = await fetch(
         `http://localhost:3003/auth/events/edit/${updatedEvent.id}`,
         {
-          method: 'POST',
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(updatedEvent),
         },
@@ -74,15 +77,16 @@ export default function EventsPage() {
       }
 
       const updatedEventData = await response.json();
-
+      console.log(updatedEventData)
       setEvents(
         events.map((event) =>
-          event.id === Number(updatedEvent.id)
+          event.id === updatedEvent.id
             ? { ...event, ...updatedEventData }
             : event,
         ),
       );
     } catch (err) {
+
       setError('No se pudo actualizar el evento.');
     }
   };
@@ -116,7 +120,11 @@ export default function EventsPage() {
                   eventDate: new Date(event.eventDate)
                     .toISOString()
                     .split('T')[0],
-                  eventLocation: event.eventLocation,
+                
+                  eventAdress: event.eventAdress,
+                  price: event.price,
+                  stock: event.stock,
+                 
                 }))}
                 onToggleAction={handleToggleAction}
                 getToggleLabel={getToggleLabel}
