@@ -49,25 +49,16 @@ export default function EventsPage() {
     // getEvents();
   }, [adminEvents]);
 
-  // const handleToggleAction = (event: Item) => {
-  //   setEvents(
-  //     events.map((e) =>
-  //       e.id === event.id ? { ...e, isActive: !e.isActive } : e,
-  //     ),
-  //   );
-  // };
-
-  const getToggleLabel = (isActive: boolean) =>
-    isActive ? 'No destacar' : 'Destacar';
 
   const handleToggleHighlight = async (event: Item) => {
     try {
       const response = await fetch(
         `http://localhost:3003/auth/events/highlight/${event.id}`,
         {
-          method: 'POST',
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
         },
       );
@@ -76,17 +67,9 @@ export default function EventsPage() {
         throw new Error('Error updating highlight status');
       }
 
-      const updatedEventData = await response.json();
-      setEvent(updatedEventData);
-      setAdminEvent(updatedEventData);
-      // Actualiza el estado de eventos
-      // setEvents((prevEvents) =>
-      //   prevEvents.map((e) =>
-      //     e.id === event.id
-      //       ? { ...e, highlight: updatedEventData.highlight }
-      //       : e,
-      //   ),
-      // );
+      const updatedEvent = await response.json();
+      setEvent(updatedEvent)
+      setAdminEvent(updatedEvent)
     } catch (err) {
       setError('No se pudo actualizar el estado de destacar.');
     }
@@ -110,31 +93,15 @@ export default function EventsPage() {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            title: updatedEvent.title,
-            description: updatedEvent.description,
-            eventDate: updatedEvent.eventDate,
-            eventLocation: updatedEvent.eventLocation,
-            eventAddress: updatedEvent.eventAddress,
-            price: updatedEvent.price,
-            stock: updatedEvent.stock,
-          }),
+          body: JSON.stringify(updatedEvent),
         },
       );
-
       if (!response.ok) {
         throw new Error('Error updating event');
       }
       const updatedEventData = await response.json();
-      setEvent(updatedEventData);
-      // console.log(updatedEventData);
-      // setEvents(
-      //   events.map((event) =>
-      //     event.id === updatedEvent.id
-      //       ? { ...event, ...updatedEventData }
-      //       : event,
-      //   ),
-      // );
+      setEvent(updatedEventData)
+      setAdminEvent(updatedEventData)
     } catch (err) {
       setError('No se pudo actualizar el evento.');
     }
@@ -173,9 +140,10 @@ export default function EventsPage() {
                   eventAddress: event.eventAddress,
                   price: event.price,
                   stock: event.stock,
+                  status: event.status
                 }))}
                 onToggleAction={handleToggleAction}
-                getToggleLabel={getToggleLabel}
+                onToggleHighlight={handleToggleHighlight}
                 onUpdateEvent={handleUpdateEvent}
               />
             )}
