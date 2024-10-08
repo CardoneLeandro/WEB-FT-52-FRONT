@@ -26,7 +26,7 @@ interface AdminListComponentProps {
   type: ItemType;
   items: Item[];
   onToggleAction: (item: Item) => void;
-  getToggleLabel: (status: string) => string;
+  onToggleHighlight: (item: Item) => void;
   onUpdateEvent?: (updatedEvent: Item) => void;
 }
 
@@ -34,7 +34,7 @@ export default function AdminListComponent({
   type,
   items,
   onToggleAction,
-  getToggleLabel,
+  onToggleHighlight,
   onUpdateEvent,
 }: AdminListComponentProps) {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
@@ -59,6 +59,16 @@ export default function AdminListComponent({
       setSelectedItem({
         ...selectedItem,
         status: selectedItem.status === 'banned' ? 'active' : 'banned',
+      });
+    }
+  };
+
+  const handleToggleHighlight = () => {
+    if (selectedItem) {
+      onToggleHighlight(selectedItem);
+      setSelectedItem({
+        ...selectedItem,
+        highlight: !selectedItem.highlight,
       });
     }
   };
@@ -164,10 +174,15 @@ export default function AdminListComponent({
               </div>
               <div className="flex space-x-2">
                 <Button onClick={handleToggleAction}>
-                  {getToggleLabel(selectedItem.status)}
+                  {selectedItem.status === 'banned' ? 'Activar' : 'Desactivar'}
                 </Button>
                 {type === 'event' && (
-                  <Button onClick={handleEditEvent}>Editar</Button>
+                  <>
+                    <Button onClick={handleEditEvent}>Editar</Button>
+                    <Button onClick={handleToggleHighlight}>
+                      {selectedItem.highlight ? 'No destacar' : 'Destacar'}
+                    </Button>
+                  </>
                 )}
               </div>
             </div>

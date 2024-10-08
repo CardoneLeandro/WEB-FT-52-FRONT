@@ -20,7 +20,7 @@ interface Event {
 }
 
 const EventDetailPage = ({ params }: { params: { id: string } }) => {
-  const [event, setEvent] = useState<Event | null>(null);
+  const [event, setEvent] = useState<Event | null>();
 
   useEffect(() => {
     const fetchEvent = async () => {

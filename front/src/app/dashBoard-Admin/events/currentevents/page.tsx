@@ -55,20 +55,18 @@ export default function EventsPage() {
     );
   };
 
-  const getToggleLabel = (isActive: boolean) =>
-    isActive ? 'No destacar' : 'Destacar';
-
   const handleToggleHighlight = async (event: Item) => {
     try {
       const response = await fetch(
         `http://localhost:3003/auth/events/highlight/${event.id}`,
         {
-          method: 'POST',
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            highlight: !event.highlight, // Cambia el estado de highlight
+            highlight: !event.highlight,
           }),
         },
       );
@@ -79,7 +77,6 @@ export default function EventsPage() {
 
       const updatedEventData = await response.json();
 
-      // Actualiza el estado de eventos
       setEvents((prevEvents) =>
         prevEvents.map((e) =>
           e.id === event.id
@@ -93,14 +90,6 @@ export default function EventsPage() {
   };
 
   const handleUpdateEvent = async (updatedEvent: Item) => {
-    console.log("Esto es lo que envio", {
-      title: updatedEvent.title,
-      description: updatedEvent.description,
-      eventDate: updatedEvent.eventDate,
-      eventLocation: updatedEvent.eventLocation,
-      price: updatedEvent.price,
-      stock: updatedEvent.stock,
-    })
     try {
       const response = await fetch(
         `http://localhost:3003/auth/events/edit/${updatedEvent.id}`,
@@ -127,7 +116,6 @@ export default function EventsPage() {
       }
 
       const updatedEventData = await response.json();
-      console.log(updatedEventData);
       setEvents(
         events.map((event) =>
           event.id === updatedEvent.id
@@ -173,9 +161,10 @@ export default function EventsPage() {
                   eventAddress: event.eventAddress,
                   price: event.price,
                   stock: event.stock,
+                  status: event.status
                 }))}
                 onToggleAction={handleToggleAction}
-                getToggleLabel={getToggleLabel}
+                onToggleHighlight={handleToggleHighlight}
                 onUpdateEvent={handleUpdateEvent}
               />
             )}

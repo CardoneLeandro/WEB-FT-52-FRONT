@@ -89,11 +89,13 @@ function InputEventAd({
 
         alert(`Evento creado exitosamente. Ver en Google Maps: ${googleMapsLink}`);
       } else {
+        console.log("!!!!!!!!!!!",eventData);
         toast.error('Error al crear el evento', {
           position: 'bottom-center',
         });
       }
     } catch (error) {
+      
       toast.error('Ha ocurrido un error al crear el evento', {
         position: 'bottom-center',
       });

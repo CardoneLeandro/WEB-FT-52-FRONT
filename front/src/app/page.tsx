@@ -6,14 +6,6 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -24,8 +16,8 @@ import { useInView } from 'react-intersection-observer';
 import { useAnimation } from 'framer-motion';
 import EventsList from '../components/events/eventsList';
 import FeaturedEventCard from '../components/events/featuredEventCard';
-import { CalendarIcon, MapPinIcon, ClockIcon, ImageIcon } from 'lucide-react';
-import Image from 'next/image';
+import { CalendarIcon } from 'lucide-react';
+import HighlightEvent from '@/components/events/eventsHighLight';
 
 const featuredEvents = [
   {
@@ -48,46 +40,62 @@ const featuredEvents = [
       'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
   },
   {
-    title: 'Desert Destinations',
-    description: "It's the desert you've always dreamed of",
+    title: 'Mountain Retreats',
+    description: 'Escape to serene mountain getaways',
     imgSrc:
       'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
   },
   {
-    title: 'Desert Destinations',
-    description: "It's the desert you've always dreamed of",
+    title: 'City Adventures',
+    description: 'Explore vibrant urban landscapes',
     imgSrc:
       'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
   },
   {
-    title: 'Desert Destinations',
-    description: "It's the desert you've always dreamed of",
+    title: 'Tropical Paradise',
+    description: 'Discover exotic tropical destinations',
     imgSrc:
       'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
   },
   {
-    title: 'Desert Destinations',
-    description: "It's the desert you've always dreamed of",
+    title: 'Historical Tours',
+    description: 'Journey through time with historical destinations',
     imgSrc:
       'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
   },
 ];
 
+interface EventCardProps {
+  id: string;
+  highlight: boolean;
+  
+  status: string;
+  title: string;
+  eventDate: Date;
+  eventLocation: string; 
+  eventAddress: string;
+  description: string;
+  price: string;
+  stock: string;
+  images: string[];
+}
+
 export default function Home({ initialEvents }) {
   const redirect = useRouter();
   const [events, setEvents] = useState([]);
   const { token, userSession } = useAuth();
+  const [highlightedEvents, setHighlightedEvents] = useState<EventCardProps[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
-  const [showMap, setShowMap] = useState(false);
 
   const controls = useAnimation();
+
   const getEvents = async () => {
     try {
       const response = await fetch('http://localhost:3003/events');
-
       if (!response.ok) {
         throw new Error('Error fetching events');
       }
@@ -97,6 +105,35 @@ export default function Home({ initialEvents }) {
       console.error('Error fetching events:', error);
     }
   };
+
+  useEffect(() => {
+    const getHighlightedEvents = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch('http://localhost:3003/events/highlightactive');
+        if (!response.ok) {
+          throw new Error('Error fetching highlighted events');
+        }
+        const data = await response.json();
+        console.log("Fetched data from API:", data);
+        
+        if (Array.isArray(data)) {
+          setHighlightedEvents(data);
+          
+        } else {
+          console.error("Unexpected data structure:", data);
+          setHighlightedEvents(null);
+        }
+      } catch (error) {
+        console.error("Error fetching highlighted events:", error);
+        setHighlightedEvents(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getHighlightedEvents();
+  }, []);
 
   useEffect(() => {
     if (userSession?.status === 'pending') {
@@ -115,11 +152,83 @@ export default function Home({ initialEvents }) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">
-          Evento Destacado
-        </h2>
-        <Card className="bg-white text-gray-800 shadow-lg max-w-4xl mx-auto overflow-hidden">
+    <section className="mb-12">
+      <h2 className="text-3xl font-bold mb-6 text-gray-800">
+        Eventos Destacados
+      </h2>
+      <Carousel
+  opts={{
+    align: 'start',
+    loop: true,
+    
+  }}
+  className="w-full max-w-5xl mx-auto"
+>
+  <CarouselContent>
+    {isLoading ? (
+      <p>Cargando eventos destacados...</p>
+    ) : highlightedEvents && highlightedEvents.length > 0 ? (
+      highlightedEvents.map((event) => (
+        <CarouselItem key={event.id}>
+          <HighlightEvent {...event} />
+        </CarouselItem>
+      ))
+    ) : (
+      <p>No hay eventos destacados disponibles.</p>
+    )}
+  </CarouselContent>
+  <CarouselPrevious />
+  <CarouselNext />
+</Carousel>
+    </section>
+  
+    <section className="mb-12">
+      <h2 className="text-3xl font-bold mb-6 text-gray-800">
+        Próximos Eventos
+      </h2>
+      <div className="flex flex-row mx-auto p-2">
+        <EventsList initialEvents={initialEvents} showLimitedEvents={true} />
+      </div>
+      <div className="flex justify-center mt-6">
+        <Link href="/eventsPage" passHref>
+          <Button variant="outline" className="flex items-center">
+            Ver todos los eventos
+            <CalendarIcon className="ml-2 h-4 w-4" />
+          </Button>
+        </Link>
+      </div>
+    </section>
+  
+    <section ref={ref}>
+      <Carousel
+        opts={{
+          align: 'start',
+          loop: true,
+        }}
+        className="w-full max-w-5xl mx-auto"
+      >
+        <CarouselContent>
+          {featuredEvents.map((event, index) => (
+            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+              <div className="p-1">
+                <FeaturedEventCard
+                  imgSrc={event.imgSrc}
+                  title={event.title}
+                  description={event.description}
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+    </section>
+  </div>
+  )}
+
+/*
+ <Card className="bg-white text-gray-800 shadow-lg max-w-4xl mx-auto overflow-hidden">
           <div className="md:flex">
             <div className="md:w-1/2">
               <div className="relative h-64 md:h-full">
@@ -179,53 +288,5 @@ export default function Home({ initialEvents }) {
             </div>
           </div>
         </Card>
-      </section>
 
-      <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">
-          Próximos Eventos
-        </h2>
-        <div className="flex flex-row mx-auto p-2">
-          <EventsList initialEvents={initialEvents} showLimitedEvents={true} />
-        </div>
-        <div className="flex justify-center mt-6">
-          <Link href="/eventsPage" passHref>
-            <Button variant="outline" className="flex items-center">
-              Ver todos los eventos
-              <CalendarIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-      </section>
-
-      <section ref={ref}>
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">
-          Momentos Destacados
-        </h2>
-        <Carousel
-          opts={{
-            align: 'start',
-            loop: true,
-          }}
-          className="w-full max-w-5xl mx-auto"
-        >
-          <CarouselContent>
-            {featuredEvents.map((event, index) => (
-              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                <div className="p-1">
-                  <FeaturedEventCard
-                    imgSrc={event.imgSrc}
-                    title={event.title}
-                    description={event.description}
-                  />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-      </section>
-    </div>
-  );
-}
+*/
