@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Input } from '@/components/ui/input';
+import GoogleMaps from '../GoogleMaps';
 
 export type ItemType = 'event' | 'user' | 'donation';
 
@@ -9,8 +11,12 @@ export interface Item {
   id: string;
   title: string;
   description: string;
-  status: string;
-  isActive: boolean;
+  status: string; // 'active' | 'partialactive' | 'pending' | 'banned' | 'inactive' | 'rejected';
+  // user => 'active' | 'partialactive' | 'pending' | 'banned' | 'inactive'
+  // donations => 'pending' | 'active' | 'rejected'
+  // events =>  'active' | 'inactive' 
+  role?: string; // 'user' | 'admin' | 'superadmin'
+  highlight: boolean; // true | false
   avatarUrl?: string;
   image?: string;
   eventDate?: string;
@@ -18,10 +24,12 @@ export interface Item {
   eventLocation?: string;
   eventAddress?: string;
   stock?: string;
-  highlight: boolean;
-  isAdmin: boolean;
   amount?: number;
   email?: string;
+  // ===== BORRAR =====
+  isActive: boolean;
+  isAdmin: boolean;
+  // ===== BORRAR =====
 }
 
 interface AdminListComponentProps {
@@ -34,7 +42,9 @@ interface AdminListComponentProps {
   onUpdateEvent?: (updatedEvent: Item) => void;
   onConfirmPayment?: (id: string) => void;
   onCancelPayment?: (id: string) => void;
+  onToggleHighlight: (item: Item) => void;
 }
+
 
 export default function AdminListComponent({
   type,
@@ -46,8 +56,10 @@ export default function AdminListComponent({
   onUpdateEvent,
   onConfirmPayment,
   onCancelPayment,
+  onToggleHighlight,
 }: AdminListComponentProps) {
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [editingEvent, setEditingEvent] = useState<Item | null>(null);
 
   const getTitle = (): string => {
     switch (type) {
@@ -65,6 +77,16 @@ export default function AdminListComponent({
   const handleToggleAction = () => {
     if (selectedItem) {
       onToggleAction(selectedItem);
+    }
+  };
+
+  const handleToggleHighlight = () => {
+    if (selectedItem) {
+      onToggleHighlight(selectedItem);
+      setSelectedItem({
+        ...selectedItem,
+        highlight: !selectedItem.highlight,
+      });
     }
   };
 
@@ -189,6 +211,101 @@ export default function AdminListComponent({
                       {getAdminToggleLabel(selectedItem.isAdmin)}
                     </Button>
                   )}
+                <Button onClick={handleToggleAction}>
+                  {selectedItem.status === 'banned' ? 'Activar' : 'Desactivar'}
+                </Button>
+                {type === 'event' && (
+                  <>
+                    <Button onClick={}>Editar</Button>
+                    <Button onClick={handleToggleHighlight}>
+                      {selectedItem.highlight ? 'No destacar' : 'Destacar'}
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+
+          {editingEvent && (
+            <div className="space-y-4 p-6">
+              <Input
+                value={editingEvent.title}
+                onChange={(e) =>
+                  setEditingEvent({ ...editingEvent, title: e.target.value })
+                }
+                placeholder="Título"
+              />
+              <Input
+                value={editingEvent.description}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    description: e.target.value,
+                  })
+                }
+                placeholder="Descripción"
+              />
+              <Input
+                value={editingEvent.eventDate || ''}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    eventDate: e.target.value,
+                  })
+                }
+                placeholder="Fecha del evento"
+                type="date"
+              />
+              <Input
+                value={editingEvent.stock}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    stock: e.target.value,
+                  })
+                }
+                placeholder="Capacidad de asistentes"
+                type="number"
+              />
+              <Input
+                value={editingEvent.price}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    price: e.target.value,
+                  })
+                }
+                placeholder="Costo del evento"
+                type="number"
+              />
+              <Input
+                value={editingEvent.eventAddress}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    eventAddress: e.target.value,
+                  })
+                }
+                placeholder="Dirección del evento"
+              />
+              <Input
+                value={editingEvent.eventLocation || ''}
+                onChange={(e) =>
+                  setEditingEvent({
+                    ...editingEvent,
+                    eventLocation: e.target.value,
+                  })
+                }
+                placeholder="Link de ubicación en Google"
+              />
+              <div className="mt-4">
+                <GoogleMaps setEventLocation={handleLocationChange} />
+              </div>
+              <div className="flex space-x-2 mt-4">
+                <Button onClick={handleUpdateEvent}>Guardar cambios</Button>
+                <Button variant="outline" onClick={handleCancelEdit}>
+                  Cancelar edición
+                </Button>
               </div>
             </div>
           )}
