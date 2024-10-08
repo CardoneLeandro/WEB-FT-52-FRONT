@@ -155,7 +155,6 @@ export default function AdminDonaciones() {
                 description: `Monto: $${donation.amount}`,
                 status: donation.status,
                 isActive: donation.status === 'accepted',
-                amount: donation.amount,
                 highlight: false,
                 isAdmin: false,
               }))}
