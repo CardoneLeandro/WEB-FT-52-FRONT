@@ -14,13 +14,14 @@ import {
 } from '@/components/ui/carousel';
 import { useInView } from 'react-intersection-observer';
 import { useAnimation } from 'framer-motion';
-import EventsList from '../components/events/eventsList';
+
 import FeaturedEventCard from '../components/events/featuredEventCard';
 import { CalendarIcon, MapPinIcon, ClockIcon, ImageIcon } from 'lucide-react';
 import HighlightEvent from '@/components/events/eventsHighLight';
-import Image from 'next/image';
-import { set } from 'date-fns';
+// import Image from 'next/image';
+// import { set } from 'date-fns';
 import { Event } from '@/context/AuthContext';
+import NearbyEvents from '@/components/nearbyEvents';
 
 export default function Home() {
   const redirect = useRouter();
@@ -30,21 +31,15 @@ export default function Home() {
     threshold: 0.1,
   });
   const today = new Date();
-  const [showMap, setShowMap] = useState(false);
+  // const [showMap, setShowMap] = useState(false);
   const controls = useAnimation();
 
   //RENDERIZAR LAS CARD DESDE ESTOS 3 ESTADOS
   const [events, setEvents] = useState<Event[]>([]);
   const [highlight, setHighlight] = useState<Event[]>([]);
   const [moments, setMoments] = useState<Event[]>([]);
-  
-  //! UTILIZAR "INCOMMINGEVENTS" PARA RENDERIZAR LAS 3 TARJETAS
-  const incommingEvents = 
-  events
-  .filter(event => new Date(event.eventDate) >= today)
-  .sort((a, b) => a.eventDate.getTime() - b.eventDate.getTime())
-  .slice(0, 3);
 
+  //! UTILIZAR "INCOMMINGEVENTS" PARA RENDERIZAR LAS 3 TARJETAS
 
   useEffect(() => {
     if (userSession?.status === 'pending') {
@@ -66,14 +61,24 @@ export default function Home() {
         setMoments((prevMoments) => [...prevMoments, event]);
       }
     });
+    const incommingEvents = events
+      .filter((event) => new Date(event.eventDate) >= today)
+      .map((event) => ({ ...event, eventDate: new Date(event.eventDate) }))
+      .sort(
+        (a: Event, b: Event) => a.eventDate.getTime() - b.eventDate.getTime(),
+      )
+      .slice(0, 3);
+    setIncommingEvents(incommingEvents);
   }, [token, userSession, allEvents, redirect]);
-
+  const [incommingEvents, setIncommingEvents] = useState([]);
   useEffect(() => {
     if (inView) {
       controls.start({ opacity: 1, y: 0 });
     }
   }, [controls, inView]);
-
+  console.log('allEvents@@@@@@@@@@@@@@@@q', events);
+  console.log('allEvents++++++++++++', allEvents);
+  console.log('incommingEvents!!!!!!!!!!!!!!!!!!', incommingEvents);
   return (
     <div className="container mx-auto px-4 py-8">
       <section className="mb-12">
@@ -107,10 +112,8 @@ export default function Home() {
         <h2 className="text-3xl font-bold mb-6 text-gray-800">
           Próximos Eventos
         </h2>
-        <div className="flex flex-row mx-auto p-2">
-          {/* <EventsList initialEvents={filteredEvents} showLimitedEvents={true} /> */}
-          {/* CREAR UN NUEVO COMPONENTE QUE RENDERICE LOS 3 EVENTOS MAS CERCANDOS A LA FECHA ACTUAL */}
-
+        <div className="flex flex-row mx-auto p-2 justify-center">
+          <NearbyEvents setEvents={incommingEvents} />
         </div>
         <div className="flex justify-center mt-6">
           <Link href="/eventsPage" passHref>
@@ -134,8 +137,7 @@ export default function Home() {
           className="w-full max-w-5xl mx-auto"
         >
           <CarouselContent>
-            {moments &&
-            moments.length > 0 ? (
+            {moments && moments.length > 0 ? (
               moments.map((event) => (
                 <CarouselItem
                   key={event.id}

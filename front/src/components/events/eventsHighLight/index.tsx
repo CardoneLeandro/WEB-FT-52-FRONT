@@ -91,7 +91,7 @@ const HighlightEvent: React.FC<Event> = ({
   }, [eventLocation, eventAddress]);
 
   return (
-    <Card className="bg-white text-gray-800 shadow-lg max-w-4xl mx-auto overflow-hidden">
+    <Card className=" text-gray-800 shadow-xl max-w-4xl mx-auto overflow-hidden">
       <div className="md:flex h-[400px]">
         <div className="md:w-1/2 h-full">
           <div className="relative w-full h-full">
@@ -152,9 +152,7 @@ const HighlightEvent: React.FC<Event> = ({
             <p className="text-gray-700">{description}</p>
           </CardContent>
           <CardFooter className="flex-grow-0">
-            <Button className="bg-blue-500 text-white hover:bg-blue-600 transition-colors w-full">
-              Asistiré
-            </Button>
+            <Button className="w-full">Asistiré</Button>
           </CardFooter>
         </div>
       </div>
