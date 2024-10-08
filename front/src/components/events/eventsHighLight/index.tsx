@@ -91,57 +91,67 @@ const HighlightEvent: React.FC<EventHighlight> = ({
 
   return (
     <Card className="bg-white text-gray-800 shadow-lg max-w-4xl mx-auto overflow-hidden">
-      <div className="md:flex">
-        <div className="md:w-1/2">
-          <div className="relative h-64 md:h-full">
+      <div className="md:flex h-[400px]">
+        <div className="md:w-1/2 h-full">
+          <div className="relative w-full h-full">
             {images && images.length > 0 ? (
               <Image
                 src={images[0]}
                 alt={title}
-                layout="fill"
-                objectFit="cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             ) : (
               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                 <ImageIcon className="w-12 h-12 text-gray-400" />
               </div>
             )}
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center"></div>
+            <div className="absolute inset-0 bg-black bg-opacity-40"></div>
           </div>
         </div>
-        <div className="md:w-1/2">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-gray-900">
+        <div className="md:w-1/2 flex flex-col h-full">
+          {' '}
+          {/* Full height for content */}
+          <CardHeader className="flex-grow-0">
+            <CardTitle className="text-2xl font-bold text-gray-900 line-clamp-2">
               {title}
             </CardTitle>
             <CardDescription className="text-gray-600">
               <div className="flex items-center mt-2">
-                <CalendarIcon className="mr-2 text-blue-500" />
-                <h1>Fecha: </h1>
-                <p>{new Date(eventDate).toLocaleDateString()}</p>
+                <CalendarIcon className="mr-2 text-blue-500 flex-shrink-0" />
+                <span className="font-semibold mr-1">Fecha:</span>
+                <span>{new Date(eventDate).toLocaleDateString()}</span>
               </div>
               <div className="flex items-center mt-2">
-                <a href={eventLocation}>
-                  <MapPinIcon className="mr-2 text-blue-500" />
+                <span className="font-semibold mr-1">Ver en GoogleMaps</span>
+                <a
+                  href={googleMapsLink || eventLocation}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MapPinIcon className="mr-2 text-blue-500 flex-shrink-0" />
                 </a>
-                <h1>Ubicación: {eventAddress} </h1>
+
+                <span className="line-clamp-1">{eventAddress}</span>
               </div>
               <div className="flex items-center mt-2">
-                <ClockIcon className="mr-2 text-blue-500" />
-                <h1>
+                <ClockIcon className="mr-2 text-blue-500 flex-shrink-0" />
+                <span className="font-semibold mr-1">Hora:</span>
+                <span>
                   {new Date(eventDate).toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit',
                   })}
-                </h1>
+                </span>
               </div>
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="text-gray-700">{description}</div>
+          <CardContent className="flex-grow overflow-auto">
+            <p className="text-gray-700">{description}</p>
           </CardContent>
-          <CardFooter>
-            <Button className="bg-blue-500 text-white hover:bg-blue-600 transition-colors">
+          <CardFooter className="flex-grow-0">
+            <Button className="bg-blue-500 text-white hover:bg-blue-600 transition-colors w-full">
               Asistiré
             </Button>
           </CardFooter>
