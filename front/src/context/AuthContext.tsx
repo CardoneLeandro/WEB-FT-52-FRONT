@@ -7,7 +7,7 @@ const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 interface AuthContextProps {
   children: React.ReactNode;
 }
-interface AdminDonation{
+interface AdminDonation {
   id: string;
   title: string;
   amount: number;
@@ -87,7 +87,7 @@ const AuthContext = createContext<AuthContextType>({
   setAllEvents: () => {},
   setEvent: () => {},
   setAdminEvents: () => {},
-  setAdminEvent:() => {},
+  setAdminEvent: () => {},
   logout: () => {},
 });
 export const useAuth = () => useContext(AuthContext);
@@ -127,15 +127,19 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     }
     const getEvents = async () => {
       try {
-        const res = await fetch(`http://localhost:${port}/RUTA QUE RETONE TODOS LOS ACTIVOS Y LOS INACTIVOS + HL`,);
-      if(res.ok){
-        const data = await res.json();
-        setAllEvents(data);
-      }else {setAllEvents(null)}
+        const res = await fetch(
+          `http://localhost:${port}/events/getactiveandinactivehighlight`,
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setAllEvents(data);
+        } else {
+          setAllEvents(null);
+        }
       } catch (error) {
         console.error('Error al obtener los eventos:', error);
       }
-    }
+    };
     getEvents();
   }, []);
 
@@ -206,9 +210,11 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const handleEvent = (updatedEvent: Event) => {
     setAllEvents((prevEvents) => {
       if (!prevEvents) return null;
-      return prevEvents.map((event) => (event.id === updatedEvent.id ? updatedEvent : event));
+      return prevEvents.map((event) =>
+        event.id === updatedEvent.id ? updatedEvent : event,
+      );
     });
-  }
+  };
 
   const handleAdminEvents = (allEvents: Event[] | null) => {
     setAdminEvents(allEvents);
@@ -231,8 +237,6 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo al cerrar sesión
   };
 
-
-
   return (
     <AuthContext.Provider
       value={{
@@ -251,8 +255,8 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         setEvent: handleEvent,
         setAllEvents: handleAllEvents,
         adminEvents,
-        setAdminEvents:handleAdminEvents,
-        setAdminEvent:handleAdminEvent,
+        setAdminEvents: handleAdminEvents,
+        setAdminEvent: handleAdminEvent,
       }}
     >
       {children}
