@@ -16,63 +16,16 @@ import { useInView } from 'react-intersection-observer';
 import { useAnimation } from 'framer-motion';
 import EventsList from '../components/events/eventsList';
 import FeaturedEventCard from '../components/events/featuredEventCard';
-import { CalendarIcon } from 'lucide-react';
 import HighlightEvent from '@/components/events/eventsHighLight';
-
-const featuredEvents = [
-  {
-    title: '50 años',
-    description:
-      'Cumple 50 años Maranatha, el movimiento peregrino que marcó a muchas generaciones de mendocinos',
-    imgSrc:
-      'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
-  },
-  {
-    title: 'To The Beach',
-    description: 'Plan your next beach trip with these fabulous destinations',
-    imgSrc:
-      'https://imgs.search.brave.com/dyfOQ7_ZbLvAx4voghAK5dDrv0PWPne7jMiCyoROgKE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvWkZUQUk2VzUz/VkNTNUI3N05BNVJC/UlpCSVkuanBnP2F1/dGg9ZjA2NjVhM2Uw/OGM1MzcxNThhZDI2/MDU2MjQ0OWMyNDI3/YjE5NTVhNmU3OGZk/NGNjMjQ0YTM2Nzlm/MjJiZjkyYyZ3aWR0/aD0xMjgwJmhlaWdo/dD03MjA',
-  },
-  {
-    title: 'Desert Destinations',
-    description: "It's the desert you've always dreamed of",
-    imgSrc:
-      'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
-  },
-  {
-    title: 'Mountain Retreats',
-    description: 'Escape to serene mountain getaways',
-    imgSrc:
-      'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
-  },
-  {
-    title: 'City Adventures',
-    description: 'Explore vibrant urban landscapes',
-    imgSrc:
-      'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
-  },
-  {
-    title: 'Tropical Paradise',
-    description: 'Discover exotic tropical destinations',
-    imgSrc:
-      'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
-  },
-  {
-    title: 'Historical Tours',
-    description: 'Journey through time with historical destinations',
-    imgSrc:
-      'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
-  },
-];
+import { CalendarIcon } from 'lucide-react';
 
 interface EventCardProps {
   id: string;
   highlight: boolean;
-  
   status: string;
   title: string;
   eventDate: Date;
-  eventLocation: string; 
+  eventLocation: string;
   eventAddress: string;
   description: string;
   price: string;
@@ -84,7 +37,12 @@ export default function Home({ initialEvents }) {
   const redirect = useRouter();
   const [events, setEvents] = useState([]);
   const { token, userSession } = useAuth();
-  const [highlightedEvents, setHighlightedEvents] = useState<EventCardProps[] | null>(null);
+  const [highlightedEvents, setHighlightedEvents] = useState<
+    EventCardProps[] | null
+  >(null);
+  const [inactiveHighlightedEvents, setInactiveHighlightedEvents] = useState<
+    EventCardProps[] | null
+  >(null);
   const [isLoading, setIsLoading] = useState(true);
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -110,22 +68,23 @@ export default function Home({ initialEvents }) {
     const getHighlightedEvents = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch('http://localhost:3003/events/highlightactive');
+        const response = await fetch(
+          'http://localhost:3003/events/highlightactive',
+        );
         if (!response.ok) {
           throw new Error('Error fetching highlighted events');
         }
         const data = await response.json();
-        console.log("Fetched data from API:", data);
-        
+        console.log('Fetched data from API:', data);
+
         if (Array.isArray(data)) {
           setHighlightedEvents(data);
-          
         } else {
-          console.error("Unexpected data structure:", data);
+          console.error('Unexpected data structure:', data);
           setHighlightedEvents(null);
         }
       } catch (error) {
-        console.error("Error fetching highlighted events:", error);
+        console.error('Error fetching highlighted events:', error);
         setHighlightedEvents(null);
       } finally {
         setIsLoading(false);
@@ -133,6 +92,34 @@ export default function Home({ initialEvents }) {
     };
 
     getHighlightedEvents();
+  }, []);
+
+  useEffect(() => {
+    const getInactiveHighlightedEvents = async () => {
+      try {
+        const response = await fetch(
+          'http://localhost:3003/events/highlightinactive',
+        );
+        if (!response.ok) {
+          throw new Error('Error fetching inactive highlighted events');
+        }
+        const data = await response.json();
+        console.log('Fetched inactive highlighted events:', data);
+
+        if (Array.isArray(data)) {
+          setInactiveHighlightedEvents(data);
+          console.log('Inactive highlighted events', data);
+        } else {
+          console.error('Unexpected data structure for inactive events:', data);
+          setInactiveHighlightedEvents(null);
+        }
+      } catch (error) {
+        console.error('Error fetching inactive highlighted events:', error);
+        setInactiveHighlightedEvents(null);
+      }
+    };
+
+    getInactiveHighlightedEvents();
   }, []);
 
   useEffect(() => {
@@ -152,141 +139,89 @@ export default function Home({ initialEvents }) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-    <section className="mb-12">
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">
-        Eventos Destacados
-      </h2>
-      <Carousel
-  opts={{
-    align: 'start',
-    loop: true,
-    
-  }}
-  className="w-full max-w-5xl mx-auto"
->
-  <CarouselContent>
-    {isLoading ? (
-      <p>Cargando eventos destacados...</p>
-    ) : highlightedEvents && highlightedEvents.length > 0 ? (
-      highlightedEvents.map((event) => (
-        <CarouselItem key={event.id}>
-          <HighlightEvent {...event} />
-        </CarouselItem>
-      ))
-    ) : (
-      <p>No hay eventos destacados disponibles.</p>
-    )}
-  </CarouselContent>
-  <CarouselPrevious />
-  <CarouselNext />
-</Carousel>
-    </section>
-  
-    <section className="mb-12">
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">
-        Próximos Eventos
-      </h2>
-      <div className="flex flex-row mx-auto p-2">
-        <EventsList initialEvents={initialEvents} showLimitedEvents={true} />
-      </div>
-      <div className="flex justify-center mt-6">
-        <Link href="/eventsPage" passHref>
-          <Button variant="outline" className="flex items-center">
-            Ver todos los eventos
-            <CalendarIcon className="ml-2 h-4 w-4" />
-          </Button>
-        </Link>
-      </div>
-    </section>
-  
-    <section ref={ref}>
-      <Carousel
-        opts={{
-          align: 'start',
-          loop: true,
-        }}
-        className="w-full max-w-5xl mx-auto"
-      >
-        <CarouselContent>
-          {featuredEvents.map((event, index) => (
-            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-              <div className="p-1">
-                <FeaturedEventCard
-                  imgSrc={event.imgSrc}
-                  title={event.title}
-                  description={event.description}
-                />
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
-    </section>
-  </div>
-  )}
+      <section className="mb-12">
+        <h2 className="text-3xl font-bold mb-6 text-gray-800">
+          Eventos Destacados
+        </h2>
+        <Carousel
+          opts={{
+            align: 'start',
+            loop: true,
+          }}
+          className="w-full max-w-5xl mx-auto"
+        >
+          <CarouselContent>
+            {isLoading ? (
+              <p>Cargando eventos destacados...</p>
+            ) : highlightedEvents && highlightedEvents.length > 0 ? (
+              highlightedEvents.map((event) => (
+                <CarouselItem key={event.id}>
+                  <HighlightEvent {...event} />
+                </CarouselItem>
+              ))
+            ) : (
+              <p>No hay eventos destacados disponibles.</p>
+            )}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      </section>
 
-/*
- <Card className="bg-white text-gray-800 shadow-lg max-w-4xl mx-auto overflow-hidden">
-          <div className="md:flex">
-            <div className="md:w-1/2">
-              <div className="relative h-64 md:h-full">
-                <Image
-                  src="/placeholder.svg?height=400&width=400"
-                  alt="Concierto de Rock en el Parque"
-                  layout="fill"
-                  objectFit="cover"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                  <Button
-                    size="sm"
-                    className="absolute top-4 right-4"
-                    onClick={() => setShowMap(!showMap)}
-                  >
-                    {showMap ? (
-                      <ImageIcon className="mr-2" />
-                    ) : (
-                      <MapPinIcon className="mr-2" />
-                    )}
-                    {showMap ? 'Ver Imagen' : 'Ver Mapa'}
-                  </Button>
-                </div>
-              </div>
-            </div>
-            <div className="md:w-1/2">
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold text-gray-900">
-                  Concierto de Rock en el Parque
-                </CardTitle>
-                <CardDescription className="text-gray-600">
-                  <div className="flex items-center mt-2">
-                    <CalendarIcon className="mr-2 text-blue-500" />
-                    <h1>15 de Julio, 2024</h1>
-                  </div>
-                  <div className="flex items-center mt-2">
-                    <MapPinIcon className="mr-2 text-blue-500" />
-                    <h1>Parque Central</h1>
-                  </div>
-                  <div className="flex items-center mt-2">
-                    <ClockIcon className="mr-2 text-blue-500" />
-                    <h1>20:00 - 23:00</h1>
-                  </div>
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-gray-700">
-                  Disfruta de una noche llena de rock con las mejores bandas
-                  locales. Habrá comida, bebidas y mucha diversión.
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button className="bg-blue-500 text-white hover:bg-blue-600 transition-colors">
-                  Asistiré
-                </Button>
-              </CardFooter>
-            </div>
-          </div>
-        </Card>
+      <section className="mb-12">
+        <h2 className="text-3xl font-bold mb-6 text-gray-800">
+          Próximos Eventos
+        </h2>
+        <div className="flex flex-row mx-auto p-2">
+          <EventsList initialEvents={initialEvents} showLimitedEvents={true} />
+        </div>
+        <div className="flex justify-center mt-6">
+          <Link href="/eventsPage" passHref>
+            <Button variant="outline" className="flex items-center">
+              Ver todos los eventos
+              <CalendarIcon className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </section>
 
-*/
+      <section ref={ref}>
+        <h2 className="text-3xl font-bold mb-6 text-gray-800">
+          Momentos destacados
+        </h2>
+        <Carousel
+          opts={{
+            align: 'start',
+            loop: true,
+          }}
+          className="w-full max-w-5xl mx-auto"
+        >
+          <CarouselContent>
+            {inactiveHighlightedEvents &&
+            inactiveHighlightedEvents.length > 0 ? (
+              inactiveHighlightedEvents.map((event) => (
+                <CarouselItem
+                  key={event.id}
+                  className="md:basis-1/2 lg:basis-1/3"
+                >
+                  <div className="p-1">
+                    <FeaturedEventCard
+                      id={event.id}
+                      title={event.title}
+                      description={event.description}
+                      images={event.images[0]}
+                    />
+                  </div>
+                </CarouselItem>
+              ))
+            ) : (
+              <p>No hay momentos destacados disponibles.</p>
+            )}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+      </section>
+    </div>
+  );
+}
