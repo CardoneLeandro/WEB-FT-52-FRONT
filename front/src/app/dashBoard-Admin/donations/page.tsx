@@ -3,17 +3,14 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import AdminListComponent, {
-  Item,
-} from '@/components/adminPanel/adminListComponent';
+import AdminListComponent from '@/components/adminPanel/adminListComponent';
 import { useAuth } from '@/context/AuthContext';
 
 interface Donation {
   id: string;
-  nombre: string;
-  email: string;
-  monto: number;
-  estado: 'efectuado' | 'pendiente';
+  title: string;
+  amount: number;
+  status: string;
 }
 
 export default function AdminDonaciones() {
@@ -25,7 +22,9 @@ export default function AdminDonaciones() {
   const [nameFilter, setNameFilter] = useState('');
   const { userSession, token } = useAuth();
 
-  const fetchDonations = async () => {
+  const fetchDonations = async (): Promise<void> => {
+    if (!userSession) return;
+
     try {
       const response = await fetch('http://localhost:3003/donations', {
         headers: {
@@ -36,15 +35,8 @@ export default function AdminDonaciones() {
 
       if (response.ok) {
         const data = await response.json();
-        const allDonations: Donation[] = data.map((donation: any) => ({
-          id: donation.id,
-          nombre: donation.nombre,
-          email: donation.email,
-          monto: donation.monto,
-          estado: donation.estado,
-        }));
-        setDonations(allDonations);
-        setFilteredDonations(allDonations);
+        console.log('Fetched donations:', data);
+        setDonations(data);
       } else {
         console.error('Error fetching donations:', response.statusText);
       }
@@ -54,15 +46,13 @@ export default function AdminDonaciones() {
   };
 
   useEffect(() => {
-    if (userSession) {
-      fetchDonations();
-    }
+    fetchDonations();
   }, [userSession]);
 
-  const handleConfirmPayment = async (item: Item) => {
+  const handleConfirmPayment = async (id: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3003/donations/confirm/${item.id}`,
+        `http://localhost:3003/donations/confirm/${id}`,
         {
           method: 'PATCH',
           headers: {
@@ -73,11 +63,6 @@ export default function AdminDonaciones() {
       );
 
       if (response.ok) {
-        setDonations((prevDonations) =>
-          prevDonations.map((d) =>
-            d.id === item.id ? { ...d, estado: 'efectuado' } : d,
-          ),
-        );
       } else {
         console.error('Error confirming payment:', response.statusText);
       }
@@ -86,10 +71,10 @@ export default function AdminDonaciones() {
     }
   };
 
-  const handleCancelPayment = async (item: Item) => {
+  const handleCancelPayment = async (id: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3003/payments/pay-donation/success`,
+        `http://localhost:3003/payments/pay-donation/success/${id}`,
         {
           method: 'DELETE',
           headers: {
@@ -100,9 +85,6 @@ export default function AdminDonaciones() {
       );
 
       if (response.ok) {
-        setDonations((prevDonations) =>
-          prevDonations.filter((d) => d.id !== item.id),
-        );
       } else {
         console.error('Error canceling payment:', response.statusText);
       }
@@ -115,13 +97,13 @@ export default function AdminDonaciones() {
     const filtered = donations
       .filter((donation) => {
         if (statusFilter === 'efectuado')
-          return donation.estado === 'efectuado';
+          return donation.status === 'efectuado';
         if (statusFilter === 'pendiente')
-          return donation.estado === 'pendiente';
+          return donation.status === 'pendiente';
         return true;
       })
       .filter((donation) =>
-        donation.nombre.toLowerCase().includes(nameFilter.toLowerCase()),
+        donation.title?.toLowerCase().includes(nameFilter.toLowerCase()),
       );
 
     setFilteredDonations(filtered);
@@ -164,15 +146,14 @@ export default function AdminDonaciones() {
             </div>
 
             <AdminListComponent
-              type="donation"
+              type="donation" // Verifica que esté pasando "donation"
               items={filteredDonations.map((donation) => ({
                 id: donation.id,
-                title: donation.nombre,
-                description: `Monto: $${donation.monto}`,
-                status: donation.estado,
-                isActive: donation.estado === 'efectuado',
-                email: donation.email,
-                amount: donation.monto,
+                title: donation.title,
+                description: `Monto: $${donation.amount}`,
+                status: donation.status,
+                isActive: donation.status === 'efectuado',
+                amount: donation.amount,
                 highlight: false,
                 isAdmin: false,
               }))}

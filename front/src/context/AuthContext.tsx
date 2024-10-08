@@ -58,8 +58,12 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   useEffect(() => {
     // Cargar datos del localStorage
     const storedToken = localStorage.getItem('token');
-    const storedSession = JSON.parse(localStorage.getItem('userSession') || 'null');
-    const storedPaymentInfo = JSON.parse(localStorage.getItem('paymentInfo') || 'null');
+    const storedSession = JSON.parse(
+      localStorage.getItem('userSession') || 'null',
+    );
+    const storedPaymentInfo = JSON.parse(
+      localStorage.getItem('paymentInfo') || 'null',
+    );
 
     if (storedToken && storedSession) {
       setSession(storedSession);

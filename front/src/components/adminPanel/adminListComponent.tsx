@@ -32,8 +32,8 @@ interface AdminListComponentProps {
   getToggleLabel: (status: string) => string;
   getAdminToggleLabel?: (isAdmin: boolean) => string;
   onUpdateEvent?: (updatedEvent: Item) => void;
-  onConfirmPayment?: (item: Item) => void;
-  onCancelPayment?: (item: Item) => void;
+  onConfirmPayment?: (id: string) => void;
+  onCancelPayment?: (id: string) => void;
 }
 
 export default function AdminListComponent({
@@ -76,13 +76,13 @@ export default function AdminListComponent({
 
   const handleConfirmPayment = () => {
     if (selectedItem && onConfirmPayment) {
-      onConfirmPayment(selectedItem);
+      onConfirmPayment(selectedItem.id);
     }
   };
 
   const handleCancelPayment = () => {
     if (selectedItem && onCancelPayment) {
-      onCancelPayment(selectedItem);
+      onCancelPayment(selectedItem.id);
     }
   };
 
