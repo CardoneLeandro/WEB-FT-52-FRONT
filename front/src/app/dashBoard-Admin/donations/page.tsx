@@ -1,211 +1,169 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Download, Search } from 'lucide-react';
+import AdminListComponent from '@/components/adminPanel/adminListComponent';
+import { useAuth } from '@/context/AuthContext';
 
-const donaciones = [
-  {
-    id: 1,
-    nombre: 'Juan Pérez',
-    email: 'juan@example.com',
-    monto: 100,
-    estado: 'efectuado',
-  },
-  {
-    id: 2,
-    nombre: 'María García',
-    email: 'maria@example.com',
-    monto: 250,
-    estado: 'pendiente',
-  },
-  {
-    id: 3,
-    nombre: 'Carlos Rodríguez',
-    email: 'carlos@example.com',
-    monto: 50,
-    estado: 'efectuado',
-  },
-  {
-    id: 4,
-    nombre: 'Ana Martínez',
-    email: 'ana@example.com',
-    monto: 75,
-    estado: 'pendiente',
-  },
-  {
-    id: 5,
-    nombre: 'Luis Sánchez',
-    email: 'luis@example.com',
-    monto: 200,
-    estado: 'efectuado',
-  },
-  {
-    id: 6,
-    nombre: 'Elena Fernández',
-    email: 'elena@example.com',
-    monto: 150,
-    estado: 'pendiente',
-  },
-  {
-    id: 7,
-    nombre: 'Pedro Gómez',
-    email: 'pedro@example.com',
-    monto: 80,
-    estado: 'efectuado',
-  },
-  {
-    id: 8,
-    nombre: 'Laura Torres',
-    email: 'laura@example.com',
-    monto: 120,
-    estado: 'efectuado',
-  },
-  {
-    id: 9,
-    nombre: 'Miguel Ángel Ruiz',
-    email: 'miguel@example.com',
-    monto: 300,
-    estado: 'pendiente',
-  },
-  {
-    id: 10,
-    nombre: 'Isabel López',
-    email: 'isabel@example.com',
-    monto: 90,
-    estado: 'efectuado',
-  },
-  {
-    id: 11,
-    nombre: 'Francisco Morales',
-    email: 'francisco@example.com',
-    monto: 180,
-    estado: 'pendiente',
-  },
-  {
-    id: 12,
-    nombre: 'Carmen Jiménez',
-    email: 'carmen@example.com',
-    monto: 220,
-    estado: 'efectuado',
-  },
-  {
-    id: 13,
-    nombre: 'Javier Díaz',
-    email: 'javier@example.com',
-    monto: 130,
-    estado: 'pendiente',
-  },
-  {
-    id: 14,
-    nombre: 'Sofía Hernández',
-    email: 'sofia@example.com',
-    monto: 170,
-    estado: 'efectuado',
-  },
-  {
-    id: 15,
-    nombre: 'Antonio Muñoz',
-    email: 'antonio@example.com',
-    monto: 110,
-    estado: 'pendiente',
-  },
-];
+interface Donation {
+  id: string;
+  title: string;
+  amount: number;
+  status: 'pending' | 'accepted';
+}
+
+const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
 export default function AdminDonaciones() {
-  const [busqueda, setBusqueda] = useState('');
-  const [filtroEstado, setFiltroEstado] = useState<
-    'todas' | 'efectuado' | 'pendiente'
+  const [donations, setDonations] = useState<Donation[]>([]);
+  const [filteredDonations, setFilteredDonations] = useState<Donation[]>([]);
+  const [statusFilter, setStatusFilter] = useState<
+    'todas' | 'accepted' | 'pending'
   >('todas');
+  const [nameFilter, setNameFilter] = useState('');
+  const { userSession, token } = useAuth();
+  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+  const fetchDonations = async (): Promise<void> => {
+    if (!userSession) return;
 
-  const donacionesFiltradas = donaciones
-    .filter(
-      (donacion) =>
-        donacion.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-        donacion.email.toLowerCase().includes(busqueda.toLowerCase()),
-    )
-    .filter((donacion) => {
-      if (filtroEstado === 'todas') return true;
-      return donacion.estado === filtroEstado;
-    });
+    try {
+      const response = await fetch('http://localhost:3003/auth/donations', {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-  const totalDonaciones = donacionesFiltradas.reduce(
-    (sum, donacion) => sum + donacion.monto,
-    0,
-  );
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Fetched donations:', data);
+        setDonations(data);
+      } else {
+        console.error('Error fetching donations:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching donations:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDonations();
+  }, [userSession]);
+
+  const handleConfirmPayment = async (id: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:${port}/auth/payment/donation/confirm/${id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (response.ok) {
+        await fetchDonations(); // Reload donations after successful confirmation
+      } else {
+        console.error('Error confirming payment:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error confirming payment:', error);
+    }
+  };
+
+  const handleCancelPayment = async (id: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:${port}/auth/payment/donation/reject/${id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (response.ok) {
+        await fetchDonations();
+      } else {
+        console.error('Error canceling payment:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error canceling payment:', error);
+    }
+  };
+
+  useEffect(() => {
+    const filtered = donations
+      .filter((donation) => {
+        if (statusFilter === 'accepted') return donation.status === 'accepted';
+        if (statusFilter === 'pending') return donation.status === 'pending';
+        return true;
+      })
+      .filter((donation) =>
+        donation.title?.toLowerCase().includes(nameFilter.toLowerCase()),
+      );
+
+    setFilteredDonations(filtered);
+  }, [statusFilter, nameFilter, donations]);
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-6">
-        Panel de Administración de Donaciones
-      </h1>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-          <div className="relative flex-grow sm:flex-grow-0">
-            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <Input
-              type="text"
-              placeholder="Buscar por nombre"
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-              className="pl-10 w-full"
-            />
-          </div>
-
-          <select
-            value={filtroEstado}
-            onChange={(e) =>
-              setFiltroEstado(
-                e.target.value as 'todas' | 'efectuado' | 'pendiente',
-              )
-            }
-            className="p-2 border rounded-md"
-          >
-            <option value="todas">Todas</option>
-            <option value="efectuado">Efectuado</option>
-            <option value="pendiente">Pendiente</option>
-          </select>
+    <div className="flex flex-col min-h-screen">
+      <div className="bg-gradient-to-r from-blue-500 to-green-500 py-10">
+        <div className="container mx-auto px-4">
+          <h1 className="text-2xl font-bold text-white">
+            Panel de Administración de Donaciones
+          </h1>
         </div>
       </div>
-      <div className="border rounded-md">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[200px]">Nombre</TableHead>
-              <TableHead className="w-[250px]">Email</TableHead>
-              <TableHead className="text-right">Monto</TableHead>
-              <TableHead className="text-right">Estado</TableHead>
-            </TableRow>
-          </TableHeader>
-        </Table>
-        <div className="max-h-[400px] overflow-y-auto">
-          <Table>
-            <TableBody>
-              {donacionesFiltradas.map((donacion) => (
-                <TableRow key={donacion.id}>
-                  <TableCell className="font-medium">
-                    {donacion.nombre}
-                  </TableCell>
-                  <TableCell>{donacion.email}</TableCell>
-                  <TableCell className="text-right">
-                    ${donacion.monto}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {donacion.estado}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+      <div className="flex-grow bg-gray-100 py-6">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mb-4">
+            <div className="flex space-x-4 mb-6">
+              <select
+                value={statusFilter}
+                onChange={(e) =>
+                  setStatusFilter(
+                    e.target.value as 'todas' | 'accepted' | 'pending',
+                  )
+                }
+                className="p-2 border rounded-md"
+              >
+                <option value="todas">Todas</option>
+                <option value="accepted">Aceptadas</option>
+                <option value="pending">Pendientes</option>
+              </select>
+
+              <Input
+                type="text"
+                placeholder="Buscar por nombre"
+                value={nameFilter}
+                onChange={(e) => setNameFilter(e.target.value)}
+                className="p-2 border rounded-md"
+              />
+            </div>
+
+            <AdminListComponent
+              type="donation"
+              items={filteredDonations.map((donation) => ({
+                id: donation.id,
+                title: donation.title,
+                description: `Monto: $${donation.amount}`,
+                status: donation.status,
+                isActive: donation.status === 'accepted',
+                highlight: false,
+                isAdmin: false,
+              }))}
+              onToggleAction={() => {}}
+              getToggleLabel={() => ''}
+              onConfirmPayment={handleConfirmPayment}
+              onCancelPayment={handleCancelPayment}
+            />
+          </div>
         </div>
       </div>
     </div>

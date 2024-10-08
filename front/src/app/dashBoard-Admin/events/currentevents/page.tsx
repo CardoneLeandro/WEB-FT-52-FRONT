@@ -5,6 +5,7 @@ import AdminListComponent, {
   Item,
 } from '@/components/adminPanel/adminListComponent';
 import { useAuth } from '@/context/AuthContext';
+import { Event as AdminEvent } from '@/context/AuthContext';
 
 interface Event {
   id: string;
@@ -21,39 +22,40 @@ interface Event {
   description: string;
   isActive: boolean;
 }
-
 export default function EventsPage() {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<AdminEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { userSession, token } = useAuth();
+  const {adminEvents, setEvent, setAdminEvent, userSession, token } = useAuth();
 
-  const getEvents = async () => {
-    try {
-      const response = await fetch('http://localhost:3003/events');
-      if (response.status !== 200) {
-        throw new Error('Error fetching events');
-      }
-      const data = await response.json();
-      setEvents(data.events);
-    } catch (err) {
-      setError('No se pudieron cargar los eventos.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const getEvents = async () => {
+  //   try {
+  //     const response = await fetch('http://localhost:3003/events');
+  //     if (response.status !== 200) {
+  //       throw new Error('Error fetching events');
+  //     }
+  //     const data = await response.json();
+  //     setEvents(data.events);
+  //   } catch (err) {
+  //     setError('No se pudieron cargar los eventos.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
-    getEvents();
-  }, []);
+    if (adminEvents){setEvents(adminEvents);}
+    
+    // getEvents();
+  }, [adminEvents]);
 
-  const handleToggleAction = (event: Item) => {
-    setEvents(
-      events.map((e) =>
-        e.id === event.id ? { ...e, isActive: !e.isActive } : e,
-      ),
-    );
-  };
+  // const handleToggleAction = (event: Item) => {
+  //   setEvents(
+  //     events.map((e) =>
+  //       e.id === event.id ? { ...e, isActive: !e.isActive } : e,
+  //     ),
+  //   );
+  // };
 
   const getToggleLabel = (isActive: boolean) =>
     isActive ? 'No destacar' : 'Destacar';
@@ -67,40 +69,38 @@ export default function EventsPage() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            highlight: !event.highlight, // Cambia el estado de highlight
-          }),
         },
       );
 
-      if (response.status !== 200) {
+      if (!response.ok) {
         throw new Error('Error updating highlight status');
       }
 
       const updatedEventData = await response.json();
-
+      setEvent(updatedEventData);
+      setAdminEvent(updatedEventData);
       // Actualiza el estado de eventos
-      setEvents((prevEvents) =>
-        prevEvents.map((e) =>
-          e.id === event.id
-            ? { ...e, highlight: updatedEventData.highlight }
-            : e,
-        ),
-      );
+      // setEvents((prevEvents) =>
+      //   prevEvents.map((e) =>
+      //     e.id === event.id
+      //       ? { ...e, highlight: updatedEventData.highlight }
+      //       : e,
+      //   ),
+      // );
     } catch (err) {
       setError('No se pudo actualizar el estado de destacar.');
     }
   };
 
   const handleUpdateEvent = async (updatedEvent: Item) => {
-    console.log("Esto es lo que envio", {
+    console.log('Esto es lo que envio', {
       title: updatedEvent.title,
       description: updatedEvent.description,
       eventDate: updatedEvent.eventDate,
       eventLocation: updatedEvent.eventLocation,
       price: updatedEvent.price,
       stock: updatedEvent.stock,
-    })
+    });
     try {
       const response = await fetch(
         `http://localhost:3003/auth/events/edit/${updatedEvent.id}`,
@@ -122,19 +122,19 @@ export default function EventsPage() {
         },
       );
 
-      if (response.status !== 200) {
+      if (!response.ok) {
         throw new Error('Error updating event');
       }
-
       const updatedEventData = await response.json();
-      console.log(updatedEventData);
-      setEvents(
-        events.map((event) =>
-          event.id === updatedEvent.id
-            ? { ...event, ...updatedEventData }
-            : event,
-        ),
-      );
+      setEvent(updatedEventData);
+      // console.log(updatedEventData);
+      // setEvents(
+      //   events.map((event) =>
+      //     event.id === updatedEvent.id
+      //       ? { ...event, ...updatedEventData }
+      //       : event,
+      //   ),
+      // );
     } catch (err) {
       setError('No se pudo actualizar el evento.');
     }

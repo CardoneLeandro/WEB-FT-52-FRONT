@@ -10,9 +10,10 @@ import { useAuth } from '@/context/AuthContext';
 import IInputEventAdProps from '@/interfaces/IInputEventAdProps';
 import toast from 'react-hot-toast';
 import GoogleMap from '../GoogleMaps';
+import { set } from 'date-fns';
 
 function InputEventAd() {
-  const { token, userSession } = useAuth();
+  const { setEvent, token, userSession } = useAuth();
   const [image, setImage] = useState<string>('');
   const [showMap, setShowMap] = useState<boolean>(false);
 
@@ -106,7 +107,9 @@ function InputEventAd() {
           },
         );
 
-        if (response.status === 201) {
+        if (response.ok) {
+          const data = await response.json();
+          setEvent(data);
           toast.success('El evento se ha creado exitosamente', {
             position: 'bottom-center',
           });
