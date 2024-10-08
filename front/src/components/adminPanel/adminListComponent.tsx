@@ -74,15 +74,25 @@ export default function AdminListComponent({
     }
   };
 
-  const handleConfirmPayment = () => {
+  const handleConfirmPayment = async () => {
     if (selectedItem && onConfirmPayment) {
-      onConfirmPayment(selectedItem.id);
+      try {
+        await onConfirmPayment(selectedItem.id);
+        setSelectedItem({ ...selectedItem, status: 'accepted' });
+      } catch (error) {
+        console.error('Error confirming payment:', error);
+      }
     }
   };
 
-  const handleCancelPayment = () => {
+  const handleCancelPayment = async () => {
     if (selectedItem && onCancelPayment) {
-      onCancelPayment(selectedItem.id);
+      try {
+        await onCancelPayment(selectedItem.id);
+        setSelectedItem({ ...selectedItem, status: 'pending' });
+      } catch (error) {
+        console.error('Error canceling payment:', error);
+      }
     }
   };
 
@@ -141,14 +151,17 @@ export default function AdminListComponent({
                         Monto: ${selectedItem.amount}
                       </p>
                       <p className="text-sm text-gray-500">
-                        Estado: {selectedItem.status}
+                        Estado:{' '}
+                        {selectedItem.status === 'accepted'
+                          ? 'Aceptada'
+                          : 'Pendiente'}
                       </p>
                     </>
                   )}
                 </div>
               </div>
               <div className="flex space-x-2">
-                {type === 'donation' && selectedItem.status === 'pendiente' && (
+                {type === 'donation' && selectedItem.status === 'pending' && (
                   <>
                     <Button onClick={handleConfirmPayment} variant="default">
                       Confirmar Pago

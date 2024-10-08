@@ -10,7 +10,7 @@ interface Donation {
   id: string;
   title: string;
   amount: number;
-  status: string;
+  status: 'pending' | 'accepted';
 }
 
 const port = process.env.NEXT_PUBLIC_APP_API_PORT;
@@ -19,16 +19,16 @@ export default function AdminDonaciones() {
   const [donations, setDonations] = useState<Donation[]>([]);
   const [filteredDonations, setFilteredDonations] = useState<Donation[]>([]);
   const [statusFilter, setStatusFilter] = useState<
-    'todas' | 'efectuado' | 'pendiente'
+    'todas' | 'accepted' | 'pending'
   >('todas');
   const [nameFilter, setNameFilter] = useState('');
   const { userSession, token } = useAuth();
-
+  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const fetchDonations = async (): Promise<void> => {
     if (!userSession) return;
 
     try {
-      const response = await fetch(`http://localhost:${port}/donations`, {
+      const response = await fetch('http://localhost:3003/auth/donations', {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -65,6 +65,7 @@ export default function AdminDonaciones() {
       );
 
       if (response.ok) {
+        await fetchDonations(); // Reload donations after successful confirmation
       } else {
         console.error('Error confirming payment:', response.statusText);
       }
@@ -87,6 +88,7 @@ export default function AdminDonaciones() {
       );
 
       if (response.ok) {
+        await fetchDonations();
       } else {
         console.error('Error canceling payment:', response.statusText);
       }
@@ -98,10 +100,8 @@ export default function AdminDonaciones() {
   useEffect(() => {
     const filtered = donations
       .filter((donation) => {
-        if (statusFilter === 'efectuado')
-          return donation.status === 'efectuado';
-        if (statusFilter === 'pendiente')
-          return donation.status === 'pendiente';
+        if (statusFilter === 'accepted') return donation.status === 'accepted';
+        if (statusFilter === 'pending') return donation.status === 'pending';
         return true;
       })
       .filter((donation) =>
@@ -128,14 +128,14 @@ export default function AdminDonaciones() {
                 value={statusFilter}
                 onChange={(e) =>
                   setStatusFilter(
-                    e.target.value as 'todas' | 'efectuado' | 'pendiente',
+                    e.target.value as 'todas' | 'accepted' | 'pending',
                   )
                 }
                 className="p-2 border rounded-md"
               >
                 <option value="todas">Todas</option>
-                <option value="efectuado">Efectuadas</option>
-                <option value="pendiente">Pendientes</option>
+                <option value="accepted">Aceptadas</option>
+                <option value="pending">Pendientes</option>
               </select>
 
               <Input
@@ -148,13 +148,13 @@ export default function AdminDonaciones() {
             </div>
 
             <AdminListComponent
-              type="donation" // Verifica que esté pasando "donation"
+              type="donation"
               items={filteredDonations.map((donation) => ({
                 id: donation.id,
                 title: donation.title,
                 description: `Monto: $${donation.amount}`,
                 status: donation.status,
-                isActive: donation.status === 'efectuado',
+                isActive: donation.status === 'accepted',
                 amount: donation.amount,
                 highlight: false,
                 isAdmin: false,
