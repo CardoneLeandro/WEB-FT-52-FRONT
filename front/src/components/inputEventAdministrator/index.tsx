@@ -24,8 +24,9 @@ function InputEventAd() {
       eventDate: '',
       eventLocation: '',
       description: '',
-      price: 0,
-      stock: 0,
+      price: '',
+      stock: '',
+      eventAddress: '',
     },
     validationSchema: Yup.object({
       title: Yup.string()
@@ -42,7 +43,15 @@ function InputEventAd() {
     }),
     onSubmit: async (values) => {
       const creatorId = userSession?.creatorId;
-
+      const {
+        title,
+        eventDate,
+        eventLocation,
+        description,
+        price,
+        stock,
+        eventAddress,
+      } = values;
       if (
         !title ||
         !eventDate ||
@@ -79,11 +88,11 @@ function InputEventAd() {
         eventLocation: googleMapsLink,
         eventAddress,
         images: [image],
-        stock: stock || 0,
-        price: price || 0,
+        stock: stock || '0',
+        price: price || '0',
         creator: creatorId,
       };
-
+      console.log('!!!!!!!!!!!!!!!!', eventData);
       try {
         const response = await fetch(
           `http://localhost:${port}/auth/events/create`,
@@ -169,13 +178,13 @@ function InputEventAd() {
               >
                 Generar Link
               </Button>
-              <Input
+              {/* <Input
                 type="text"
                 placeholder="Link generado por GoogleMaps"
                 className="bg-white flex-grow"
-                value={eventLocation}
+                value={googleMapsLink}
                 onChange={(e) => setEventLocation!(e.target.value)}
-              />
+              /> */}
             </div>
             {formik.touched.eventLocation && formik.errors.eventLocation && (
               <div className="text-red-500">{formik.errors.eventLocation}</div>
@@ -190,7 +199,7 @@ function InputEventAd() {
             {formik.touched.description && formik.errors.description && (
               <div className="text-red-500">{formik.errors.description}</div>
             )}
-            <h1 className="text-gray-600">Costo de entrada al evento:</h1>
+
             <Input
               {...formik.getFieldProps('price')}
               type="number"
@@ -220,8 +229,11 @@ function InputEventAd() {
             {showMap && (
               <div className="mt-4 w-full items-start">
                 <GoogleMap
-                  setEventLocation={(location: string) =>
+                  setEventLocation={(location) =>
                     formik.setFieldValue('eventLocation', location)
+                  }
+                  setEventAddress={(address) =>
+                    formik.setFieldValue('eventAddress', address)
                   }
                 />
               </div>
