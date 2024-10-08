@@ -19,20 +19,14 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
-const year = [
-  {
-    value: '2024',
-    label: '2024',
-  },
-  {
-    value: '2025',
-    label: '2025',
-  },
-  {
-    value: '2026',
-    label: '2026',
-  },
-];
+const inicial = 2024;
+const hasta = new Date().getFullYear() + 2;
+
+const year = Array.from({ length: hasta - inicial + 1 }, (_, i) => {
+  const value = inicial + i;
+  return { value: String(value), label: String(value) };
+});
+
 interface ComboboxDemoYearProps {
   onChange: (year: string) => void;
   value: string;
