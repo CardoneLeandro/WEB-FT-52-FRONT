@@ -13,6 +13,8 @@ interface Donation {
   status: string;
 }
 
+const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+
 export default function AdminDonaciones() {
   const [donations, setDonations] = useState<Donation[]>([]);
   const [filteredDonations, setFilteredDonations] = useState<Donation[]>([]);
@@ -26,7 +28,7 @@ export default function AdminDonaciones() {
     if (!userSession) return;
 
     try {
-      const response = await fetch('http://localhost:3003/donations', {
+      const response = await fetch(`http://localhost:${port}/donations`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -52,7 +54,7 @@ export default function AdminDonaciones() {
   const handleConfirmPayment = async (id: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3003/donations/confirm/${id}`,
+        `http://localhost:${port}/auth/payment/donation/confirm/${id}`,
         {
           method: 'PATCH',
           headers: {
@@ -74,9 +76,9 @@ export default function AdminDonaciones() {
   const handleCancelPayment = async (id: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3003/payments/pay-donation/success/${id}`,
+        `http://localhost:${port}/auth/payment/donation/reject/${id}`,
         {
-          method: 'DELETE',
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
