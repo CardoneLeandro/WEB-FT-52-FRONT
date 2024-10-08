@@ -73,7 +73,7 @@ const featuredEvents = [
   },
 ];
 
-export default function Home({ initialEvents }) {
+export default function Home() {
   const redirect = useRouter();
   const [events, setEvents] = useState([]);
   const { token, userSession } = useAuth();
@@ -186,7 +186,7 @@ export default function Home({ initialEvents }) {
           Próximos Eventos
         </h2>
         <div className="flex flex-row mx-auto p-2">
-          <EventsList initialEvents={initialEvents} showLimitedEvents={true} />
+          <EventsList initialEvents={events} showLimitedEvents={true} />
         </div>
         <div className="flex justify-center mt-6">
           <Link href="/eventsPage" passHref>
