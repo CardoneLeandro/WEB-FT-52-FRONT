@@ -26,86 +26,45 @@ import EventsList from '../components/events/eventsList';
 import FeaturedEventCard from '../components/events/featuredEventCard';
 import { CalendarIcon, MapPinIcon, ClockIcon, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
-
-const featuredEvents = [
-  {
-    title: '50 años',
-    description:
-      'Cumple 50 años Maranatha, el movimiento peregrino que marcó a muchas generaciones de mendocinos',
-    imgSrc:
-      'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
-  },
-  {
-    title: 'To The Beach',
-    description: 'Plan your next beach trip with these fabulous destinations',
-    imgSrc:
-      'https://imgs.search.brave.com/dyfOQ7_ZbLvAx4voghAK5dDrv0PWPne7jMiCyoROgKE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvWkZUQUk2VzUz/VkNTNUI3N05BNVJC/UlpCSVkuanBnP2F1/dGg9ZjA2NjVhM2Uw/OGM1MzcxNThhZDI2/MDU2MjQ0OWMyNDI3/YjE5NTVhNmU3OGZk/NGNjMjQ0YTM2Nzlm/MjJiZjkyYyZ3aWR0/aD0xMjgwJmhlaWdo/dD03MjA',
-  },
-  {
-    title: 'Desert Destinations',
-    description: "It's the desert you've always dreamed of",
-    imgSrc:
-      'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
-  },
-  {
-    title: 'Desert Destinations',
-    description: "It's the desert you've always dreamed of",
-    imgSrc:
-      'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
-  },
-  {
-    title: 'Desert Destinations',
-    description: "It's the desert you've always dreamed of",
-    imgSrc:
-      'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
-  },
-  {
-    title: 'Desert Destinations',
-    description: "It's the desert you've always dreamed of",
-    imgSrc:
-      'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
-  },
-  {
-    title: 'Desert Destinations',
-    description: "It's the desert you've always dreamed of",
-    imgSrc:
-      'https://imgs.search.brave.com/Bn9ESrWYvb4aKafewtoLAA75yNqFwRQvx3lQXzUC-Kg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/bG9zYW5kZXMuY29t/LmFyL3Jlc2l6ZXIv/djIvRkRJVTQ3QTZK/VkVOTE1MUjZXSlVF/RzJRN1EuanBnP3F1/YWxpdHk9NzUmc21h/cnQ9dHJ1ZSZhdXRo/PTQwMTM2YzQyNjU4/NDQ3MDMxMzVhNmJm/ZTBiZjNmYjZiNmIx/ZWYwMGVlZWNhZjM4/Njg4MWFhNDlmMTcz/ZDA3MWQmd2lkdGg9/OTgwJmhlaWdodD02/NDA',
-  },
-];
+import { set } from 'date-fns';
+import { Event } from '@/context/AuthContext';
 
 export default function Home() {
   const redirect = useRouter();
-  const [events, setEvents] = useState([]);
-  const { token, userSession } = useAuth();
+  const { allEvents, token, userSession } = useAuth();
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
   const [showMap, setShowMap] = useState(false);
-
   const controls = useAnimation();
-  const getEvents = async () => {
-    try {
-      const response = await fetch('http://localhost:3003/events');
 
-      if (!response.ok) {
-        throw new Error('Error fetching events');
-      }
-      const data = await response.json();
-      setEvents(data.events);
-    } catch (error) {
-      console.error('Error fetching events:', error);
-    }
-  };
+  //RENDERIZAR LAS CARD DESDE ESTOS 3 ESTADOS
+  const [events, setEvents] = useState<Event[]>([]);
+  const [highlight, setHighlight] = useState<Event[]>([]);
+  const [moments, setMoments] = useState<Event[]>([]);
 
   useEffect(() => {
     if (userSession?.status === 'pending') {
       redirect.push('/formpage');
     }
-    if (events.length === 0) {
-      getEvents();
-    }
-  }, [token, userSession, events, redirect]);
+    setEvents([]);
+    setHighlight([]);
+    setMoments([]);
+
+    allEvents?.map((event) => {
+      if (event.highlight === true && event.status === 'active') {
+        setHighlight((prevHighlight) => [...prevHighlight, event]);
+      }
+      if (event.highlight === false && event.status === 'active') {
+        setEvents((prevEvent) => [...prevEvent, event]);
+      }
+
+      if (event.highlight === true && event.status === 'inactive') {
+        setMoments((prevMoments) => [...prevMoments, event]);
+      }
+    });
+  }, [token, userSession, allEvents, redirect]);
 
   useEffect(() => {
     if (inView) {
