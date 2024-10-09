@@ -38,7 +38,7 @@ export interface Session {
   phone: string;
   address: string;
   donations: Donation[];
-  assistance: Assistance[];
+  assistantEvents: Assistance[];
 }
 interface PaymentInfo {
   title: string | null;
@@ -59,7 +59,7 @@ export interface Event {
   price: number;
   stock: number;
   images: string[];
-  assistance: Assistance[];
+  assistantEvents: Assistance[];
 }
 
 interface AuthContextType {
@@ -98,7 +98,7 @@ const AuthContext = createContext<AuthContextType>({
     phone: '',
     address: '',
     donations: [],
-    assistance: [],
+    assistantEvents: [],
   },
   paymentInfo: null,
   adminDonations: null,
@@ -133,7 +133,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     phone: '',
     address: '',
     donations: [],
-    assistance: [],
+    assistantEvents: [],
   });
   const [token, setToken] = useState<string | null>(null);
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
@@ -185,7 +185,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         phone: '',
         address: '',
         donations: [],
-        assistance: [],
+        assistantEvents: [],
       });
       localStorage.removeItem('userSession');
       setToken(null);
@@ -217,8 +217,8 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     if (updatedAssistance.length > 0) {
       setSession((prevSession) => {
         if (prevSession) {
-          const { assistance, ...rest } = prevSession;
-          const updatedSession = { assistance: updatedAssistance, ...rest };
+          const { assistantEvents, ...rest } = prevSession;
+          const updatedSession = { assistantEvents: updatedAssistance, ...rest };
           return updatedSession;
         }
         return prevSession;
@@ -250,7 +250,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         phone: '',
         address: '',
         donations: [],
-        assistance: [],
+        assistantEvents: [],
       });
       localStorage.removeItem('token');
       localStorage.removeItem('userSession');
@@ -325,7 +325,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
       phone: '',
       address: '',
       donations: [],
-      assistance: [],
+      assistantEvents: [],
     });
     localStorage.removeItem('token');
     localStorage.removeItem('userSession');

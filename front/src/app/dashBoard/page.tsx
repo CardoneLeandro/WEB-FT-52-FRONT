@@ -70,17 +70,17 @@ export default function UserDashboard() {
                   </CardHeader>
                   <CardContent className="cursor-default">
                     <ul className="space-y-2">
-                      {userSession?.assistance?.length > 0 ? (
-                        userSession.assistance.map((event) => (
+                      {userSession?.assistantEvents?.length > 0 ? (
+                        userSession.assistantEvents.map((assistantEvents) => (
                           <li
-                            key={event.id}
+                            key={assistantEvents.eventId}
                             className="flex justify-between items-center bg-white p-3 rounded shadow-sm"
                           >
-                            <span>{event.title}</span>
+                            <span>{assistantEvents.title}</span>
                             <span className="text-sm text-gray-500">
-                              {new Date(event.eventDate).toLocaleDateString()}
+                              {new Date(assistantEvents.eventDate).toLocaleDateString()}
                             </span>
-                            <Button onClick={() => Router.push(`/eventdetail/${event.id}`)} variant="default">Ver Evento </Button>
+                            <Button onClick={() => Router.push(`/eventdetail/${assistantEvents.eventId}`)} variant="default">Ver Evento </Button>
                           </li>
                         ))
                       ) : (
