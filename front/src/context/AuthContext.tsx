@@ -19,6 +19,7 @@ interface Donation {
   amount: number;
   date: string;
 }
+export interface Assistance {}
 export interface Session {
   id: string | null;
   name: string;
@@ -30,6 +31,7 @@ export interface Session {
   phone: string;
   address: string;
   donations: Donation[];
+  assistance: Assistance[];
 }
 interface PaymentInfo {
   title: string | null;
@@ -37,7 +39,7 @@ interface PaymentInfo {
 }
 
 export interface Event {
-  id: string ;
+  id: string;
   highlight: boolean;
   createDate: Date;
   status: string;
@@ -83,7 +85,7 @@ const AuthContext = createContext<AuthContextType>({
     status: null,
     phone: '',
     address: '',
-    donations: []
+    donations: [],
   },
   paymentInfo: null,
   adminDonations: null,

@@ -1,7 +1,8 @@
 'use client';
+import { useAuth } from '@/context/AuthContext';
 import { useEffect, useState } from 'react';
 import { FaMapMarkerAlt } from 'react-icons/fa';
-
+import { Event } from '@/context/AuthContext';
 interface EventCardProps {
   id: string;
   highlight: boolean;
@@ -9,7 +10,7 @@ interface EventCardProps {
   status: string;
   title: string;
   eventDate: Date;
-  eventLocation: string; 
+  eventLocation: string;
   eventAddress: string;
   description: string;
   price: number;
@@ -23,16 +24,15 @@ const EventCardDetail: React.FC<EventCardProps> = ({
   title,
   status,
   eventDate,
-  eventLocation, 
+  eventLocation,
   eventAddress,
   stock,
   price,
   description,
 }) => {
   const [googleMapsLink, setGoogleMapsLink] = useState<string>('');
-  const [address, setAddress] = useState<string>(''); 
+  const [address, setAddress] = useState<string>('');
 
- 
   const extractCoordinatesFromURL = (url: string) => {
     try {
       const queryString = new URL(url).searchParams.get('query');
@@ -45,7 +45,6 @@ const EventCardDetail: React.FC<EventCardProps> = ({
     }
   };
 
- 
   const getAddressFromCoordinates = async (coordinates: string[]) => {
     if (coordinates.length < 2) return 'Ubicación no disponible';
 
@@ -71,7 +70,7 @@ const EventCardDetail: React.FC<EventCardProps> = ({
   };
 
   useEffect(() => {
-    const coordinates = extractCoordinatesFromURL(eventLocation); 
+    const coordinates = extractCoordinatesFromURL(eventLocation);
     const fetchAddress = async () => {
       const fetchedAddress = await getAddressFromCoordinates(coordinates);
       setAddress(fetchedAddress);
@@ -80,9 +79,34 @@ const EventCardDetail: React.FC<EventCardProps> = ({
     if (coordinates.length > 0) {
       fetchAddress();
     } else {
-      setAddress(eventAddress); 
+      setAddress(eventAddress);
     }
   }, [eventLocation, eventAddress]);
+  const { token } = useAuth();
+
+  const handleEventAsistance = async (updatedEvent: Event) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3003/events/updateattendance/:${updatedEvent.id}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(updatedEvent),
+        },
+      );
+      if (!response.ok) {
+        throw new Error(
+          'CHIPICHIPICHAPACHAPADUBIDUBIDABADABA,MAGICOMIDUBIDUBIBUMBUMBUM',
+        );
+      }
+      const updatedEventData = await response.json();
+    } catch (err) {
+      setError('No se pudo actualizar el evento.');
+    }
+  };
 
   return (
     <div className="flex justify-center p-4">
@@ -105,7 +129,9 @@ const EventCardDetail: React.FC<EventCardProps> = ({
             <p className="text-gray-700 font-semibold">{description}</p>
             <div className="space-y-2 mt-2">
               <div className="flex flex-row items-center gap-2 text-gray-700">
-                <p className="font-bold">Ubicación: {address || eventAddress}</p>
+                <p className="font-bold">
+                  Ubicación: {address || eventAddress}
+                </p>
                 {eventLocation && (
                   <a
                     href={googleMapsLink}

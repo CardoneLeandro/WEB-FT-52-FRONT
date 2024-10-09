@@ -18,9 +18,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     logout();
   };
 
-
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <div className="flex min-h-screen mb-20">
@@ -231,12 +229,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       </a>
                     </li>
                     <li>
-                      <a
+                      {/* <a
                         href="/dashBoard-Admin/usercontrol"
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
                         Lista de usuarios
-                      </a>
+                      </a> */}
                     </li>
                   </ul>
                 )}
