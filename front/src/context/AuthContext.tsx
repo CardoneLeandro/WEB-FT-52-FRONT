@@ -1,11 +1,18 @@
 'use client';
 
-import { set } from 'date-fns';
+import { get } from 'http';
 import React, { useState, useEffect, createContext, useContext } from 'react';
 const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
 interface AuthContextProps {
   children: React.ReactNode;
+}
+export interface Assistance {
+  eventId: string; // ID DEL EVENTO
+  id: string; // ID DE LA ASISTENCIA
+  status: string; // SI ESTA ACTIVA ES PORQUE EL USUARIO ESTA APUNTADO
+  title: string; // TITULO DEL EVENTO
+  eventDate: Date; // FECHA DEL EVENTO
 }
 export interface AdminDonation {
   id: string;
@@ -30,6 +37,7 @@ export interface Session {
   phone: string;
   address: string;
   donations: Donation[];
+  assistance: Assistance[];
 }
 interface PaymentInfo {
   title: string | null;
@@ -37,10 +45,11 @@ interface PaymentInfo {
 }
 
 export interface Event {
-  id: string ;
+  id: string;
   highlight: boolean;
   createDate: Date;
   status: string;
+  vacancy: boolean;
   title: string;
   description: string;
   eventDate: Date;
@@ -49,6 +58,7 @@ export interface Event {
   price: number;
   stock: number;
   images: string[];
+  assistance: Assistance[];
 }
 
 interface AuthContextType {
@@ -61,6 +71,7 @@ interface AuthContextType {
   setToken: (token: string | null) => void;
   setSession: (userSession: Session) => void;
   setDonation: (donation: Donation) => void;
+  setAssistance: (assistance: Assistance[]) => void;
   setPaymentInfo: (paymentInfo: PaymentInfo | null) => void;
   setAdminDonation: (adminDonation: AdminDonation) => void;
   setAdminDonations: (adminDonations: AdminDonation[] | null) => void;
@@ -69,6 +80,7 @@ interface AuthContextType {
   setAdminEvent: (adminEvent: Event) => void;
   setEvent: (event: Event) => void;
   logout: () => void;
+  getEvents: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -83,7 +95,8 @@ const AuthContext = createContext<AuthContextType>({
     status: null,
     phone: '',
     address: '',
-    donations: []
+    donations: [],
+    assistance: [],
   },
   paymentInfo: null,
   adminDonations: null,
@@ -92,6 +105,7 @@ const AuthContext = createContext<AuthContextType>({
   setToken: () => {},
   setSession: () => {},
   setDonation: () => {},
+  setAssistance: () => {},
   setPaymentInfo: () => {},
   setAdminDonation: () => {},
   setAdminDonations: () => {},
@@ -100,6 +114,7 @@ const AuthContext = createContext<AuthContextType>({
   setAdminEvents: () => {},
   setAdminEvent: () => {},
   logout: () => {},
+  getEvents: () => {},
 });
 export const useAuth = () => useContext(AuthContext);
 
@@ -114,7 +129,8 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     status: null,
     phone: '',
     address: '',
-    donations: [], // Inicializa donations como un array vacío
+    donations: [],
+    assistance: [],
   });
   const [token, setToken] = useState<string | null>(null);
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
@@ -123,6 +139,22 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   );
   const [allEvents, setAllEvents] = useState<Event[] | null>(null);
   const [adminEvents, setAdminEvents] = useState<Event[] | null>(null);
+
+  const getEvents = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:${port}/events/getactiveandinactivehighlight`,
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setAllEvents(data);
+      } else {
+        setAllEvents(null);
+      }
+    } catch (error) {
+      console.error('Error al obtener los eventos:', error);
+    }
+  };
 
   useEffect(() => {
     // Cargar datos del localStorage
@@ -149,6 +181,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         phone: '',
         address: '',
         donations: [],
+        assistance: [],
       });
       localStorage.removeItem('userSession');
       setToken(null);
@@ -158,21 +191,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     if (storedPaymentInfo) {
       setPaymentInfo(storedPaymentInfo);
     }
-    const getEvents = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:${port}/events/getactiveandinactivehighlight`,
-        );
-        if (res.ok) {
-          const data = await res.json();
-          setAllEvents(data);
-        } else {
-          setAllEvents(null);
-        }
-      } catch (error) {
-        console.error('Error al obtener los eventos:', error);
-      }
-    };
+
     getEvents();
   }, []);
 
@@ -184,6 +203,19 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
             ...prevSession,
             donations: [...prevSession.donations, donation],
           };
+        }
+        return prevSession;
+      });
+    }
+  };
+
+  const handleSetAssistance = (updatedAssistance: Assistance[]) => {
+    if (updatedAssistance.length > 0) {
+      setSession((prevSession) => {
+        if (prevSession) {
+          const { assistance, ...rest } = prevSession;
+          const updatedSession = { assistance: updatedAssistance, ...rest };
+          return updatedSession;
         }
         return prevSession;
       });
@@ -212,7 +244,8 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         status: null,
         phone: '',
         address: '',
-        donations: [], // Inicializa donations como un array vacío
+        donations: [],
+        assistance: [],
       });
       localStorage.removeItem('token');
       localStorage.removeItem('userSession');
@@ -286,6 +319,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
       phone: '',
       address: '',
       donations: [],
+      assistance: [],
     });
     localStorage.removeItem('token');
     localStorage.removeItem('userSession');
@@ -312,6 +346,8 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         adminEvents,
         setAdminEvents: handleAdminEvents,
         setAdminEvent: handleAdminEvent,
+        setAssistance: handleSetAssistance,
+        getEvents,
       }}
     >
       {children}

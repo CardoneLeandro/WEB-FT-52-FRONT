@@ -35,14 +35,17 @@ const EventDetailPage = ({ params }: { params: { id: string } }) => {
     fetchEvent();
   }, [params.id]);
 
-  
   console.log('id del evento', params.id);
 
   if (!event) {
     return <div>Evento no disponible</div>;
   }
 
-  return <EventCardDetail {...event} />;
+  return (
+    <div className="flex justify-center items-center min-h-screen nim-w-screen ">
+      <EventCardDetail {...event} />;
+    </div>
+  );
 };
 
 export default EventDetailPage;

@@ -1,30 +1,52 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Input } from '@/components/ui/input';
 import { useAuth } from '@/context/AuthContext';
-import DonationComponent from './donationComponent';
-import { AdminDonation } from '@/context/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
-
+type AdminDonation = {
+  id: string;
+  title: string;
+  amount: number;
+  status: 'active' | 'pending';
+  createdAt: string;
+};
 
 const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
 export default function AdminDonaciones() {
   const [donations, setDonations] = useState<AdminDonation[]>([]);
-  const [filteredDonations, setFilteredDonations] = useState<AdminDonation[]>([]);
+  const [filteredDonations, setFilteredDonations] = useState<AdminDonation[]>(
+    [],
+  );
   const [statusFilter, setStatusFilter] = useState<
-    'todas' | 'accepted' | 'pending'
+    'todas' | 'active' | 'pending'
   >('todas');
   const [nameFilter, setNameFilter] = useState('');
   const { userSession, token } = useAuth();
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
   const fetchDonations = async (): Promise<void> => {
     if (!userSession) return;
 
     try {
-      const response = await fetch('http://localhost:3003/auth/donations', {
+      const response = await fetch(`http://localhost:${port}/auth/donations`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -33,7 +55,6 @@ export default function AdminDonaciones() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Fetched donations:', data);
         setDonations(data);
       } else {
         console.error('Error fetching donations:', response.statusText);
@@ -61,7 +82,7 @@ export default function AdminDonaciones() {
       );
 
       if (response.ok) {
-        await fetchDonations(); // Reload donations after successful confirmation
+        await fetchDonations();
       } else {
         console.error('Error confirming payment:', response.statusText);
       }
@@ -96,82 +117,99 @@ export default function AdminDonaciones() {
   useEffect(() => {
     const filtered = donations
       .filter((donation) => {
-        if (statusFilter === 'accepted') return donation.status === 'active';
+        if (statusFilter === 'active') return donation.status === 'active';
         if (statusFilter === 'pending') return donation.status === 'pending';
         return true;
       })
       .filter((donation) =>
-        donation.title?.toLowerCase().includes(nameFilter.toLowerCase()),
+        donation.title.toLowerCase().includes(nameFilter.toLowerCase()),
       );
 
     setFilteredDonations(filtered);
   }, [statusFilter, nameFilter, donations]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="bg-gradient-to-r from-blue-500 to-green-500 py-10">
-        <div className="container mx-auto px-4">
-          <h1 className="text-2xl font-bold text-white">
-            Panel de Administración de Donaciones
-          </h1>
-        </div>
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">
+        Panel de Administración de Donaciones
+      </h1>
+      <div className="flex space-x-4 mb-6">
+        <Select
+          value={statusFilter}
+          onValueChange={(value) =>
+            setStatusFilter(value as 'todas' | 'active' | 'pending')
+          }
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filtrar por estado" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="todas">Todas</SelectItem>
+            <SelectItem value="active">Aceptadas</SelectItem>
+            <SelectItem value="pending">Pendientes</SelectItem>
+          </SelectContent>
+        </Select>
+        <Input
+          type="text"
+          placeholder="Buscar por nombre"
+          value={nameFilter}
+          onChange={(e) => setNameFilter(e.target.value)}
+          className="max-w-sm"
+        />
       </div>
-      <div className="flex-grow bg-gray-100 py-6">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mb-4">
-            <div className="flex space-x-4 mb-6">
-              <select
-                value={statusFilter}
-                onChange={(e) =>
-                  setStatusFilter(
-                    e.target.value as 'todas' | 'accepted' | 'pending',
-                  )
-                }
-                className="p-2 border rounded-md"
-              >
-                <option value="todas">Todas</option>
-                <option value="accepted">Aceptadas</option>
-                <option value="pending">Pendientes</option>
-              </select>
-
-              <Input
-                type="text"
-                placeholder="Buscar por nombre"
-                value={nameFilter}
-                onChange={(e) => setNameFilter(e.target.value)}
-                className="p-2 border rounded-md"
-              />
-            </div>
-
-            <div>
+      <div className="border rounded-lg shadow">
+        <ScrollArea className="h-[70vh]">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Título</TableHead>
+                <TableHead>Monto</TableHead>
+                <TableHead>Estado</TableHead>
+                <TableHead>Fecha</TableHead>
+                <TableHead>Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filteredDonations.map((donation) => (
-                <DonationComponent
-                  key={donation.id}
-                  props={donation}
-                  confirmPayment={handleConfirmPayment}
-                  cancelPayment={handleCancelPayment}
-                />
+                <TableRow key={donation.id}>
+                  <TableCell>{donation.title}</TableCell>
+                  <TableCell>${donation.amount}</TableCell>
+                  <TableCell>
+                    {donation.status === 'active' ? 'Aceptada' : 'Pendiente'}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(donation.createdAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    {donation.status === 'pending' && (
+                      <div className="flex space-x-2">
+                        <Button
+                          className="w-full"
+                          variant={'constructive'}
+                          onClick={() => handleConfirmPayment(donation.id)}
+                        >
+                          Aprobar
+                        </Button>
+                        <Button
+                          className="w-full"
+                          variant="destructive"
+                          onClick={() => handleCancelPayment(donation.id)}
+                        >
+                          Cancelar
+                        </Button>
+                      </div>
+                    )}
+                    {donation.status === 'active' && (
+                      <span className="text-green-600 font-medium">
+                        Aprobada
+                      </span>
+                    )}
+                  </TableCell>
+                </TableRow>
               ))}
-            </div>
-
-            {/* <AdminListComponent
-              type="donation"
-              items={filteredDonations.map((donation) => ({
-                id: donation.id,
-                title: donation.title,
-                description: `Monto: $${donation.amount}`,
-                status: donation.status,
-                isActive: donation.status === 'accepted',
-                highlight: false,
-                isAdmin: false,
-              }))}
-              onToggleAction={() => {}}
-              getToggleLabel={() => ''}
-              onConfirmPayment={handleConfirmPayment}
-              onCancelPayment={handleCancelPayment}
-            /> */}
-          </div>
-        </div>
+            </TableBody>
+          </Table>
+        </ScrollArea>
       </div>
     </div>
   );
