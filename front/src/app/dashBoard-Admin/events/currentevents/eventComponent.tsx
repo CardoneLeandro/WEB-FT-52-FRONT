@@ -3,8 +3,6 @@ import { Event } from '@/context/AuthContext';
 
 export default function EventComponent({
   props,
-  onToggleHighlight,
-  onUpdateEvent,
 }: {
   props: Event;
   onToggleHighlight: (id: string) => void;

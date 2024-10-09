@@ -1,6 +1,5 @@
 'use client';
 
-import { get } from 'http';
 import React, { useState, useEffect, createContext, useContext } from 'react';
 const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
@@ -21,7 +20,7 @@ export interface AdminDonation {
   date: string;
   status: 'pending' | 'active' | 'rejected';
 }
-interface Donation {
+export interface Donation {
   title: string;
   amount: number;
   date: string;
@@ -40,7 +39,7 @@ export interface Session {
   donations: Donation[];
   assistantEvents: Assistance[];
 }
-interface PaymentInfo {
+export interface PaymentInfo {
   title: string | null;
   amount: number | null;
 }
@@ -217,6 +216,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     if (updatedAssistance.length > 0) {
       setSession((prevSession) => {
         if (prevSession) {
+          // eslint-disable-next-line no-unused-vars
           const { assistantEvents, ...rest } = prevSession;
           const updatedSession = { assistantEvents: updatedAssistance, ...rest };
           return updatedSession;

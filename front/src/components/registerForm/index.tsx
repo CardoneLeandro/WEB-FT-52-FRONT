@@ -82,8 +82,7 @@ function FormRegister() {
           router.push('/login');
         }
       } catch (error) {
-        console.error('Error al enviar los datos al backend:', error);
-        window.alert('Error al enviar los datos al backend.');
+        toast.error('Hubo un problema al intentar registrarte por favor intentalo mas tarde')
       } finally {
         setLoading(false);
       }

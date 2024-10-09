@@ -12,7 +12,7 @@ const EventDetailPage = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const fetchedEvent = await getEventById(params.id);
+        const fetchedEvent: Event|null = await getEventById(params.id);
         setEvent(fetchedEvent);
       } catch (error) {
         window.console.error('error', error);

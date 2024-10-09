@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'next-auth/react';
 import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -12,17 +13,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const toggleMenu = (menuName: string) => {
     setActiveMenu((prevMenu) => (prevMenu === menuName ? null : menuName));
   };
-  const { logout, token } = useAuth();
+  const { logout, token, userSession } = useAuth();
   const handleLogOut = () => {
     signOut({ callbackUrl: '/' });
     logout();
   };
 
-  useEffect(() => {}, []);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (
+      (userSession?.role !== 'superadmin' && userSession?.role !== 'admin') ||
+      !token
+    ) {
+      router.push('/');
+    }
+  }, [userSession, token, router]);
 
   return (
     <div className="flex min-h-screen mb-20">
-      {/* Sidebar */}
       <div className="w-64 flex flex-col border-e bg-white min-h-screen justify-between  p-4 mb-44">
         <Button variant={'default'}>
           <Link href="/">Volver a inicio</Link>
@@ -81,14 +90,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         Ver y Editar Eventos
                       </Link>
                     </li>
-                    <li>
-                      {/* <Link
-                        href="/dashBoard-Admin/events/eventassistance"
-                        className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                      >
-                        Asistencia de eventos
-                      </Link> */}
-                    </li>
+                    <li></li>
                   </ul>
                 )}
               </div>
@@ -135,63 +137,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </li>
 
-            {/* <li>
-              <div>
-                <button
-                  onClick={() => toggleMenu('posteos')}
-                  className="flex w-full items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  <span className="text-sm font-medium"> Posteos </span>
-                  <span
-                    className={`transition duration-300 ${
-                      activeMenu === 'posteos' ? '-rotate-180' : ''
-                    }`}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="size-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                </button>
-                {activeMenu === 'posteos' && (
-                  <ul className="mt-2 space-y-1 px-4">
-                    <li>
-                      <a
-                        href="#"
-                        className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                      >
-                        Crear y editar noticias
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                      >
-                        Carga de imágenes de eventos
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                      >
-                        Historial de eventos e imágenes
-                      </a>
-                    </li>
-                  </ul>
-                )}
-              </div>
-            </li> */}
-
             <li>
               <div>
                 <button
@@ -228,13 +173,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         Agregar y eliminar usuarios
                       </a>
                     </li>
-                    <li>
-                      {/* <a
-                        href="/dashBoard-Admin/usercontrol"
-                        className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                      >
-                        Lista de usuarios
-                      </a> */}
+                    <li>                      
                     </li>
                   </ul>
                 )}
@@ -243,7 +182,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </ul>
         </div>
 
-        {/* Fixed footer with "Go Home" and "Logout" buttons */}
         <div className="  flex flex-col gap-2 justify-center px-4 mb-10">
           <Button variant={'destructive'} onClick={() => handleLogOut()}>
             Cerrar sesión

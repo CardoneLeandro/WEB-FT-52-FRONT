@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { CloudHail, HeartIcon } from 'lucide-react';
+import {  HeartIcon } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { donate } from '@/app/donations/mercadoPago';
 

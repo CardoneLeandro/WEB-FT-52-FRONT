@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import EventAlert from '@/components/events/eventAlert';
+import { Event } from '@/context/AuthContext';
 function EventsPage() {
   const [events, setEvents] = useState([]);
   const [search, setSearch] = useState('');
@@ -44,11 +45,11 @@ function EventsPage() {
     getEvents(selectedMonth, selectedYear, search);
   }, [selectedMonth, selectedYear, search]);
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
     if (value.length > 1) {
-      const filtered = events.filter((event) =>
+      const filtered = events.filter((event: Event) =>
         event.title.toLowerCase().includes(value.toLowerCase()),
       );
       setFilteredEvents(filtered);
@@ -99,6 +100,7 @@ function EventsPage() {
             </div>
           ) : (
             <EventsList
+              initialEvents={events}
               selectedMonth={selectedMonth}
               selectedYear={selectedYear}
               search={search}

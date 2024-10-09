@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,8 +20,16 @@ import { useRouter } from 'next/navigation';
 
 export default function UserDashboard() {
   const [showDonations, setShowDonations] = useState(false);
-  const { userSession } = useAuth();
+  const { userSession , token } = useAuth();
   const Router = useRouter()
+  useEffect(() => {
+    if (
+      (userSession.role !== "user" ) ||
+      !token
+    ) {
+      Router.push('/');
+    }
+  }, [userSession, token, Router]);
 
 
   return (
