@@ -124,7 +124,7 @@ export default function TeamPage() {
   );
 }
 
-function DeveloperCard({ name, github }) {
+function DeveloperCard( {name, github}:{name:string, github:string} ) {
   return (
     <div className="flex items-center space-x-4 p-2 rounded-lg hover:bg-secondary transition-colors">
       <Avatar>

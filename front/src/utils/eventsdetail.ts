@@ -1,17 +1,4 @@
-interface Event {
-  id: string;
-  highlight: boolean;
-  createDate: Date;
-  status: string;
-  title: string;
-  eventDate: Date;
-  eventLocation: string;
-  eventAdress: string;
-  price: number;
-  stock: number;
-  images: string[];
-  description: string;
-}
+import { Event } from "@/context/AuthContext";
 
 export default async function getEventById(id: string) {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT || 3003;

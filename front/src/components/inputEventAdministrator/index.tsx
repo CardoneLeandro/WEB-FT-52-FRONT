@@ -10,24 +10,40 @@ import { useAuth } from '@/context/AuthContext';
 import IInputEventAdProps from '@/interfaces/IInputEventAdProps';
 import toast from 'react-hot-toast';
 import GoogleMap from '../GoogleMaps';
-import { set } from 'date-fns';
 
-function InputEventAd() {
+export const InputEventAd: React.FC<IInputEventAdProps> = ({
+  title,
+  eventDate,
+  eventLocation,
+  eventAddress,
+  description,
+  stock,
+  price,
+  setTitle,
+  setEventDate,
+  setEventLocation,
+  setEventAddress,
+  setDescription,
+  setImages,
+  setStock,
+  setPrice,
+}) => {
   const { setEvent, token, userSession } = useAuth();
   const [image, setImage] = useState<string>('');
   const [showMap, setShowMap] = useState<boolean>(false);
 
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
-  const formik = useFormik<IInputEventAdProps>({
+  const formik = useFormik({
     initialValues: {
-      title: '',
-      eventDate: '',
-      eventLocation: '',
-      description: '',
-      price: '',
-      stock: '',
-      eventAddress: '',
+      title,
+      eventDate,
+      eventLocation,
+      description,
+      price,
+      stock,
+      eventAddress,
+      images: [''],
     },
     validationSchema: Yup.object({
       title: Yup.string()
@@ -53,14 +69,8 @@ function InputEventAd() {
         stock,
         eventAddress,
       } = values;
-      if (
-        !title ||
-        !eventDate ||
-        !eventLocation ||
-        !description ||
-        !image ||
-        !eventAddress
-      ) {
+
+      if (!title || !eventDate || !eventLocation || !description || !image || !eventAddress) {
         toast.error('Todos los campos son obligatorios.', {
           position: 'bottom-center',
         });
@@ -74,10 +84,7 @@ function InputEventAd() {
         return;
       }
 
-      const cleanedDateString = values.eventDate.replace(
-        /(\d+)(th|st|nd|rd)/,
-        '$1',
-      );
+      const cleanedDateString = values.eventDate.replace(/(\d+)(th|st|nd|rd)/, '$1');
       const eventDateConverted = new Date(cleanedDateString);
 
       const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventLocation)}`;
@@ -93,7 +100,7 @@ function InputEventAd() {
         price: price || '0',
         creator: creatorId,
       };
-      console.log('!!!!!!!!!!!!!!!!', eventData);
+
       try {
         const response = await fetch(
           `http://localhost:${port}/auth/events/create`,
@@ -113,10 +120,7 @@ function InputEventAd() {
           toast.success('El evento se ha creado exitosamente', {
             position: 'bottom-center',
           });
-
-          alert(
-            `Evento creado exitosamente. Ver en Google Maps: ${googleMapsLink}`,
-          );
+          alert(`Evento creado exitosamente. Ver en Google Maps: ${googleMapsLink}`);
         } else {
           toast.error('Error al crear el evento', {
             position: 'bottom-center',
@@ -135,11 +139,29 @@ function InputEventAd() {
     setShowMap(true);
   };
 
+  useEffect(() => {
+    setTitle(formik.values.title);
+    setEventDate(formik.values.eventDate);
+    setEventLocation(formik.values.eventLocation);
+    setEventAddress(formik.values.eventAddress);
+    setDescription(formik.values.description);
+    setStock(formik.values.stock);
+    setPrice(formik.values.price);
+    setImages(formik.values.images);
+  }, [
+    formik.values.title,
+    formik.values.eventDate,
+    formik.values.eventLocation,
+    formik.values.eventAddress,
+    formik.values.description,
+    formik.values.stock,
+    formik.values.price,
+    formik.values.images,
+  ]);
+
   return (
     <div className="p-4 space-y-4">
-      <h1 className="font-bold text-[28px] text-gray-500 mb-4">
-        Crear evento:
-      </h1>
+      <h1 className="font-bold text-[28px] text-gray-500 mb-4">Crear evento:</h1>
 
       <form onSubmit={formik.handleSubmit} className="flex flex-row gap-8">
         <div className="w-1/2">
@@ -155,9 +177,7 @@ function InputEventAd() {
             )}
 
             <DatePickerDemo
-              onChange={(date: string) =>
-                formik.setFieldValue('eventDate', date)
-              }
+              onChange={(date: string) => formik.setFieldValue('eventDate', date)}
             />
             {formik.touched.eventDate && formik.errors.eventDate && (
               <div className="text-red-500">{formik.errors.eventDate}</div>
@@ -177,13 +197,6 @@ function InputEventAd() {
               >
                 Generar Link
               </Button>
-              {/* <Input
-                type="text"
-                placeholder="Link generado por GoogleMaps"
-                className="bg-white flex-grow"
-                value={googleMapsLink}
-                onChange={(e) => setEventLocation!(e.target.value)}
-              /> */}
             </div>
             {formik.touched.eventLocation && formik.errors.eventLocation && (
               <div className="text-red-500">{formik.errors.eventLocation}</div>
@@ -228,12 +241,8 @@ function InputEventAd() {
             {showMap && (
               <div className="mt-4 w-full items-start">
                 <GoogleMap
-                  setEventLocation={(location) =>
-                    formik.setFieldValue('eventLocation', location)
-                  }
-                  setEventAddress={(address) =>
-                    formik.setFieldValue('eventAddress', address)
-                  }
+                  setEventLocation={(location) => formik.setFieldValue('eventLocation', location)}
+                  setEventAddress={(address) => formik.setFieldValue('eventAddress', address)}
                 />
               </div>
             )}
@@ -241,9 +250,7 @@ function InputEventAd() {
         </div>
 
         <div className="w-1/2 flex flex-col items-start">
-          <h2 className="font-bold text-[24px] text-gray-500 mb-2">
-            Previsualización:
-          </h2>
+          <h2 className="font-bold text-[24px] text-gray-500 mb-2">Previsualización:</h2>
           <div className="border p-4 rounded-lg shadow-lg max-w-sm">
             <img
               src={image || 'https://via.placeholder.com/400'}
