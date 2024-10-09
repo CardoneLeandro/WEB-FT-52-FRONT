@@ -7,20 +7,20 @@ const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 interface AuthContextProps {
   children: React.ReactNode;
 }
-interface AdminDonation {
+export interface AdminDonation {
   id: string;
   title: string;
   amount: number;
   date: string;
-  status: string;
+  status: 'pending' | 'active' | 'rejected';
 }
 interface Donation {
   title: string;
   amount: number;
   date: string;
 }
-interface Session {
-  id: string;
+export interface Session {
+  id: string | null;
   name: string;
   email: string;
   image: string | null;
@@ -37,7 +37,7 @@ interface PaymentInfo {
 }
 
 export interface Event {
-  id: string;
+  id: string ;
   highlight: boolean;
   createDate: Date;
   status: string;
@@ -53,13 +53,13 @@ export interface Event {
 
 interface AuthContextType {
   token: string | null;
-  userSession: Session | null;
+  userSession: Session;
   paymentInfo: PaymentInfo | null;
   adminDonations: AdminDonation[] | null;
   allEvents: Event[] | null;
   adminEvents: Event[] | null;
   setToken: (token: string | null) => void;
-  setSession: (userSession: Session | null) => void;
+  setSession: (userSession: Session) => void;
   setDonation: (donation: Donation) => void;
   setPaymentInfo: (paymentInfo: PaymentInfo | null) => void;
   setAdminDonation: (adminDonation: AdminDonation) => void;
@@ -73,7 +73,18 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
   token: null,
-  userSession: null,
+  userSession: {
+    id: null,
+    name: '',
+    email: '',
+    image: null,
+    providerAccountId: '',
+    creatorId: '',
+    status: null,
+    phone: '',
+    address: '',
+    donations: []
+  },
   paymentInfo: null,
   adminDonations: null,
   allEvents: null,
@@ -93,7 +104,18 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
-  const [userSession, setSession] = useState<Session | null>(null);
+  const [userSession, setSession] = useState<Session>({
+    id: null,
+    name: '',
+    email: '',
+    image: null,
+    providerAccountId: '',
+    creatorId: '',
+    status: null,
+    phone: '',
+    address: '',
+    donations: [], // Inicializa donations como un array vacío
+  });
   const [token, setToken] = useState<string | null>(null);
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
   const [adminDonations, setAdminDonations] = useState<AdminDonation[] | null>(
@@ -116,7 +138,18 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
       setSession(storedSession);
       setToken(storedToken);
     } else {
-      setSession(null);
+      setSession({
+        id: null,
+        name: '',
+        email: '',
+        image: null,
+        providerAccountId: '',
+        creatorId: '',
+        status: null,
+        phone: '',
+        address: '',
+        donations: [],
+      });
       localStorage.removeItem('userSession');
       setToken(null);
     }
@@ -169,7 +202,18 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const handleSetToken = (newToken: string | null) => {
     setToken(newToken);
     if (!newToken) {
-      setSession(null);
+      setSession({
+        id: '',
+        name: '',
+        email: '',
+        image: null,
+        providerAccountId: '',
+        creatorId: '',
+        status: null,
+        phone: '',
+        address: '',
+        donations: [], // Inicializa donations como un array vacío
+      });
       localStorage.removeItem('token');
       localStorage.removeItem('userSession');
       localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo también si no hay token
@@ -178,7 +222,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     }
   };
 
-  const handleUserData = (userSession: Session | null) => {
+  const handleUserData = (userSession: Session) => {
     setSession(userSession);
     if (!userSession) {
       setToken(null);
@@ -231,7 +275,18 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
 
   const logout = () => {
     setToken(null);
-    setSession(null);
+    setSession({
+      id: null,
+      name: '',
+      email: '',
+      image: null,
+      providerAccountId: '',
+      creatorId: '',
+      status: null,
+      phone: '',
+      address: '',
+      donations: [],
+    });
     localStorage.removeItem('token');
     localStorage.removeItem('userSession');
     localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo al cerrar sesión

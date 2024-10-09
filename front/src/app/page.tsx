@@ -38,6 +38,8 @@ export default function Home() {
   const [events, setEvents] = useState<Event[]>([]);
   const [highlight, setHighlight] = useState<Event[]>([]);
   const [moments, setMoments] = useState<Event[]>([]);
+  const [incommingEvents, setIncommingEvents] = useState<Event[]>([]);
+
 
   //! UTILIZAR "INCOMMINGEVENTS" PARA RENDERIZAR LAS 3 TARJETAS
 
@@ -68,17 +70,21 @@ export default function Home() {
         (a: Event, b: Event) => a.eventDate.getTime() - b.eventDate.getTime(),
       )
       .slice(0, 3);
+
     setIncommingEvents(incommingEvents);
+
+    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@', allEvents)
+  console.log('allEvents@@@@@@@@@@@@@@@@q', events);
+  console.log('allEvents++++++++++++', allEvents);
+  console.log('incommingEvents!!!!!!!!!!!!!!!!!!', incommingEvents);
+
   }, [token, userSession, allEvents, redirect]);
-  const [incommingEvents, setIncommingEvents] = useState([]);
+  
   useEffect(() => {
     if (inView) {
       controls.start({ opacity: 1, y: 0 });
     }
   }, [controls, inView]);
-  console.log('allEvents@@@@@@@@@@@@@@@@q', events);
-  console.log('allEvents++++++++++++', allEvents);
-  console.log('incommingEvents!!!!!!!!!!!!!!!!!!', incommingEvents);
   return (
     <div className="container mx-auto px-4 py-8">
       <section className="mb-12">
