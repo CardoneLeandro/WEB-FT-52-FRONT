@@ -1,29 +1,25 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import AdminListComponent from '@/components/adminPanel/adminListComponent';
 import { useAuth } from '@/context/AuthContext';
+import DonationComponent from './donationComponent';
+import { AdminDonation } from '@/context/AuthContext';
 
-interface Donation {
-  id: string;
-  title: string;
-  amount: number;
-  status: 'pending' | 'accepted';
-}
+
 
 const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
 export default function AdminDonaciones() {
-  const [donations, setDonations] = useState<Donation[]>([]);
-  const [filteredDonations, setFilteredDonations] = useState<Donation[]>([]);
+  const [donations, setDonations] = useState<AdminDonation[]>([]);
+  const [filteredDonations, setFilteredDonations] = useState<AdminDonation[]>([]);
   const [statusFilter, setStatusFilter] = useState<
     'todas' | 'accepted' | 'pending'
   >('todas');
   const [nameFilter, setNameFilter] = useState('');
   const { userSession, token } = useAuth();
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+
   const fetchDonations = async (): Promise<void> => {
     if (!userSession) return;
 
@@ -100,7 +96,7 @@ export default function AdminDonaciones() {
   useEffect(() => {
     const filtered = donations
       .filter((donation) => {
-        if (statusFilter === 'accepted') return donation.status === 'accepted';
+        if (statusFilter === 'accepted') return donation.status === 'active';
         if (statusFilter === 'pending') return donation.status === 'pending';
         return true;
       })
@@ -147,7 +143,18 @@ export default function AdminDonaciones() {
               />
             </div>
 
-            <AdminListComponent
+            <div>
+              {filteredDonations.map((donation) => (
+                <DonationComponent
+                  key={donation.id}
+                  props={donation}
+                  confirmPayment={handleConfirmPayment}
+                  cancelPayment={handleCancelPayment}
+                />
+              ))}
+            </div>
+
+            {/* <AdminListComponent
               type="donation"
               items={filteredDonations.map((donation) => ({
                 id: donation.id,
@@ -162,7 +169,7 @@ export default function AdminDonaciones() {
               getToggleLabel={() => ''}
               onConfirmPayment={handleConfirmPayment}
               onCancelPayment={handleCancelPayment}
-            />
+            /> */}
           </div>
         </div>
       </div>

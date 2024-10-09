@@ -5,23 +5,22 @@ import AdminListComponent, {
   Item,
 } from '@/components/adminPanel/adminListComponent';
 import { useAuth } from '@/context/AuthContext';
+import UsersComponent from './usersComponent';
 
 interface User {
   id: string;
   name: string;
   email: string;
-  status: string;
+  status: 'active' | 'partialactive' | 'pending' | 'banned' | 'inactive'; // Cambiado a valores específicos
+  role: 'user' | 'admin' | 'superadmin';
+  image: string;
   previousStatus?: string;
-  avatarUrl: string;
-  isAdmin: boolean;
 }
 
 export default function AdminPanel() {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [statusFilter, setStatusFilter] = useState<
-    'all' | 'active' | 'inactive'
-  >('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [nameFilter, setNameFilter] = useState('');
   const { userSession, token } = useAuth();
 
@@ -37,7 +36,7 @@ export default function AdminPanel() {
         const data = await response.json();
         console.log('Fetched users:', data);
         setUsers(data);
-        setFilteredUsers(data);
+        // setFilteredUsers(data);
       } else {
         console.error('Error fetching users:', response.statusText);
       }
@@ -52,42 +51,44 @@ export default function AdminPanel() {
     }
   }, [userSession]);
 
-  const handleToggleAction = async (user: Item) => {
-    const currentUser = users.find((u) => u.id === user.id);
-
+  const handleToggleAction = async (id: string) => {
+    const currentUser = users.find((u) => u.id === id);
+  
     if (!currentUser) {
       console.error('User not found');
       return;
     }
-
-    const newStatus =
+  
+    // Cambiar status correctamente, asegurándose de que sea un valor válido
+    const newStatus: 'active' | 'partialactive' | 'pending' | 'banned' | 'inactive' =
       currentUser.status === 'banned'
-        ? currentUser.previousStatus || 'active'
+        ? (currentUser.previousStatus as 'active' | 'partialactive' | 'pending' | 'banned' | 'inactive')
         : 'banned';
-
+  
     try {
       const response = await fetch(
-        `http://localhost:3003/auth/user/ban/${user.id}`,
+        `http://localhost:3003/auth/user/ban/${id}`,
         {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
-
+  
       if (response.ok) {
         const updatedUser = {
           ...currentUser,
-          status: newStatus,
+          status: newStatus, // Asegúrate de que el status sea un valor válido
           previousStatus: currentUser.status,
         };
+  
         setUsers((prevUsers) =>
-          prevUsers.map((u) => (u.id === user.id ? updatedUser : u)),
+          prevUsers.map((u) => (u.id === id ? updatedUser : u))
         );
         setFilteredUsers((prevUsers) =>
-          prevUsers.map((u) => (u.id === user.id ? updatedUser : u)),
+          prevUsers.map((u) => (u.id === id ? updatedUser : u))
         );
       } else {
         console.error('Error updating user status:', response.statusText);
@@ -97,17 +98,10 @@ export default function AdminPanel() {
     }
   };
 
-  const handleToggleAdminRole = async (user: Item) => {
-    const currentUser = users.find((u) => u.id === user.id);
-
-    if (!currentUser) {
-      console.error('User not found');
-      return;
-    }
-
+  const handleToggleAdminRole = async (id: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3003/auth/user/role/administrator/${user.id}`,
+        `http://localhost:3003/auth/user/role/administrator/${id}`,
         {
           method: 'PATCH',
           headers: {
@@ -118,13 +112,8 @@ export default function AdminPanel() {
       );
 
       if (response.ok) {
-        const updatedUser = { ...currentUser, isAdmin: !currentUser.isAdmin };
-        setUsers((prevUsers) =>
-          prevUsers.map((u) => (u.id === user.id ? updatedUser : u)),
-        );
-        setFilteredUsers((prevUsers) =>
-          prevUsers.map((u) => (u.id === user.id ? updatedUser : u)),
-        );
+        const user = await response.json();
+        // Realiza las actualizaciones correspondientes
       } else {
         console.error('Error updating user admin role:', response.statusText);
       }
@@ -190,7 +179,27 @@ export default function AdminPanel() {
               />
             </div>
 
-            <AdminListComponent
+            <div>
+              {filteredUsers.map((user) => (
+                <UsersComponent
+                  key={user.id}
+                  props={user}
+                  changeRole={handleToggleAdminRole}
+                  changeStatus={handleToggleAction}
+                />
+            ))}
+          </div>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+
+
+            {/* <AdminListComponent
               type="user"
               items={filteredUsers.map((user) => ({
                 id: user.id.toString(),
@@ -205,10 +214,5 @@ export default function AdminPanel() {
               onToggleAdminRole={handleToggleAdminRole}
               getToggleLabel={getToggleLabel}
               getAdminToggleLabel={getAdminToggleLabel}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+            /> */}
+          

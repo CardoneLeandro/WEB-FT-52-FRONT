@@ -12,34 +12,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const toggleMenu = (menuName: string) => {
     setActiveMenu((prevMenu) => (prevMenu === menuName ? null : menuName));
   };
-  const { logout, adminEvents, setAdminEvents, allEvents, setAllEvents, token } = useAuth();
+  const { logout, token } = useAuth();
   const handleLogOut = () => {
     signOut({ callbackUrl: '/' });
     logout();
   };
 
-  const getEvents = async () => {
-    try {
-      const response = await fetch(`http://localhost:${port}/RUTA QUE LLAMA A TODOS LOS EVENTOS Y REQUIERE TOKEN`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      },
-      )
-    if(response.ok){
-      const data = await response.json();
-      setAdminEvents(data);
-    }else {setAllEvents(null)}
-    } catch (error) {
-      console.error('Error al obtener los eventos:', error);
-    }
-  }
 
   useEffect(() => {
-    getEvents();
   }, []);
 
   return (
