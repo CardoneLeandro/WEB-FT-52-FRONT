@@ -1,18 +1,14 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
 import { useAuth } from '@/context/AuthContext';
-
-
-
-const upcomingEvents = [
-  { id: 1, name: 'Evento 1', date: '2023-07-15' },
-  { id: 2, name: 'Evento 2', date: '2023-07-22' },
-  { id: 3, name: 'Evento 3', date: '2023-07-29' },
-];
+import { useRouter } from 'next/navigation';
 
 export default function PanelAdmin() {
   const { userSession } = useAuth();
+  const Router = useRouter();
 
   return (
     <div className="container mx-auto p-6">
@@ -22,13 +18,11 @@ export default function PanelAdmin() {
         </h1>
       </div>
 
-      {/* Contenido principal */}
       <div className="flex-grow bg-gray-100 py-6">
         <div className="container mx-auto px-4 max-w-7xl">
           <Card>
             <CardContent className="p-6 rounded-b-xl shadow-xl">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Sección de Información del Usuario */}
                 <Card className="shadow-md">
                   <CardHeader>
                     <CardTitle>Información del Usuario</CardTitle>
@@ -49,7 +43,6 @@ export default function PanelAdmin() {
                   </CardContent>
                 </Card>
 
-                {/* Sección de Próximos Eventos */}
                 <Card className="shadow-md">
                   <CardHeader>
                     <CardTitle className="cursor-default">
@@ -58,17 +51,33 @@ export default function PanelAdmin() {
                   </CardHeader>
                   <CardContent className="cursor-default">
                     <ul className="space-y-2">
-                      {upcomingEvents.map((event) => (
-                        <li
-                          key={event.id}
-                          className="flex justify-between items-center bg-white p-3 rounded shadow-sm"
-                        >
-                          <span>{event.name}</span>
-                          <span className="text-sm text-gray-500">
-                            {event.date}
-                          </span>
-                        </li>
-                      ))}
+                      {userSession?.assistantEvents?.length > 0 ? (
+                        userSession.assistantEvents.map((assistantEvents) => (
+                          <li
+                            key={assistantEvents.eventId}
+                            className="flex justify-between items-center bg-white p-3 rounded shadow-sm"
+                          >
+                            <span>{assistantEvents.title}</span>
+                            <span className="text-sm text-gray-500">
+                              {new Date(
+                                assistantEvents.eventDate,
+                              ).toLocaleDateString()}
+                            </span>
+                            <Button
+                              onClick={() =>
+                                Router.push(
+                                  `/eventdetail/${assistantEvents.eventId}`,
+                                )
+                              }
+                              variant="default"
+                            >
+                              Ver Evento{' '}
+                            </Button>
+                          </li>
+                        ))
+                      ) : (
+                        <p>Aun no te has inscripto a ningun evento.</p>
+                      )}
                     </ul>
                   </CardContent>
                 </Card>
