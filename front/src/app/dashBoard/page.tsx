@@ -14,37 +14,15 @@ import {
 } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
-const aportes = [
-  {
-    aporte: 'Donación',
-    paymentStatus: 'Paid',
-    totalAmount: '$250.00',
-    paymentMethod: 'Credit Card',
-  },
-  {
-    aporte: 'Donación',
-    paymentStatus: 'Pending',
-    totalAmount: '$150.00',
-    paymentMethod: 'PayPal',
-  },
-  {
-    aporte: 'Donación',
-    paymentStatus: 'Unpaid',
-    totalAmount: '$350.00',
-    paymentMethod: 'Bank Transfer',
-  },
-];
 
-const upcomingEvents = [
-  { id: 1, name: 'Evento 1', date: '2023-07-15' },
-  { id: 2, name: 'Evento 2', date: '2023-07-22' },
-  { id: 3, name: 'Evento 3', date: '2023-07-29' },
-];
 
 export default function UserDashboard() {
   const [showDonations, setShowDonations] = useState(false);
   const { userSession } = useAuth();
+  const Router = useRouter()
+
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 ">
@@ -92,17 +70,23 @@ export default function UserDashboard() {
                   </CardHeader>
                   <CardContent className="cursor-default">
                     <ul className="space-y-2">
-                      {upcomingEvents.map((event) => (
-                        <li
-                          key={event.id}
-                          className="flex justify-between items-center bg-white p-3 rounded shadow-sm"
-                        >
-                          <span>{event.name}</span>
-                          <span className="text-sm text-gray-500">
-                            {event.date}
-                          </span>
-                        </li>
-                      ))}
+                      {userSession?.assistance?.length > 0 ? (
+                        userSession.assistance.map((event) => (
+                          <li
+                            key={event.id}
+                            className="flex justify-between items-center bg-white p-3 rounded shadow-sm"
+                          >
+                            <span>{event.title}</span>
+                            <span className="text-sm text-gray-500">
+                              {new Date(event.eventDate).toLocaleDateString()}
+                            </span>
+                            <Button onClick={() => Router.push(`/eventdetail/${event.id}`)} variant="default">Ver Evento </Button>
+                          </li>
+                        ))
+                      ) : (
+                        <p>Aun no te has inscripto a ningun evento.</p>
+                      )}
+
                     </ul>
                   </CardContent>
                 </Card>
@@ -128,19 +112,21 @@ export default function UserDashboard() {
                       <Table>
                         <TableHeader>
                           <TableRow className="text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md transition-colors duration-300 curor-pointer">
-                            <TableHead>Aporte</TableHead>
-                            <TableHead>Estado</TableHead>
+                            <TableHead>Descripcion</TableHead>
+                            <TableHead>Fecha</TableHead>
                             <TableHead>Total</TableHead>
-                            <TableHead>Método de Pago</TableHead>
+                           
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {aportes.map((aporte, index) => (
-                            <TableRow key={index}>
-                              <TableCell>{aporte.aporte}</TableCell>
-                              <TableCell>{aporte.paymentStatus}</TableCell>
-                              <TableCell>{aporte.totalAmount}</TableCell>
-                              <TableCell>{aporte.paymentMethod}</TableCell>
+                          {userSession?.donations.map((donation) => (
+                            <TableRow key={donation.title}>
+                              <TableCell>{donation.title}</TableCell>
+                              <TableCell>
+                                {new Date(donation.date).toLocaleDateString()}
+                              </TableCell>{' '}
+                              {/* Formatear la fecha */}
+                              <TableCell>${donation.amount}</TableCell>
                             </TableRow>
                           ))}
                         </TableBody>

@@ -13,7 +13,7 @@ function DropDownMenu() {
   };
 
   useEffect(() => {
-    console.log('USE EFFECT DROPDOWN MENU', token);
+    console.log('USE EFFECT DROPDOWN MENU', userSession);
     if (token === null) {
       return;
     }
@@ -36,12 +36,15 @@ function DropDownMenu() {
           >
             Mi perfil
           </Link>
-          <Link
-            href="/dashBoard-Admin"
-            className="px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md transition-colors duration-300"
-          >
-            Panel Administrador
-          </Link>
+          {(userSession?.role === 'superadmin' ||
+            userSession?.role === 'admin') && (
+            <Link
+              href="/dashBoard-Admin"
+              className="px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md transition-colors duration-300"
+            >
+              Panel Administrador
+            </Link>
+          )}
           <div
             onClick={() => handleLogOut()}
             className="px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md transition-colors duration-300 cursor-pointer"
