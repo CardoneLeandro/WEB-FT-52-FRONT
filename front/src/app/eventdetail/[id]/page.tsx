@@ -42,7 +42,11 @@ const EventDetailPage = ({ params }: { params: { id: string } }) => {
     return <div>Evento no disponible</div>;
   }
 
-  return <EventCardDetail {...event} />;
+  return (
+    <div className="flex justify-center items-center min-h-screen nim-w-screen bg-green-500">
+    <EventCardDetail {...event} />;
+    </div>
+  )
 };
 
 export default EventDetailPage;

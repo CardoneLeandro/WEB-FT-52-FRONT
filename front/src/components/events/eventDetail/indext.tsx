@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useEffect, useState } from 'react';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { Event } from '@/context/AuthContext';
+import { Button } from '@/components/ui/button';
 interface EventCardProps {
   id: string;
   highlight: boolean;
@@ -75,39 +76,45 @@ const EventCardDetail: React.FC<EventCardProps> = ({
       const fetchedAddress = await getAddressFromCoordinates(coordinates);
       setAddress(fetchedAddress);
     };
-
     if (coordinates.length > 0) {
       fetchAddress();
     } else {
       setAddress(eventAddress);
     }
   }, [eventLocation, eventAddress]);
-  const { token } = useAuth();
-
-  const handleEventAsistance = async (updatedEvent: Event) => {
+  const { userSession, token, setAssistance } = useAuth();
+  const port = process.env.NEXT_PUBLIC_APP_API_PORT
+  
+  
+  const handleEventAsistance = async (id: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3003/events/updateattendance/:${updatedEvent.id}`,
+        `http://localhost:${port}/events/updateattendance/${id}`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(updatedEvent),
+          body: JSON.stringify({creator: userSession.creatorId}),
         },
       );
       if (!response.ok) {
+        const errorData = await response.json();
+        console.error('ERROR EN LA RESPUESTA DEL SERVIDOR:', errorData);
         throw new Error(
-          'CHIPICHIPICHAPACHAPADUBIDUBIDABADABA,MAGICOMIDUBIDUBIBUMBUMBUM',
+          'No se pudo actualizar el evento. Por favor, intenta de nuevo.',
         );
       }
-      const updatedEventData = await response.json();
-    } catch (err) {
-      setError('No se pudo actualizar el evento.');
+      const data = await response.json();
+      console.log('===========> RESPONSE EVENT ASISTANCE <===============', data.assistantEvents);
+      setAssistance(data.assistantEvents)
+    } catch (e) {
+      console.error(e);
     }
   };
 
+  
   return (
     <div className="flex justify-center p-4">
       <aside className="bg-white shadow-md rounded-lg flex flex-col md:flex-row w-full max-w-4xl mx-auto my-6 md:ml-4 md:max-w-6xl">
@@ -169,9 +176,11 @@ const EventCardDetail: React.FC<EventCardProps> = ({
             <button className="bg-transparent border border-blue-500 text-blue-500 hover:bg-blue-600 hover:text-white font-semibold py-2 px-4 rounded-lg w-full md:w-auto transition-colors duration-300">
               Volver a eventos
             </button>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg w-full md:w-auto transition-colors duration-300">
+            <Button 
+            onClick={() => handleEventAsistance(id)}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg w-full md:w-auto transition-colors duration-300">
               Asistiré
-            </button>
+            </Button>
           </div>
         </div>
       </aside>

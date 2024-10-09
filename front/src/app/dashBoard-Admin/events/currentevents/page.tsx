@@ -178,7 +178,7 @@ export default function EventsPage() {
                               Editar
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="sm:max-w-[425px]">
+                          <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
                             <DialogHeader>
                               <DialogTitle>Editar Evento</DialogTitle>
                             </DialogHeader>

@@ -1,11 +1,17 @@
 'use client';
 
-import { set } from 'date-fns';
 import React, { useState, useEffect, createContext, useContext } from 'react';
 const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
 interface AuthContextProps {
   children: React.ReactNode;
+}
+interface Assistance {
+  eventId: string;
+  id: string;
+  status: string;
+  title: string;
+  eventDate: Date;
 }
 export interface AdminDonation {
   id: string;
@@ -19,7 +25,6 @@ interface Donation {
   amount: number;
   date: string;
 }
-export interface Assistance {}
 export interface Session {
   id: string | null;
   name: string;
@@ -43,6 +48,7 @@ export interface Event {
   highlight: boolean;
   createDate: Date;
   status: string;
+  vacancy: boolean;
   title: string;
   description: string;
   eventDate: Date;
@@ -51,6 +57,7 @@ export interface Event {
   price: number;
   stock: number;
   images: string[];
+  assistance: Assistance[];
 }
 
 interface AuthContextType {
@@ -63,6 +70,7 @@ interface AuthContextType {
   setToken: (token: string | null) => void;
   setSession: (userSession: Session) => void;
   setDonation: (donation: Donation) => void;
+  setAssistance: (assistance: Assistance[]) => void;
   setPaymentInfo: (paymentInfo: PaymentInfo | null) => void;
   setAdminDonation: (adminDonation: AdminDonation) => void;
   setAdminDonations: (adminDonations: AdminDonation[] | null) => void;
@@ -86,22 +94,24 @@ const AuthContext = createContext<AuthContextType>({
     phone: '',
     address: '',
     donations: [],
+    assistance: []
   },
   paymentInfo: null,
   adminDonations: null,
   allEvents: null,
   adminEvents: null,
-  setToken: () => {},
-  setSession: () => {},
-  setDonation: () => {},
-  setPaymentInfo: () => {},
-  setAdminDonation: () => {},
-  setAdminDonations: () => {},
-  setAllEvents: () => {},
-  setEvent: () => {},
-  setAdminEvents: () => {},
-  setAdminEvent: () => {},
-  logout: () => {},
+  setToken: () => { },
+  setSession: () => { },
+  setDonation: () => { },
+  setAssistance: () => { },
+  setPaymentInfo: () => { },
+  setAdminDonation: () => { },
+  setAdminDonations: () => { },
+  setAllEvents: () => { },
+  setEvent: () => { },
+  setAdminEvents: () => { },
+  setAdminEvent: () => { },
+  logout: () => { },
 });
 export const useAuth = () => useContext(AuthContext);
 
@@ -116,7 +126,8 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     status: null,
     phone: '',
     address: '',
-    donations: [], // Inicializa donations como un array vacío
+    donations: [],
+    assistance: []
   });
   const [token, setToken] = useState<string | null>(null);
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
@@ -151,6 +162,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         phone: '',
         address: '',
         donations: [],
+        assistance: []
       });
       localStorage.removeItem('userSession');
       setToken(null);
@@ -192,20 +204,106 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     }
   };
 
-  const handleSetPayment = (params: PaymentInfo | null) => {
-    setPaymentInfo(params);
-    if (params) {
-      localStorage.setItem('paymentInfo', JSON.stringify(params)); // Guardar en localStorage
-    } else {
-      localStorage.removeItem('paymentInfo'); // Limpiar localStorage si es null
-    }
-  };
+  const handleSetAssistance = (updatedAssistance: Assistance[]) => {
+    if (updatedAssistance.length > 0) {
+      setSession((prevSession) => {
+        if (prevSession) {
+          const { assistance, ...rest } = prevSession;
+          const updatedSession = {assistance:updatedAssistance, ...rest };
+          return updatedSession;
+        }
+        return prevSession;
+      })
+    }}
 
-  const handleSetToken = (newToken: string | null) => {
-    setToken(newToken);
-    if (!newToken) {
+    const handleSetPayment = (params: PaymentInfo | null) => {
+      setPaymentInfo(params);
+      if (params) {
+        localStorage.setItem('paymentInfo', JSON.stringify(params)); // Guardar en localStorage
+      } else {
+        localStorage.removeItem('paymentInfo'); // Limpiar localStorage si es null
+      }
+    };
+
+    const handleSetToken = (newToken: string | null) => {
+      setToken(newToken);
+      if (!newToken) {
+        setSession({
+          id: '',
+          name: '',
+          email: '',
+          image: null,
+          providerAccountId: '',
+          creatorId: '',
+          status: null,
+          phone: '',
+          address: '',
+          donations: [],
+          assistance: []
+        });
+        localStorage.removeItem('token');
+        localStorage.removeItem('userSession');
+        localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo también si no hay token
+      } else {
+        localStorage.setItem('token', newToken);
+      }
+    };
+
+    const handleUserData = (userSession: Session) => {
+      setSession(userSession);
+      if (!userSession) {
+        setToken(null);
+        localStorage.removeItem('token');
+        localStorage.removeItem('userSession');
+        localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo también si no hay sesión
+      } else {
+        localStorage.setItem('userSession', JSON.stringify(userSession));
+      }
+    };
+
+    const handleAdminDonations = (adminDonations: AdminDonation[] | null) => {
+      setAdminDonations(adminDonations);
+    };
+
+    const handleAdminDonation = (adminDonation: AdminDonation) => {
+      setAdminDonations((prevAdminDonations) => {
+        if (prevAdminDonations) {
+          return [...prevAdminDonations, adminDonation];
+        }
+        return [adminDonation];
+      });
+    };
+
+    const handleAllEvents = (allEvents: Event[] | null) => {
+      setAllEvents(allEvents);
+    };
+
+    const handleEvent = (updatedEvent: Event) => {
+      setAllEvents((prevEvents) => {
+        if (!prevEvents) return null;
+        return prevEvents.map((event) =>
+          event.id === updatedEvent.id ? updatedEvent : event,
+        );
+      });
+    };
+
+    const handleAdminEvents = (allEvents: Event[] | null) => {
+      setAdminEvents(allEvents);
+    };
+
+    const handleAdminEvent = (adminEvent: Event) => {
+      setAdminEvents((prevAdminEvents) => {
+        if (prevAdminEvents) {
+          return [...prevAdminEvents, adminEvent];
+        }
+        return [adminEvent];
+      });
+    };
+
+    const logout = () => {
+      setToken(null);
       setSession({
-        id: '',
+        id: null,
         name: '',
         email: '',
         image: null,
@@ -214,111 +312,40 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         status: null,
         phone: '',
         address: '',
-        donations: [], // Inicializa donations como un array vacío
+        donations: [],
+        assistance: []
       });
       localStorage.removeItem('token');
       localStorage.removeItem('userSession');
-      localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo también si no hay token
-    } else {
-      localStorage.setItem('token', newToken);
-    }
+      localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo al cerrar sesión
+    };
+
+    return (
+      <AuthContext.Provider
+        value={{
+          token,
+          setToken: handleSetToken,
+          userSession,
+          setSession: handleUserData,
+          setDonation: handleSetDonations,
+          logout,
+          paymentInfo,
+          setPaymentInfo: handleSetPayment,
+          adminDonations,
+          setAdminDonation: handleAdminDonation,
+          setAdminDonations: handleAdminDonations,
+          allEvents,
+          setEvent: handleEvent,
+          setAllEvents: handleAllEvents,
+          adminEvents,
+          setAdminEvents: handleAdminEvents,
+          setAdminEvent: handleAdminEvent,
+          setAssistance: handleSetAssistance
+        }}
+      >
+        {children}
+      </AuthContext.Provider>
+    );
   };
 
-  const handleUserData = (userSession: Session) => {
-    setSession(userSession);
-    if (!userSession) {
-      setToken(null);
-      localStorage.removeItem('token');
-      localStorage.removeItem('userSession');
-      localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo también si no hay sesión
-    } else {
-      localStorage.setItem('userSession', JSON.stringify(userSession));
-    }
-  };
-
-  const handleAdminDonations = (adminDonations: AdminDonation[] | null) => {
-    setAdminDonations(adminDonations);
-  };
-
-  const handleAdminDonation = (adminDonation: AdminDonation) => {
-    setAdminDonations((prevAdminDonations) => {
-      if (prevAdminDonations) {
-        return [...prevAdminDonations, adminDonation];
-      }
-      return [adminDonation];
-    });
-  };
-
-  const handleAllEvents = (allEvents: Event[] | null) => {
-    setAllEvents(allEvents);
-  };
-
-  const handleEvent = (updatedEvent: Event) => {
-    setAllEvents((prevEvents) => {
-      if (!prevEvents) return null;
-      return prevEvents.map((event) =>
-        event.id === updatedEvent.id ? updatedEvent : event,
-      );
-    });
-  };
-
-  const handleAdminEvents = (allEvents: Event[] | null) => {
-    setAdminEvents(allEvents);
-  };
-
-  const handleAdminEvent = (adminEvent: Event) => {
-    setAdminEvents((prevAdminEvents) => {
-      if (prevAdminEvents) {
-        return [...prevAdminEvents, adminEvent];
-      }
-      return [adminEvent];
-    });
-  };
-
-  const logout = () => {
-    setToken(null);
-    setSession({
-      id: null,
-      name: '',
-      email: '',
-      image: null,
-      providerAccountId: '',
-      creatorId: '',
-      status: null,
-      phone: '',
-      address: '',
-      donations: [],
-    });
-    localStorage.removeItem('token');
-    localStorage.removeItem('userSession');
-    localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo al cerrar sesión
-  };
-
-  return (
-    <AuthContext.Provider
-      value={{
-        token,
-        setToken: handleSetToken,
-        userSession,
-        setSession: handleUserData,
-        setDonation: handleSetDonations,
-        logout,
-        paymentInfo,
-        setPaymentInfo: handleSetPayment,
-        adminDonations,
-        setAdminDonation: handleAdminDonation,
-        setAdminDonations: handleAdminDonations,
-        allEvents,
-        setEvent: handleEvent,
-        setAllEvents: handleAllEvents,
-        adminEvents,
-        setAdminEvents: handleAdminEvents,
-        setAdminEvent: handleAdminEvent,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export default AuthProvider;
+  export default AuthProvider;

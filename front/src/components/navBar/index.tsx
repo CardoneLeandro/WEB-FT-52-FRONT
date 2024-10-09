@@ -18,9 +18,8 @@ function NavBar() {
   };
 
   useEffect(() => {
-    console.log('navbar', userSession ,"!!!!!!!" ,token);
   }),
-    [userSession , token];
+    [token];
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
   };
@@ -73,7 +72,6 @@ function NavBar() {
                 <AvatarImage
                   src={userSession?.image}
                   onClick={handleDropDownMenu}
-                  onMouseEnter={() => setDropDownMenu(true)}
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
@@ -85,7 +83,7 @@ function NavBar() {
             )}
 
             {dropDownMenu && (
-              <div onMouseLeave={() => setDropDownMenu(false)}>
+              <div>
                 <DropDownMenu />
               </div>
             )}
