@@ -35,7 +35,6 @@ const EventDetailPage = ({ params }: { params: { id: string } }) => {
     fetchEvent();
   }, [params.id]);
 
-  
   console.log('id del evento', params.id);
 
   if (!event) {
@@ -43,10 +42,10 @@ const EventDetailPage = ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen nim-w-screen bg-green-500">
-    <EventCardDetail {...event} />;
+    <div className="flex justify-center items-center min-h-screen nim-w-screen ">
+      <EventCardDetail {...event} />;
     </div>
-  )
+  );
 };
 
 export default EventDetailPage;
