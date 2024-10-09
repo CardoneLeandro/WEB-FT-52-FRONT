@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import { useAuth } from '@/context/AuthContext';
 function DropDownMenu() {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const { token, userSession } = useAuth();
   const { logout } = useAuth();
 

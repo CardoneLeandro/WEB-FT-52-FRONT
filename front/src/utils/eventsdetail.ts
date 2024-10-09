@@ -16,18 +16,21 @@ interface Event {
 export default async function getEventById(id: string) {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT || 3003;
   try {
-    const res = await fetch(`http://localhost:${port}/events/getone/${id}`, {
-      cache: 'no-store',
-    });
+    const res = await fetch(
+      `https://web-ft-52-back-1.onrender.com/${port}/events/getone/${id}`,
+      {
+        cache: 'no-store',
+      },
+    );
 
     if (!res.ok) {
       throw new Error(
-        `Error al obtener el evento: ${res.status} ${res.statusText}`
+        `Error al obtener el evento: ${res.status} ${res.statusText}`,
       );
     }
 
     const event: Event = await res.json();
-    return event
+    return event;
   } catch (error) {
     console.error('Error al obtener el evento por ID:', error);
     return null;

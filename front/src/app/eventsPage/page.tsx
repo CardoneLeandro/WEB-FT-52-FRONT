@@ -15,7 +15,7 @@ function EventsPage() {
 
   const getEvents = async (month = '', year = '', title = '') => {
     try {
-      let url = 'http://localhost:3003/events';
+      let url = 'https://web-ft-52-back-1.onrender.com/events';
 
       const params = new URLSearchParams();
       if (month) params.append('month', month);

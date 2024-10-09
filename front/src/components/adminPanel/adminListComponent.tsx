@@ -11,12 +11,10 @@ export interface Item {
   id: string;
   title: string;
   description: string;
-  status: string; // 'active' | 'partialactive' | 'pending' | 'banned' | 'inactive' | 'rejected';
-  // user => 'active' | 'partialactive' | 'pending' | 'banned' | 'inactive'
-  // donations => 'pending' | 'active' | 'rejected'
-  // events =>  'active' | 'inactive' 
-  role?: string; // 'user' | 'admin' | 'superadmin'
-  highlight: boolean; // true | false
+  status: string;
+
+  role?: string;
+  highlight: boolean;
   avatarUrl?: string;
   image?: string;
   eventDate?: string;
@@ -44,7 +42,6 @@ interface AdminListComponentProps {
   onCancelPayment?: (id: string) => void;
   onToggleHighlight: (item: Item) => void;
 }
-
 
 export default function AdminListComponent({
   type,
@@ -117,7 +114,7 @@ export default function AdminListComponent({
       }
     }
   };
-
+  console.log(onUpdateEvent);
   return (
     <div className="flex max-h-[calc(200vh-200px)] overflow-hidden">
       <Card className="w-full max-w-5xl mx-auto flex">
@@ -216,7 +213,7 @@ export default function AdminListComponent({
                 </Button>
                 {type === 'event' && (
                   <>
-                    <Button onClick={}>Editar</Button>
+                    <Button>Editar</Button>
                     <Button onClick={handleToggleHighlight}>
                       {selectedItem.highlight ? 'No destacar' : 'Destacar'}
                     </Button>

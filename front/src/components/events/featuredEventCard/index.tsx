@@ -6,28 +6,24 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import Image from 'next/image';
-
-interface FeaturedEventProps {
-  id: string; 
-  images: string;
-  description: string;
-  title: string;
-}
-
+import { Event } from '@/context/AuthContext';
 export default function FeaturedEventCard({
   id,
   images,
   description,
   title,
-}: FeaturedEventProps) {
+}: Event) {
+  console.log(id);
   return (
     <Card className="w-full max-w-[400px] shadow-lg">
       <CardContent className="pt-6 space-y-3">
-        <CardTitle className="cursor-default truncate" title={title}>{title}</CardTitle>
-        <div className="relative w-full aspect-video"> 
+        <CardTitle className="cursor-default truncate" title={title}>
+          {title}
+        </CardTitle>
+        <div className="relative w-full aspect-video">
           <Image
             className="rounded-xl object-cover"
-            src={images}
+            src={images[0]}
             alt={title}
             fill
             sizes="(max-width: 350px) 100vw, 350px"

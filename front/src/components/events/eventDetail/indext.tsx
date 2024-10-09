@@ -18,8 +18,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { toast } from 'hooks/use-toast';
-import { Event, Assistance } from '@/context/AuthContext';
-import { set } from 'date-fns';
+import { Event } from '@/context/AuthContext';
 
 const EventCardDetail: React.FC<Event> = ({
   id,
@@ -37,11 +36,12 @@ const EventCardDetail: React.FC<Event> = ({
 }) => {
   const [googleMapsLink, setGoogleMapsLink] = useState<string>('');
   const [address, setAddress] = useState<string>('');
+  console.log(setAddress);
   const { userSession, token, setAssistance } = useAuth();
   const router = useRouter();
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const [appointed, setAppointed] = useState<boolean>(false);
-
+  console.log(status, assistance);
   const extractCoordinatesFromURL = (url: string) => {
     try {
       const queryString = new URL(url).searchParams.get('query');
@@ -53,7 +53,7 @@ const EventCardDetail: React.FC<Event> = ({
       return [];
     }
   };
-
+  console.log(extractCoordinatesFromURL);
   const getAddressFromCoordinates = async (coordinates: string[]) => {
     if (coordinates.length < 2) return 'Ubicación no disponible';
 
@@ -77,6 +77,7 @@ const EventCardDetail: React.FC<Event> = ({
     }
     return `${lat}, ${lng}`;
   };
+  console.log(getAddressFromCoordinates);
 
   useEffect(() => {
     if (userSession.assistance && Array.isArray(userSession.assistance)) {

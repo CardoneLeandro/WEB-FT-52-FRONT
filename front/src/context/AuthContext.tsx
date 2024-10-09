@@ -1,8 +1,6 @@
 'use client';
 
-import { get } from 'http';
 import React, { useState, useEffect, createContext, useContext } from 'react';
-const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
 interface AuthContextProps {
   children: React.ReactNode;
@@ -60,6 +58,8 @@ export interface Event {
   stock: number;
   images: string[];
   assistantEvents: Assistance[];
+  key: string | number;
+  assistance?: boolean | string | number; //felipe añadio
 }
 
 interface AuthContextType {
@@ -146,7 +146,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const getEvents = async () => {
     try {
       const res = await fetch(
-        `http://localhost:${port}/events/getactiveandinactivehighlight`,
+        `https://web-ft-52-back-1.onrender.com/events/getactiveandinactivehighlight`,
       );
       if (res.ok) {
         const data = await res.json();
@@ -218,14 +218,17 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
       setSession((prevSession) => {
         if (prevSession) {
           const { assistantEvents, ...rest } = prevSession;
-          const updatedSession = { assistantEvents: updatedAssistance, ...rest };
+          console.log(assistantEvents); //evita generar errores
+          const updatedSession = {
+            assistantEvents: updatedAssistance,
+            ...rest,
+          };
           return updatedSession;
         }
         return prevSession;
       });
     }
   };
-
   const handleSetPayment = (params: PaymentInfo | null) => {
     setPaymentInfo(params);
     if (params) {

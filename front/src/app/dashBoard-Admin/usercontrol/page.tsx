@@ -43,12 +43,15 @@ export default function AdminPanel() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:3003/auth/user/get/all', {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        'https://web-ft-52-back-1.onrender.com/auth/user/get/all',
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       if (response.ok) {
         const data = await response.json();
         setUsers(data);
@@ -91,7 +94,7 @@ export default function AdminPanel() {
 
     try {
       const response = await fetch(
-        `http://localhost:3003/auth/user/ban/${id}`,
+        `https://web-ft-52-back-1.onrender.com/auth/user/ban/${id}`,
         {
           method: 'PATCH',
           headers: {
@@ -122,7 +125,7 @@ export default function AdminPanel() {
   const handleToggleAdminRole = async (id: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3003/auth/user/role/administrator/${id}`,
+        `https://web-ft-52-back-1.onrender.com/auth/user/role/administrator/${id}`,
         {
           method: 'PATCH',
           headers: {

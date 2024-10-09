@@ -12,23 +12,23 @@ import {
 } from '@/components/ui/card';
 import { MapPin } from 'lucide-react';
 import { HoverCard, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Event } from '@/context/AuthContext';
+// interface EventCardProps {
+//   id: string;
+//   key: string;
+//   highlight: boolean;
+//   createDate: Date;
+//   status: string;
+//   title: string;
+//   eventDate: Date;
+//   eventLocation: string;
+//   eventAddress: string;
+//   price: number;
+//   stock: number;
+//   images: string;
+// }
 
-interface EventCardProps {
-  id: string;
-  key: string;
-  highlight: boolean;
-  createDate: Date;
-  status: string;
-  title: string;
-  eventDate: Date;
-  eventLocation: string;
-  eventAddress: string;
-  price: number;
-  stock: number;
-  images: string;
-}
-
-const EventCard: React.FC<EventCardProps> = ({
+const EventCard: React.FC<Event> = ({
   id,
   key,
   highlight,
@@ -46,7 +46,7 @@ const EventCard: React.FC<EventCardProps> = ({
   const [highlighted, setHighlighted] = useState(highlight);
   const [formattedAddress, setFormattedAddress] = useState('');
   const [googleMapsLink, setGoogleMapsLink] = useState('');
-
+  console.log(formattedAddress, createDate, key, status, price, stock);
   const extractCoordinatesFromURL = (url: string) => {
     try {
       const queryString = new URL(url).searchParams.get('query');
@@ -97,16 +97,19 @@ const EventCard: React.FC<EventCardProps> = ({
     setHighlighted(!highlighted);
 
     try {
-      const response = await fetch('http://localhost:3003/events/highlight', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'https://web-ft-52-back-1.onrender.com/events/highlight',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            eventId: id,
+            highlight: !highlighted,
+          }),
         },
-        body: JSON.stringify({
-          eventId: id,
-          highlight: !highlighted,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Error al actualizar el estado del evento');
@@ -122,7 +125,7 @@ const EventCard: React.FC<EventCardProps> = ({
   const handleViewDetails = () => {
     router.push(`/eventdetail/${id}`);
   };
-
+  console.log(handleHighlightToggle);
   return (
     <Card className="flex-shrink-0 shadow-md">
       <CardHeader>
@@ -159,7 +162,7 @@ const EventCard: React.FC<EventCardProps> = ({
           >
             {images ? (
               <Image
-                src={images}
+                src={images[0]}
                 alt={title}
                 width={180}
                 height={180}

@@ -47,7 +47,9 @@ export default function EventsPage() {
 
   const getEvents = async () => {
     try {
-      const response = await fetch('http://localhost:3003/events');
+      const response = await fetch(
+        'https://web-ft-52-back-1.onrender.com/events',
+      );
       if (!response.ok) {
         throw new Error('Error fetching events');
       }
@@ -67,7 +69,7 @@ export default function EventsPage() {
   const handleToggleHighlight = async (id: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3003/auth/events/highlight/${id}`,
+        `https://web-ft-52-back-1.onrender.com/auth/events/highlight/${id}`,
         {
           method: 'PATCH',
           headers: {
@@ -101,7 +103,7 @@ export default function EventsPage() {
   const handleUpdateEvent = async (updatedEvent: Event) => {
     try {
       const response = await fetch(
-        `http://localhost:3003/auth/events/edit/${updatedEvent.id}`,
+        `https://web-ft-52-back-1.onrender.com/auth/events/edit/${updatedEvent.id}`,
         {
           method: 'PATCH',
           headers: {

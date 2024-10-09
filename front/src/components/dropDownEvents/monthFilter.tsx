@@ -19,7 +19,12 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
-const meses = [
+interface Mes {
+  value: string;
+  label: string;
+}
+
+const meses: Mes[] = [
   { value: '01', label: 'Enero' },
   { value: '02', label: 'Febrero' },
   { value: '03', label: 'Marzo' },
@@ -34,13 +39,20 @@ const meses = [
   { value: '12', label: 'Diciembre' },
 ];
 
-export function ComboboxDemo({ onChange, value }) {
+interface ComboboxProps {
+  onChange: (value: string) => void;
+  value?: string;
+}
+
+export function ComboboxDemo({ onChange, value }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(value || '');
+
   React.useEffect(() => {
-    setSelectedValue(value);
+    setSelectedValue(value || '');
   }, [value]);
-  const handleSelect = (currentValue) => {
+
+  const handleSelect = (currentValue: string) => {
     const newValue = currentValue === value ? '' : currentValue;
     setSelectedValue(newValue);
     onChange(newValue);

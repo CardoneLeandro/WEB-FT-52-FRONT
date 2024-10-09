@@ -31,7 +31,7 @@ const EventsList = ({
   selectedYear,
   search,
   showLimitedEvents,
-}: EventsListProps) => {
+}: Event) => {
   const [events, setEvents] = useState<Event[]>(initialEvents || []);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -44,10 +44,9 @@ const EventsList = ({
   const fetchEvents = async (page: number) => {
     if (showLimitedEvents) return;
 
-    const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
     setLoading(true);
     try {
-      let url = `http://localhost:3003/events?page=${page}&limit=6`;
+      let url = `https://web-ft-52-back-1.onrender.com/events?page=${page}&limit=6`;
 
       if (selectedMonth) url += `&month=${selectedMonth}`;
       if (selectedYear) url += `&year=${selectedYear}`;

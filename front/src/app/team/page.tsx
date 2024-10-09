@@ -10,7 +10,13 @@ import { Button } from '@/components/ui/button';
 import { IoLogoGithub } from 'react-icons/io5';
 import Link from 'next/link';
 
-const developers = [
+interface Developer {
+  name: string;
+  role: string;
+  github: string;
+}
+
+const developers: Developer[] = [
   {
     name: 'Leandro Cardone',
     role: 'Backend',
@@ -22,7 +28,7 @@ const developers = [
     github: 'https://github.com/FernandoCampellone',
   },
   {
-    name: 'santiago Gamma',
+    name: 'Santiago Gamma',
     role: 'Backend',
     github: 'https://github.com/Gamma1404',
   },
@@ -50,7 +56,7 @@ export default function TeamPage() {
         Los creadores digitales de nuestra comunidad
       </h1>
       <div>
-        <p className="text-lg text-gray-500  text-justify">
+        <p className="text-lg text-gray-500 text-justify">
           Cada uno de nosotros tiene talentos únicos. Nuestro equipo de
           desarrollo web usa sus habilidades para construir puentes digitales
           que nos conectan a todos.
@@ -124,7 +130,12 @@ export default function TeamPage() {
   );
 }
 
-function DeveloperCard({ name, github }) {
+interface DeveloperCardProps {
+  name: string;
+  github: string;
+}
+
+function DeveloperCard({ name, github }: DeveloperCardProps) {
   return (
     <div className="flex items-center space-x-4 p-2 rounded-lg hover:bg-secondary transition-colors">
       <Avatar>

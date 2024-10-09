@@ -25,8 +25,8 @@ const mendozaBounds = {
 
 const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string;
 export interface MyMapProps {
-  eventLocation: string;
-  eventAddress: string;
+  eventLocation?: string;
+  eventAddress?: string;
   setEventAddress: (address: string) => void;
   setEventLocation: (location: string) => void;
 }

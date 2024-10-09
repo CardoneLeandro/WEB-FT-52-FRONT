@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { DatePickerDemo } from './datePicker';
@@ -10,7 +10,6 @@ import { useAuth } from '@/context/AuthContext';
 import IInputEventAdProps from '@/interfaces/IInputEventAdProps';
 import toast from 'react-hot-toast';
 import GoogleMap from '../GoogleMaps';
-import { set } from 'date-fns';
 
 function InputEventAd() {
   const { setEvent, token, userSession } = useAuth();
@@ -96,7 +95,7 @@ function InputEventAd() {
       console.log('!!!!!!!!!!!!!!!!', eventData);
       try {
         const response = await fetch(
-          `http://localhost:${port}/auth/events/create`,
+          `https://web-ft-52-back-1.onrender.com/${port}/auth/events/create`,
           {
             method: 'POST',
             headers: {
@@ -177,13 +176,6 @@ function InputEventAd() {
               >
                 Generar Link
               </Button>
-              {/* <Input
-                type="text"
-                placeholder="Link generado por GoogleMaps"
-                className="bg-white flex-grow"
-                value={googleMapsLink}
-                onChange={(e) => setEventLocation!(e.target.value)}
-              /> */}
             </div>
             {formik.touched.eventLocation && formik.errors.eventLocation && (
               <div className="text-red-500">{formik.errors.eventLocation}</div>

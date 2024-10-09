@@ -14,20 +14,6 @@ import { CalendarIcon, MapPinIcon, ClockIcon, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import { Event } from '@/context/AuthContext';
 
-// interface EventHighlight {
-//   id: string;
-//   highlight: boolean;
-//   status: string;
-//   title: string;
-//   eventDate: Date;
-//   eventLocation: string;
-//   eventAddress: string;
-//   description: string;
-//   price: string;
-//   stock: string;
-//   images: string[];
-// }
-
 const HighlightEvent: React.FC<Event> = ({
   id,
   title,
@@ -39,7 +25,7 @@ const HighlightEvent: React.FC<Event> = ({
 }) => {
   const [googleMapsLink, setGoogleMapsLink] = useState<string>('');
   const [address, setAddress] = useState<string>('');
-
+  console.log(id, address);
   const extractCoordinatesFromURL = (url: string) => {
     try {
       const queryString = new URL(url).searchParams.get('query');
