@@ -23,11 +23,12 @@ const mendozaBounds = {
   east: -67.5,
 };
 
-
-const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
-interface MyMapProps {
-  setEventLocation: (location: string) => void;
+const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string;
+export interface MyMapProps {
+  eventLocation: string;
+  eventAddress: string;
   setEventAddress: (address: string) => void;
+  setEventLocation: (location: string) => void;
 }
 
 function MyMap({ setEventLocation, setEventAddress }: MyMapProps) {
@@ -45,10 +46,10 @@ function MyMap({ setEventLocation, setEventAddress }: MyMapProps) {
         setMarkerPosition({ lat, lng });
         setEventLocation(newLocation);
 
-        // Reverse geocoding to get the address
         const geocoder = new google.maps.Geocoder();
         geocoder.geocode({ location: { lat, lng } }, (results, status) => {
           if (status === 'OK' && results && results[0]) {
+            console.log('la prima de fer.........,', results);
             setEventAddress(results[0].formatted_address);
           }
         });
@@ -88,10 +89,7 @@ function MyMap({ setEventLocation, setEventAddress }: MyMapProps) {
   };
 
   return (
-    <LoadScript
-      googleMapsApiKey={key}
-      libraries={['places']}
-    >
+    <LoadScript googleMapsApiKey={key} libraries={['places']}>
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}

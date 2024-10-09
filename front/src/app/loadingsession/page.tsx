@@ -82,6 +82,7 @@ export default function LoadingSessions() {
         return;
       }
 
+      console.log('USER SESSION TOKEN', data.token);
       setSession(data.user);
       setToken(data.token);
       router.push('/');

@@ -12,7 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
 
 const aportes = [
@@ -47,14 +46,11 @@ export default function PanelAdmin() {
   const { userSession } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header con gradiente y estilos */}
-      <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center rounded-t-xl py-10">
-        <div className="container mx-auto">
-          <h1 className="text-2xl font-bold text-white">
-            Panel de Administración de Usuarios
-          </h1>
-        </div>
+    <div className="container mx-auto p-6">
+      <div className="container mx-auto">
+        <h1 className="text-2xl font-bold mb-6">
+          Panel de Administración de Eventos
+        </h1>
       </div>
 
       {/* Contenido principal */}
