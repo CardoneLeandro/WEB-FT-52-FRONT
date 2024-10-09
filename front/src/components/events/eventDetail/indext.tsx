@@ -18,31 +18,8 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { toast } from 'hooks/use-toast';
-
-interface Assistance {
-  eventId: string;
-  id: string;
-  status: string;
-  title: string;
-  eventDate: Date;
-}
-
-interface Event {
-  id: string;
-  highlight: boolean;
-  createDate: Date;
-  status: string;
-  vacancy: boolean;
-  title: string;
-  description: string;
-  eventDate: Date;
-  eventLocation: string;
-  eventAddress: string;
-  price: number;
-  stock: number;
-  images: string[];
-  assistance: Assistance[];
-}
+import { Event, Assistance } from '@/context/AuthContext';
+import { set } from 'date-fns';
 
 const EventCardDetail: React.FC<Event> = ({
   id,
@@ -60,10 +37,10 @@ const EventCardDetail: React.FC<Event> = ({
 }) => {
   const [googleMapsLink, setGoogleMapsLink] = useState<string>('');
   const [address, setAddress] = useState<string>('');
-  const [isAttending, setIsAttending] = useState<boolean>(false);
   const { userSession, token, setAssistance } = useAuth();
   const router = useRouter();
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+  const [appointed, setAppointed] = useState<boolean>(false);
 
   const extractCoordinatesFromURL = (url: string) => {
     try {
@@ -101,24 +78,17 @@ const EventCardDetail: React.FC<Event> = ({
     return `${lat}, ${lng}`;
   };
 
-  // useEffect(() => {
-  //   const coordinates = extractCoordinatesFromURL(eventLocation);
-  //   const fetchAddress = async () => {
-  //     const fetchedAddress = await getAddressFromCoordinates(coordinates);
-  //     setAddress(fetchedAddress);
-  //   };
-  //   if (coordinates.length > 0) {
-  //     fetchAddress();
-  //   } else {
-  //     setAddress(eventAddress);
-  //   }
-
-  //   setIsAttending(
-  //     userSession.assistance.status(
-  //       (a) => a.eventId === id && a.status === 'active',
-  //     ),
-  //   );
-  // }, [eventLocation, eventAddress, id, userSession.assistance]);
+  useEffect(() => {
+    if (userSession.assistance && Array.isArray(userSession.assistance)) {
+      if (userSession.assistance.find((event) => event.eventId === id)) {
+        setAppointed(true);
+      } else {
+        setAppointed(false);
+      }
+    } else {
+      setAppointed(false);
+    }
+  }, [userSession.assistance, id]);
 
   const handleEventAsistance = async () => {
     try {
@@ -142,12 +112,12 @@ const EventCardDetail: React.FC<Event> = ({
       }
       const data = await response.json();
       setAssistance(data.assistance);
-      setIsAttending(!isAttending);
+      setAppointed(!appointed);
       toast({
-        title: isAttending
+        title: appointed
           ? 'Ya no asistirás al evento'
           : '¡Asistirás al evento!',
-        description: isAttending
+        description: appointed
           ? 'Has cancelado tu asistencia.'
           : 'Te esperamos en el evento.',
       });
@@ -235,18 +205,22 @@ const EventCardDetail: React.FC<Event> = ({
               >
                 Volver a eventos
               </Button>
-              {vacancy && (
-                <Button
-                  onClick={handleEventAsistance}
-                  className={`w-full sm:w-auto text-lg py-6 ${
-                    isAttending
-                      ? 'bg-red-500 hover:bg-red-600'
-                      : 'bg-primary hover:bg-primary/90'
-                  }`}
-                >
-                  {isAttending ? 'Cancelar asistencia' : 'Asistir'}
-                </Button>
-              )}
+
+              <Button
+                onClick={handleEventAsistance}
+                className={`w-full sm:w-auto text-lg py-6 ${
+                  appointed
+                    ? 'bg-red-500 hover:bg-red-600'
+                    : 'bg-primary hover:bg-primary/90'
+                }`}
+                disabled={!vacancy && !appointed}
+              >
+                {appointed
+                  ? 'Cancelar asistencia'
+                  : vacancy
+                    ? 'Asistir'
+                    : 'No hay cupos disponibles'}
+              </Button>
             </CardFooter>
           </div>
         </div>
