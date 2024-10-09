@@ -23,6 +23,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import GoogleMaps from '@/components/GoogleMaps';
+import toast from 'react-hot-toast';
 
 interface Event {
   id: string;
@@ -93,8 +94,9 @@ export default function EventsPage() {
 
       setEvent(updatedEvent);
       setAdminEvent(updatedEvent);
+      toast.success("Evento Destacado con exito!")
     } catch (err) {
-      setError('No se pudo actualizar el estado de destacar.');
+      toast.error("Ups,error al destacar el evento")
     }
   };
 
@@ -112,7 +114,7 @@ export default function EventsPage() {
         },
       );
       if (!response.ok) {
-        throw new Error('Error updating event');
+        toast.error("error al editar el evento")
       }
       const updatedEventData = await response.json();
       setEvents((prevEvents) =>
@@ -124,7 +126,7 @@ export default function EventsPage() {
       setAdminEvent(updatedEventData);
       setEditingEvent(null);
     } catch (err) {
-      setError('No se pudo actualizar el evento.');
+      toast.error('No se pudo actualizar el evento.');
     }
   };
 
@@ -132,6 +134,7 @@ export default function EventsPage() {
     if (editingEvent) {
       setEditingEvent({ ...editingEvent, eventLocation: location });
     }
+    toast.success("Evento editado con exito!")
   };
 
   return (

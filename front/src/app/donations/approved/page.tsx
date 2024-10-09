@@ -4,6 +4,7 @@ import { useAuth, PaymentInfo } from '@/context/AuthContext';
 import { CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 
 export default function PaymentSuccess() {
@@ -44,12 +45,12 @@ export default function PaymentSuccess() {
           setDonation(donation);
           setPaymentInfo(null);
           setDisabled(false);
-          window.alert('¡Gracias por tu donación!');
+          toast.success(`Gracias por tu donacion ${userSession.name}!` );
           redirect.push('/');
         }
       })
       .catch((error) => {
-        window.alert(`ERROR AL REGISTRAR EL PAGO EN LA BASE DE DATOS ${error}`);
+        toast.error('Ups hubo un error al procesar tu pago. Por favor, intenta nuevamente.');
         redirect.push('/');
       });
   }, [paymentInfo, userSession, token]);

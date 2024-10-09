@@ -12,21 +12,8 @@ import {
 } from '@/components/ui/card';
 import { CalendarIcon, MapPinIcon, ClockIcon, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
-import { Event } from '@/context/AuthContext';
-
-// interface EventHighlight {
-//   id: string;
-//   highlight: boolean;
-//   status: string;
-//   title: string;
-//   eventDate: Date;
-//   eventLocation: string;
-//   eventAddress: string;
-//   description: string;
-//   price: string;
-//   stock: string;
-//   images: string[];
-// }
+import { Event, useAuth } from '@/context/AuthContext';
+import toast from 'react-hot-toast';
 
 const HighlightEvent: React.FC<Event> = ({
   id,
@@ -39,6 +26,9 @@ const HighlightEvent: React.FC<Event> = ({
 }) => {
   const [googleMapsLink, setGoogleMapsLink] = useState<string>('');
   const [address, setAddress] = useState<string>('');
+  const [appointed, setAppointed] = useState<boolean>(false);
+  const { userSession, token, setAssistance } = useAuth();
+  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
   const extractCoordinatesFromURL = (url: string) => {
     try {
@@ -89,6 +79,53 @@ const HighlightEvent: React.FC<Event> = ({
       setAddress(eventAddress);
     }
   }, [eventLocation, eventAddress]);
+
+  const handleEventAsistance = async () => {
+    if (!token) {
+      toast.error(
+        'Lo lamentamos, debes estar registrado antes para participar',
+        {
+          position: 'bottom-center',
+        },
+      );
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:${port}/events/updateattendance/${id}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ creator: userSession.creatorId }),
+        },
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('ERROR EN LA RESPUESTA DEL SERVIDOR:', errorData);
+        throw new Error(
+          'No se pudo actualizar el evento. Por favor, intenta de nuevo.',
+        );
+      }
+      const data = await response.json();
+      setAssistance(data.assistance);
+      setAppointed(!appointed);
+      toast.success(
+        appointed ? 'Ya no asistirás al evento' : '¡Asistirás al evento!',
+        {
+          position: 'bottom-center',
+        },
+      );
+    } catch (e) {
+      console.error(e);
+      toast.error('Ups hubo un error intentalo de nuevo mas tarde', {
+        position: 'bottom-center',
+      });
+    }
+  };
 
   return (
     <Card className=" text-gray-800 shadow-xl max-w-4xl mx-auto overflow-hidden">
@@ -152,7 +189,9 @@ const HighlightEvent: React.FC<Event> = ({
             <p className="text-gray-700">{description}</p>
           </CardContent>
           <CardFooter className="flex-grow-0">
-            <Button className="w-full">Asistiré</Button>
+            <Button className="w-full" onClick={handleEventAsistance}>
+              Asistiré
+            </Button>
           </CardFooter>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { useAuth, PaymentInfo } from '@/context/AuthContext';
 import { CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 
 
@@ -42,11 +43,11 @@ export default function PaymentPending() {
           setDonation(donation);
           setPaymentInfo(null);
           setDisabled(false);
-          window.alert('¡Gracias por tu donación!');
+          toast.success('¡Gracias por tu donación!');
           redirect.push('/');
         }
       }).catch((error) => {
-        window.alert(`ERROR AL REGISTRAR EL PAGO EN LA BASE DE DATOS ${error}`);
+        toast.error(`Ups hubo un error al generar su pago`);
         redirect.push('/');
       });
     }, [paymentInfo, userSession, token])

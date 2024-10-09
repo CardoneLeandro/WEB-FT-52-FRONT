@@ -17,9 +17,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { toast } from 'hooks/use-toast';
+
 import { Event, Assistance } from '@/context/AuthContext';
-import { set } from 'date-fns';
+import toast from 'react-hot-toast';
 
 const EventCardDetail: React.FC<Event> = ({
   id,
@@ -33,7 +33,7 @@ const EventCardDetail: React.FC<Event> = ({
   price,
   description,
   vacancy,
-  assistance,
+  assistantEvents,
 }) => {
   const [googleMapsLink, setGoogleMapsLink] = useState<string>('');
   const [address, setAddress] = useState<string>('');
@@ -79,8 +79,11 @@ const EventCardDetail: React.FC<Event> = ({
   };
 
   useEffect(() => {
-    if (userSession.assistance && Array.isArray(userSession.assistance)) {
-      if (userSession.assistance.find((event) => event.eventId === id)) {
+    if (
+      userSession.assistantEvents &&
+      Array.isArray(userSession.assistantEvents)
+    ) {
+      if (userSession.assistantEvents.find((event) => event.eventId === id)) {
         setAppointed(true);
       } else {
         setAppointed(false);
@@ -88,9 +91,19 @@ const EventCardDetail: React.FC<Event> = ({
     } else {
       setAppointed(false);
     }
-  }, [userSession.assistance, id]);
+  }, [userSession.assistantEvents, id]);
 
   const handleEventAsistance = async () => {
+    if (!token) {
+      toast.error(
+        'Lo lamentamos, debes estar registrado antes para participar',
+        {
+          position: 'bottom-center',
+        },
+      );
+      return;
+    }
+
     try {
       const response = await fetch(
         `http://localhost:${port}/events/updateattendance/${id}`,
@@ -113,20 +126,16 @@ const EventCardDetail: React.FC<Event> = ({
       const data = await response.json();
       setAssistance(data.assistance);
       setAppointed(!appointed);
-      toast({
-        title: appointed
-          ? 'Ya no asistirás al evento'
-          : '¡Asistirás al evento!',
-        description: appointed
-          ? 'Has cancelado tu asistencia.'
-          : 'Te esperamos en el evento.',
-      });
+      toast.success(
+        appointed ? 'Ya no asistirás al evento' : '¡Asistirás al evento!',
+        {
+          position: 'bottom-center',
+        },
+      );
     } catch (e) {
       console.error(e);
-      toast({
-        title: 'Error',
-        description: 'No se pudo procesar tu solicitud. Inténtalo de nuevo.',
-        variant: 'destructive',
+      toast.error('Ups hubo un error intentalo de nuevo mas tarde', {
+        position: 'bottom-center',
       });
     }
   };
@@ -218,8 +227,8 @@ const EventCardDetail: React.FC<Event> = ({
                 {appointed
                   ? 'Cancelar asistencia'
                   : vacancy
-                    ? 'Asistir'
-                    : 'No hay cupos disponibles'}
+                  ? 'Asistir'
+                  : 'No hay cupos disponibles'}
               </Button>
             </CardFooter>
           </div>
@@ -230,3 +239,4 @@ const EventCardDetail: React.FC<Event> = ({
 };
 
 export default EventCardDetail;
+

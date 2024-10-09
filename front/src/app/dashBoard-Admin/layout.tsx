@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'next-auth/react';
 import { useAuth } from '@/context/AuthContext';
-
+import { useRouter } from 'next/navigation';
+const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -12,17 +13,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const toggleMenu = (menuName: string) => {
     setActiveMenu((prevMenu) => (prevMenu === menuName ? null : menuName));
   };
-  const { logout } = useAuth();
+  const { logout, token, userSession } = useAuth();
   const handleLogOut = () => {
     signOut({ callbackUrl: '/' });
     logout();
   };
 
-  useEffect(() => {}, []);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (
+      (userSession?.role !== 'superadmin' && userSession?.role !== 'admin') ||
+      !token
+    ) {
+      router.push('/');
+    }
+  }, [userSession, token, router]);
 
   return (
     <div className="flex min-h-screen mb-20">
-      {/* Sidebar */}
       <div className="w-64 flex flex-col border-e bg-white min-h-screen justify-between  p-4 mb-44">
         <Button variant={'default'}>
           <Link href="/">Volver a inicio</Link>
@@ -81,8 +90,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         Ver y Editar Eventos
                       </Link>
                     </li>
-                    <li>
-                    </li>
+                    <li></li>
                   </ul>
                 )}
               </div>

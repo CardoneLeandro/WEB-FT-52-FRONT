@@ -73,7 +73,7 @@ function NavBar() {
                   src={userSession?.image}
                   onClick={handleDropDownMenu}
                 />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback onClick={handleDropDownMenu}>CN</AvatarFallback>
               </Avatar>
             )) || (
               <FaRegUserCircle
