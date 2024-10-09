@@ -1,5 +1,6 @@
 'use client';
 
+import { get } from 'http';
 import React, { useState, useEffect, createContext, useContext } from 'react';
 const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
@@ -7,11 +8,11 @@ interface AuthContextProps {
   children: React.ReactNode;
 }
 interface Assistance {
-  eventId: string;
-  id: string;
-  status: string;
-  title: string;
-  eventDate: Date;
+  eventId: string;  // ID DEL EVENTO
+  id: string;       // ID DE LA ASISTENCIA
+  status: string;   // SI ESTA ACTIVA ES PORQUE EL USUARIO ESTA APUNTADO
+  title: string;    // TITULO DEL EVENTO
+  eventDate: Date;  // FECHA DEL EVENTO
 }
 export interface AdminDonation {
   id: string;
@@ -79,6 +80,7 @@ interface AuthContextType {
   setAdminEvent: (adminEvent: Event) => void;
   setEvent: (event: Event) => void;
   logout: () => void;
+  getEvents: () => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -112,6 +114,7 @@ const AuthContext = createContext<AuthContextType>({
   setAdminEvents: () => { },
   setAdminEvent: () => { },
   logout: () => { },
+  getEvents: () => { },
 });
 export const useAuth = () => useContext(AuthContext);
 
@@ -136,6 +139,23 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   );
   const [allEvents, setAllEvents] = useState<Event[] | null>(null);
   const [adminEvents, setAdminEvents] = useState<Event[] | null>(null);
+
+  const getEvents = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:${port}/events/getactiveandinactivehighlight`,
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setAllEvents(data);
+      } else {
+        setAllEvents(null);
+      }
+    } catch (error) {
+      console.error('Error al obtener los eventos:', error);
+    }
+  };
+
 
   useEffect(() => {
     // Cargar datos del localStorage
@@ -172,21 +192,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     if (storedPaymentInfo) {
       setPaymentInfo(storedPaymentInfo);
     }
-    const getEvents = async () => {
-      try {
-        const res = await fetch(
-          `http://localhost:${port}/events/getactiveandinactivehighlight`,
-        );
-        if (res.ok) {
-          const data = await res.json();
-          setAllEvents(data);
-        } else {
-          setAllEvents(null);
-        }
-      } catch (error) {
-        console.error('Error al obtener los eventos:', error);
-      }
-    };
+    
     getEvents();
   }, []);
 
@@ -340,7 +346,9 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
           adminEvents,
           setAdminEvents: handleAdminEvents,
           setAdminEvent: handleAdminEvent,
-          setAssistance: handleSetAssistance
+          setAssistance: handleSetAssistance,
+          getEvents
+          
         }}
       >
         {children}
