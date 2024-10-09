@@ -3,21 +3,8 @@
 import { useEffect, useState } from 'react';
 import EventCardDetail from '@/components/events/eventDetail/indext';
 import getEventById from '@/utils/eventsdetail';
+import { Event } from '@/context/AuthContext';
 
-interface Event {
-  id: string;
-  highlight: boolean;
-  createDate: Date;
-  status: string;
-  title: string;
-  eventDate: Date;
-  eventLocation: string;
-  eventAddress: string;
-  description: string;
-  price: number;
-  stock: number;
-  images: string[];
-}
 
 const EventDetailPage = ({ params }: { params: { id: string } }) => {
   const [event, setEvent] = useState<Event | null>();
