@@ -88,7 +88,7 @@ const AuthContext = createContext<AuthContextType>({
   token: null,
   userSession: {
     id: null,
-    role:null,
+    role: null,
     name: '',
     email: '',
     image: null,
@@ -123,7 +123,7 @@ export const useAuth = () => useContext(AuthContext);
 const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const [userSession, setSession] = useState<Session>({
     id: null,
-    role:null,
+    role: null,
     name: '',
     email: '',
     image: null,
@@ -175,7 +175,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     } else {
       setSession({
         id: null,
-        role:null,
+        role: null,
         name: '',
         email: '',
         image: null,
@@ -240,7 +240,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     if (!newToken) {
       setSession({
         id: '',
-        role:null,
+        role: null,
         name: '',
         email: '',
         image: null,
@@ -315,7 +315,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     setToken(null);
     setSession({
       id: null,
-      role:null,
+      role: null,
       name: '',
       email: '',
       image: null,
