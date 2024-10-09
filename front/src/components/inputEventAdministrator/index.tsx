@@ -10,7 +10,6 @@ import { useAuth } from '@/context/AuthContext';
 import IInputEventAdProps from '@/interfaces/IInputEventAdProps';
 import toast from 'react-hot-toast';
 import GoogleMap from '../GoogleMaps';
-import { set } from 'date-fns';
 
 function InputEventAd() {
   const { setEvent, token, userSession } = useAuth();

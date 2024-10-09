@@ -23,6 +23,8 @@ const mendozaBounds = {
   east: -67.5,
 };
 
+
+const key = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string
 interface MyMapProps {
   setEventLocation: (location: string) => void;
   setEventAddress: (address: string) => void;
@@ -87,7 +89,7 @@ function MyMap({ setEventLocation, setEventAddress }: MyMapProps) {
 
   return (
     <LoadScript
-      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+      googleMapsApiKey={key}
       libraries={['places']}
     >
       <GoogleMap
