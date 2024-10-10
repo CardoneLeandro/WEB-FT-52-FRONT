@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,6 +37,7 @@ interface Event {
   stock: number;
   highlight: boolean;
   images: string[];
+  status: boolean;
 }
 
 export default function EventsPage() {
@@ -44,9 +45,10 @@ export default function EventsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { setEvent, setAdminEvent, token, logout } = useAuth();
+  const { setEvent, setAdminEvent, token, logout } = useAuth();
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
 
-  const getEvents = async () => {
+  const getEvents = useCallback(async () => {
     try {
       const response = await fetch(
         'https://web-ft-52-back-1.onrender.com/events',
@@ -61,11 +63,11 @@ export default function EventsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     getEvents();
-  }, []);
+  }, [getEvents]);
 
   const handleToggleHighlight = async (id: string) => {
     try {
@@ -82,10 +84,11 @@ export default function EventsPage() {
 
       if (response.status === 441) {
         toast.error(
-          `Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`,
+          `Su cuenta ha sido suspendida, por favor contactarse con nosotros via Email`,
         );
         logout();
         signOut({ callbackUrl: '/' });
+        return;
       }
 
       if (!response.ok) {
@@ -104,9 +107,57 @@ export default function EventsPage() {
 
       setEvent(updatedEvent);
       setAdminEvent(updatedEvent);
-      toast.success('Evento Destacado con exito!');
+      toast.success('Evento Destacado con éxito!');
     } catch (err) {
-      toast.error('Ups,error al destacar el evento');
+      toast.error('Ups, error al destacar el evento');
+    }
+  };
+
+  const handleToggleStatus = async (id: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3003/auth/events/switch-status/${id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (response.status === 441) {
+        toast.error(
+          `Su cuenta ha sido suspendida, por favor contactarse con nosotros via Email`,
+        );
+        logout();
+        signOut({ callbackUrl: '/' });
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error('Error updating event status');
+      }
+
+      const updatedEvent = await response.json();
+
+      setEvents((prevEvents) =>
+        prevEvents.map((event) =>
+          event.id === updatedEvent.id
+            ? { ...event, status: updatedEvent.status }
+            : event,
+        ),
+      );
+
+      setEvent(updatedEvent);
+      setAdminEvent(updatedEvent);
+      toast.success(
+        updatedEvent.status
+          ? 'Evento activado con éxito!'
+          : 'Evento desactivado con éxito!',
+      );
+    } catch (err) {
+      toast.error('Ups, error al cambiar el estado del evento');
     }
   };
 
@@ -126,15 +177,18 @@ export default function EventsPage() {
 
       if (response.status === 441) {
         toast.error(
-          `Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`,
+          `Su cuenta ha sido suspendida, por favor contactarse con nosotros via Email`,
         );
         logout();
         signOut({ callbackUrl: '/' });
+        return;
       }
 
       if (!response.ok) {
-        toast.error('error al editar el evento');
+        toast.error('Error al editar el evento');
+        return;
       }
+
       const updatedEventData = await response.json();
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
@@ -144,6 +198,7 @@ export default function EventsPage() {
       setEvent(updatedEventData);
       setAdminEvent(updatedEventData);
       setEditingEvent(null);
+      toast.success('Evento editado con éxito!');
     } catch (err) {
       toast.error('No se pudo actualizar el evento.');
     }
@@ -176,6 +231,7 @@ export default function EventsPage() {
                   <TableHead>Precio</TableHead>
                   <TableHead>Capacidad</TableHead>
                   <TableHead>Destacado</TableHead>
+                  <TableHead>Estado</TableHead>
                   <TableHead>Acciones</TableHead>
                 </TableRow>
               </TableHeader>
@@ -189,6 +245,9 @@ export default function EventsPage() {
                     <TableCell>${event.price}</TableCell>
                     <TableCell>{event.stock}</TableCell>
                     <TableCell>{event.highlight ? 'Sí' : 'No'}</TableCell>
+                    <TableCell>
+                      {event.status ? 'Activo' : 'Inactivo'}
+                    </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
                         <Dialog>
@@ -334,6 +393,13 @@ export default function EventsPage() {
                           onClick={() => handleToggleHighlight(event.id)}
                         >
                           {event.highlight ? 'Quitar Destacado' : 'Destacar'}
+                        </Button>
+                        <Button
+                          className="w-full"
+                          variant={event.status ? 'default' : 'outline'}
+                          onClick={() => handleToggleStatus(event.id)}
+                        >
+                          {event.status ? 'Desactivar' : 'Activar'}
                         </Button>
                       </div>
                     </TableCell>

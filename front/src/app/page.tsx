@@ -70,6 +70,7 @@ export default function Home() {
     };
 
     fetchEvents();
+    getEvents();
   }, [allEvents, getEvents, userSession, redirect]);
 
   useEffect(() => {

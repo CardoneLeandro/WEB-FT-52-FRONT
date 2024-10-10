@@ -47,7 +47,7 @@ export interface Event {
   id: string;
   highlight: boolean;
   createDate: Date;
-  status: string;
+  status: boolean;
   vacancy: boolean;
   title: string;
   description: string;
@@ -202,10 +202,13 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     if (donation) {
       setSession((prevSession) => {
         if (prevSession) {
-          return {
+          const updatedDonations = [...prevSession.donations, donation];
+          const updatedSession = {
             ...prevSession,
-            donations: [...prevSession.donations, donation],
+            donations: updatedDonations,
           };
+          localStorage.setItem('userSession', JSON.stringify(updatedSession)); // Guardar en localStorage
+          return updatedSession;
         }
         return prevSession;
       });
