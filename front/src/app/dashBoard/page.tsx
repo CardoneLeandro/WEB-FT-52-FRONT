@@ -33,7 +33,6 @@ export default function UserDashboard() {
 
   useEffect(() => {
     if (userSession.role !== 'user' || !token) {
-    if (userSession.role !== 'user' || !token) {
       Router.push('/');
     }
   }, [userSession, token, Router]);
