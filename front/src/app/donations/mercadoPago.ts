@@ -17,9 +17,12 @@ export const donate = async ({
   const preference = await new Preference(client).create({
     body: {
       back_urls: {
-        success: 'https://web-ft-52-back-1.onrender.com/donations/approved',
-        failure: 'https://web-ft-52-back-1.onrender.com/donations/failure',
-        pending: 'https://web-ft-52-back-1.onrender.com/donations/pending',
+        success:
+          'https://web-ft-52-front-deploy-git-development-felipesdisenos-projects.vercel.app/donations/approved',
+        failure:
+          'https://web-ft-52-front-deploy-git-development-felipesdisenos-projects.vercel.app/donations/failure',
+        pending:
+          'https://web-ft-52-front-deploy-git-development-felipesdisenos-projects.vercel.app/donations/pending',
       },
       auto_return: 'approved',
       items: [
