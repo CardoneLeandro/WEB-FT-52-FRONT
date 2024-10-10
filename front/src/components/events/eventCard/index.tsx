@@ -162,7 +162,7 @@ const EventCard: React.FC<Event> = ({
           >
             {images ? (
               <Image
-                src={images}
+                src={images[0]}
                 alt={title}
                 width={180}
                 height={180}
