@@ -1,7 +1,7 @@
-import NextAuth, { NextAuthOptions, DefaultSession } from "next-auth";
-import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
+import NextAuth, { NextAuthOptions, DefaultSession } from 'next-auth';
+import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google';
 
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session {
     accessToken?: string; // Añadir accessToken a la sesión
     user: {
@@ -10,7 +10,7 @@ declare module "next-auth" {
       image?: string;
       providerAccountId?: string; // Agregar ID de la cuenta del proveedor
       profile?: GoogleProfile; // Añadir el perfil de Google directamente a la sesión
-    } & DefaultSession["user"];
+    } & DefaultSession['user'];
   }
 
   interface JWT {
@@ -27,11 +27,11 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
-  
+
   callbacks: {
     async jwt({ token, account, profile }) {
       // Verificamos si el proveedor es Google y hacemos un narrowing del tipo profile a GoogleProfile
-      if (account?.provider === "google" && profile) {
+      if (account?.provider === 'google' && profile) {
         const googleProfile = profile as GoogleProfile;
 
         token.accessToken = account.access_token; // Token de acceso de Google
@@ -44,21 +44,20 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }) {
       session.accessToken = token.accessToken as string | undefined; // Asegurar el tipo de accessToken
-      session.user.providerAccountId = token.providerAccountId as string | undefined; // Asegurar el tipo de providerAccountId
+      session.user.providerAccountId = token.providerAccountId as
+        | string
+        | undefined; // Asegurar el tipo de providerAccountId
       session.user.profile = token.profile as GoogleProfile | undefined; // Asegurar el tipo de perfil de Google
 
       return session;
     },
   },
 };
+export default NextAuth(authOptions);
 
-const handler = NextAuth(authOptions);
+// const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST };
-
-
-
-
+// export { handler as GET, handler as POST };
 
 /*
 import NextAuth from "next-auth";
@@ -104,7 +103,7 @@ const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
 
 
-*/ 
+*/
 
 /*
 import NextAuth from "next-auth";
