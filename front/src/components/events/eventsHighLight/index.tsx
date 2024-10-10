@@ -165,13 +165,20 @@ const HighlightEvent: React.FC<Event> = ({
                 <span>{new Date(eventDate).toLocaleDateString()}</span>
               </div>
               <div className="flex items-center mt-2">
-                <MapPinIcon className="mr-2 text-blue-500 flex-shrink-0" />
-                <span className="font-semibold mr-1">{eventAddress}</span>
-                <a
-                  href={googleMapsLink || eventLocation}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                ></a>
+                {eventLocation && (
+                  <a
+                    href={eventLocation}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:text-primary/80 transition-colors"
+                    title="Ver dirección"
+                  >
+                    <MapPinIcon className="mr-2 text-blue-500 flex-shrink-0" />
+                  </a>
+                )}
+                <span className="font-semibold mr-1 text-black">
+                  {eventAddress}
+                </span>
               </div>
               <div className="flex items-center mt-2">
                 <ClockIcon className="mr-2 text-blue-500 flex-shrink-0" />

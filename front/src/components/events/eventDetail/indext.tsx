@@ -176,7 +176,7 @@ const EventCardDetail: React.FC<Event> = ({
                 <div className="flex items-center space-x-3">
                   {eventLocation && (
                     <a
-                      href={googleMapsLink}
+                      href={eventLocation}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-primary hover:text-primary/80 transition-colors"
@@ -185,7 +185,7 @@ const EventCardDetail: React.FC<Event> = ({
                       <MapPinIcon className="mr-2 text-blue-500 flex-shrink-0" />
                     </a>
                   )}
-                  <span className="text-lg ">{address || eventAddress}</span>
+                  <span className="text-lg ">{eventAddress}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <CalendarIcon className="mr-2 text-blue-500 flex-shrink-0" />
