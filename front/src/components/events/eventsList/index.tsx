@@ -1,22 +1,8 @@
 'use client';
-
 import React, { useEffect, useState, useCallback } from 'react';
 import EventCard from '../eventCard';
 import { Button } from '@/components/ui/button';
 import { Event } from '@/context/AuthContext';
-// export type Event = {
-//   id: string;
-//   highlight: boolean;
-//   createDate: Date;
-//   status: string;
-//   title: string;
-//   eventDate: Date;
-//   eventLocation: string;
-//   eventAddress: string;
-//   price: number;
-//   stock: number;
-//   images: string[];
-// };
 
 export type EventsListProps = {
   initialEvents: Event[];
@@ -26,34 +12,27 @@ export type EventsListProps = {
   showLimitedEvents?: boolean;
 };
 
-export default function EventsList({
+const EventsList = ({
   initialEvents,
   selectedMonth,
   selectedYear,
   search,
   showLimitedEvents,
-}: EventsListProps) {
+}: EventsListProps) => {
   const [events, setEvents] = useState<Event[]>(initialEvents || []);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState({
-    month: selectedMonth,
-    year: selectedYear,
-    search: search,
-  });
 
   const fetchEvents = useCallback(
-    async (currentPage: number, currentFilters: typeof filters) => {
-      if (showLimitedEvents) return;
-
+    async (currentPage: number) => {
       setLoading(true);
       try {
-        let url = `https://web-ft-52-back-1.onrender.com/events?page=${page}&limit=6`;
+        let url = `https://web-ft-52-back-1.onrender.com/events?page=${currentPage}&limit=6`;
 
-        if (currentFilters.month) url += `&month=${currentFilters.month}`;
-        if (currentFilters.year) url += `&year=${currentFilters.year}`;
-        if (currentFilters.search) url += `&title=${currentFilters.search}`;
+        if (selectedMonth) url += `&month=${selectedMonth}`;
+        if (selectedYear) url += `&year=${selectedYear}`;
+        if (search) url += `&title=${search}`;
 
         const res = await fetch(url);
         const data = await res.json();
@@ -66,35 +45,24 @@ export default function EventsList({
         setLoading(false);
       }
     },
-    [showLimitedEvents],
+    [selectedMonth, selectedYear, search],
   );
 
   useEffect(() => {
-    setFilters({
-      month: selectedMonth,
-      year: selectedYear,
-      search: search,
-    });
-    setPage(1);
-  }, [selectedMonth, selectedYear, search]);
+    fetchEvents(page);
+  }, [fetchEvents, page]);
 
-  useEffect(() => {
-    if (!showLimitedEvents) {
-      fetchEvents(page, filters);
-    }
-  }, [page, filters, showLimitedEvents, fetchEvents]);
-
-  const handleNextPage = () => {
+  const handleNextPage = useCallback(() => {
     if (page < totalPages) {
-      setPage(page + 1);
+      setPage((prevPage) => prevPage + 1);
     }
-  };
+  }, [page, totalPages]);
 
-  const handlePrevPage = () => {
+  const handlePrevPage = useCallback(() => {
     if (page > 1) {
-      setPage(page - 1);
+      setPage((prevPage) => prevPage - 1);
     }
-  };
+  }, [page]);
 
   const filteredEvents = showLimitedEvents
     ? events
@@ -138,29 +106,29 @@ export default function EventsList({
         ))}
       </div>
 
-      {!showLimitedEvents && !loading && (
-        <div className="flex justify-between items-center mt-4 gap-4">
-          <Button
-            onClick={handlePrevPage}
-            disabled={page === 1}
-            variant={page === 1 ? 'disabled' : 'default'}
-          >
-            Página anterior
-          </Button>
-          <span className="text-lg font-medium text-gray-600 cursor-default">
-            Página {page} de {totalPages}
-          </span>
-          <Button
-            onClick={handleNextPage}
-            disabled={page === totalPages}
-            variant={page === totalPages ? 'disabled' : 'default'}
-          >
-            Siguiente página
-          </Button>
-        </div>
-      )}
+      <div className="flex justify-between items-center mt-4">
+        <Button
+          onClick={handlePrevPage}
+          disabled={page === 1}
+          variant={page === 1 ? 'disabled' : 'default'}
+        >
+          Página anterior
+        </Button>
+        <span className="text-lg font-medium text-gray-600 cursor-default">
+          Página {page} de {totalPages}
+        </span>
+        <Button
+          onClick={handleNextPage}
+          disabled={page === totalPages}
+          variant={page === totalPages ? 'disabled' : 'default'}
+        >
+          Siguiente página
+        </Button>
+      </div>
 
       {loading && <p>Cargando eventos...</p>}
     </div>
   );
-}
+};
+
+export default EventsList;
