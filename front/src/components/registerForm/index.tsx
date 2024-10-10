@@ -62,7 +62,11 @@ function FormRegister() {
       setLoading(true);
       try {
         const response = await fetch(
+<<<<<<< HEAD
           `https://web-ft-52-back-1.onrender.com/auth/signup`,
+=======
+          `http://localhost:${port}/users/auth/signup`,
+>>>>>>> 55b17464711f90fa3b83d0c879427f94471d4153
           {
             method: 'POST',
             headers: {
@@ -82,8 +86,7 @@ function FormRegister() {
           router.push('/login');
         }
       } catch (error) {
-        console.error('Error al enviar los datos al backend:', error);
-        window.alert('Error al enviar los datos al backend.');
+        toast.error('Hubo un problema al intentar registrarte por favor intentalo mas tarde')
       } finally {
         setLoading(false);
       }

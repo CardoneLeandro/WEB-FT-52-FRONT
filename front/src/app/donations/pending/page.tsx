@@ -7,53 +7,50 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 
-export default function PaymentSuccess() {
-  const redirect = useRouter();
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const [disabled, setDisabled] = useState(true);
-  const { userSession, token, paymentInfo, setPaymentInfo, setDonation } =
-    useAuth();
 
-  const pay = async (params: PaymentInfo, token: string | null) => {
-    const response = await fetch(
-      `http://localhost:${port}/payments/pay-donations/success`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(params),
+export default function PaymentPending() {
+  const redirect = useRouter()
+  const port = process.env.NEXT_PUBLIC_APP_API_PORT
+  const [disabled, setDisabled] = useState(true);
+  const { userSession, token, paymentInfo, setPaymentInfo, setDonation} = useAuth();
+  
+  const pay = async (params: PaymentInfo, token:string|null) => {
+    const response = await fetch(`http://localhost:${port}/payments/pay-donations/pending`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-    );
+      body: JSON.stringify(params),
+    });
     const data = await response.json();
     return data;
-  };
+    }
+  
 
-  useEffect(() => {
-    if (!paymentInfo) return;
-    const paymentData = {
-      creator: userSession?.creatorId,
-      title: paymentInfo?.title,
-      amount: paymentInfo?.amount,
-    };
-
-    pay(paymentData, token)
+    useEffect(() => {
+      if (!paymentInfo) return;
+      const paymentData = {
+        creator: userSession?.creatorId,
+        title: paymentInfo?.title,
+        amount: paymentInfo?.amount,
+      };
+    
+      pay(paymentData, token)
       .then((data) => {
         if (data.ok) {
-          const { donation } = data;
+          const {donation} = data
           setDonation(donation);
           setPaymentInfo(null);
           setDisabled(false);
-          toast.success(`Gracias por tu donacion ${userSession.name}!` );
+          toast.success('¡Gracias por tu donación!');
           redirect.push('/');
         }
-      })
-      .catch((error) => {
-        toast.error('Ups hubo un error al procesar tu pago. Por favor, intenta nuevamente.');
+      }).catch((error) => {
+        toast.error(`Ups hubo un error al generar su pago`);
         redirect.push('/');
       });
-  }, [paymentInfo, userSession, token]);
+    }, [paymentInfo, userSession, token])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -68,8 +65,8 @@ export default function PaymentSuccess() {
           de tu transacción.
         </p>
         <Button
-          disabled={disabled}
-          onClick={() => redirect.push('/')}
+        disabled={disabled}
+        onClick={() => redirect.push('/')}
           className="inline-block px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 transition-colors"
         >
           Volver al inicio

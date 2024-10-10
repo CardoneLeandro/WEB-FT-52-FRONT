@@ -1,29 +1,55 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import AdminListComponent, {
   Item,
 } from '@/components/adminPanel/adminListComponent';
 import React from 'react';
+=======
+import { useAuth } from '@/context/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import GoogleMaps from '@/components/GoogleMaps';
+import toast from 'react-hot-toast';
+
+>>>>>>> 55b17464711f90fa3b83d0c879427f94471d4153
 interface Event {
-  id: number;
-  highlight: boolean;
-  createDate: Date;
-  status: string;
+  id: string;
   title: string;
-  eventDate: Date;
+  description: string;
+  eventDate: string;
+  eventAddress: string;
   eventLocation: string;
   price: number;
   stock: number;
+  highlight: boolean;
   images: string[];
-  description: string;
-  isActive: boolean;
 }
 
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+<<<<<<< HEAD
   // const [eventEdit, setEventEdit] = useState<string>('');
 
   const getEvents = async () => {
@@ -32,6 +58,16 @@ export default function EventsPage() {
         'https://web-ft-52-back-1.onrender.com/events',
       );
       if (response.status !== 200) {
+=======
+  const { setEvent, setAdminEvent, token } =
+    useAuth();
+  const [editingEvent, setEditingEvent] = useState<Event | null>(null);
+
+  const getEvents = async () => {
+    try {
+      const response = await fetch('http://localhost:3003/events');
+      if (!response.ok) {
+>>>>>>> 55b17464711f90fa3b83d0c879427f94471d4153
         throw new Error('Error fetching events');
       }
       const data = await response.json();
@@ -47,87 +83,266 @@ export default function EventsPage() {
     getEvents();
   }, []);
 
-  const handleToggleAction = (event: Item) => {
-    setEvents(
-      events.map((e) =>
-        e.id === Number(event.id) ? { ...e, isActive: !e.isActive } : e,
-      ),
-    );
+  const handleToggleHighlight = async (id: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3003/auth/events/highlight/${id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('Error updating highlight status');
+      }
+
+      const updatedEvent = await response.json();
+
+      setEvents((prevEvents) =>
+        prevEvents.map((event) =>
+          event.id === updatedEvent.id
+            ? { ...event, highlight: updatedEvent.highlight }
+            : event,
+        ),
+      );
+
+      setEvent(updatedEvent);
+      setAdminEvent(updatedEvent);
+      toast.success("Evento Destacado con exito!")
+    } catch (err) {
+      toast.error("Ups,error al destacar el evento")
+    }
   };
 
-  const getToggleLabel = (isActive: boolean) =>
-    isActive ? 'No destacar' : 'Destacar';
-
-  const handleUpdateEvent = async (updatedEvent: Item) => {
+  const handleUpdateEvent = async (updatedEvent: Event) => {
     try {
       const response = await fetch(
         `https://web-ft-52-back-1.onrender.com/auth/events/edit/${updatedEvent.id}`,
         {
-          method: 'POST',
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(updatedEvent),
         },
       );
-
-      if (response.status !== 200) {
-        throw new Error('Error updating event');
+      if (!response.ok) {
+        toast.error("error al editar el evento")
       }
-
       const updatedEventData = await response.json();
-
-      setEvents(
-        events.map((event) =>
-          event.id === Number(updatedEvent.id)
-            ? { ...event, ...updatedEventData }
-            : event,
+      setEvents((prevEvents) =>
+        prevEvents.map((event) =>
+          event.id === updatedEventData.id ? updatedEventData : event,
         ),
       );
+      setEvent(updatedEventData);
+      setAdminEvent(updatedEventData);
+      setEditingEvent(null);
     } catch (err) {
-      setError('No se pudo actualizar el evento.');
+      toast.error('No se pudo actualizar el evento.');
     }
   };
 
-  return (
-    <div>
-      <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center  py-10">
-        <div className="container mx-auto">
-          <h1 className="text-2xl font-bold">
-            Panel de Administración de Eventos
-          </h1>
-        </div>
-      </div>
+  const handleLocationChange = (location: string) => {
+    if (editingEvent) {
+      setEditingEvent({ ...editingEvent, eventLocation: location });
+    }
+    toast.success("Evento editado con exito!")
+  };
 
-      <div className="flex-grow bg-gray-100 py-6">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl">
-            {loading ? (
-              <p>Cargando eventos...</p>
-            ) : error ? (
-              <p>{error}</p>
-            ) : (
-              <AdminListComponent
-                type="event"
-                items={events.map((event) => ({
-                  id: event.id.toString(),
-                  title: event.title,
-                  description: event.description,
-                  isActive: event.isActive,
-                  image: event.images[0] || '/default-event-image.jpg',
-                  eventDate: new Date(event.eventDate)
-                    .toISOString()
-                    .split('T')[0],
-                  eventLocation: event.eventLocation,
-                }))}
-                onToggleAction={handleToggleAction}
-                getToggleLabel={getToggleLabel}
-                onUpdateEvent={handleUpdateEvent}
-              />
-            )}
-          </div>
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">
+        Panel de Administración de Eventos
+      </h1>
+      {loading ? (
+        <p>Cargando eventos...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : (
+        <div className="border rounded-lg shadow">
+          <ScrollArea className="h-[70vh]">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Título</TableHead>
+                  <TableHead>Fecha</TableHead>
+                  <TableHead>Precio</TableHead>
+                  <TableHead>Capacidad</TableHead>
+                  <TableHead>Destacado</TableHead>
+                  <TableHead>Acciones</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {events.map((event) => (
+                  <TableRow key={event.id}>
+                    <TableCell>{event.title}</TableCell>
+                    <TableCell>
+                      {new Date(event.eventDate).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>${event.price}</TableCell>
+                    <TableCell>{event.stock}</TableCell>
+                    <TableCell>{event.highlight ? 'Sí' : 'No'}</TableCell>
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button
+                              className="w-full"
+                              onClick={() => setEditingEvent(event)}
+                            >
+                              Editar
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+                            <DialogHeader>
+                              <DialogTitle>Editar Evento</DialogTitle>
+                            </DialogHeader>
+                            {editingEvent && (
+                              <div className="space-y-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor="title">Título</Label>
+                                  <Input
+                                    id="title"
+                                    value={editingEvent.title}
+                                    onChange={(e) =>
+                                      setEditingEvent({
+                                        ...editingEvent,
+                                        title: e.target.value,
+                                      })
+                                    }
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="description">
+                                    Descripción
+                                  </Label>
+                                  <Textarea
+                                    id="description"
+                                    value={editingEvent.description}
+                                    onChange={(e) =>
+                                      setEditingEvent({
+                                        ...editingEvent,
+                                        description: e.target.value,
+                                      })
+                                    }
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="eventDate">
+                                    Fecha del evento
+                                  </Label>
+                                  <Input
+                                    id="eventDate"
+                                    type="date"
+                                    value={editingEvent.eventDate.split('T')[0]}
+                                    onChange={(e) =>
+                                      setEditingEvent({
+                                        ...editingEvent,
+                                        eventDate: e.target.value,
+                                      })
+                                    }
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="stock">Capacidad</Label>
+                                  <Input
+                                    id="stock"
+                                    type="number"
+                                    value={editingEvent.stock}
+                                    onChange={(e) =>
+                                      setEditingEvent({
+                                        ...editingEvent,
+                                        stock: Number(e.target.value),
+                                      })
+                                    }
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="price">Precio</Label>
+                                  <Input
+                                    id="price"
+                                    type="number"
+                                    value={editingEvent.price}
+                                    onChange={(e) =>
+                                      setEditingEvent({
+                                        ...editingEvent,
+                                        price: Number(e.target.value),
+                                      })
+                                    }
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="eventAddress">
+                                    Dirección
+                                  </Label>
+                                  <Input
+                                    id="eventAddress"
+                                    value={editingEvent.eventAddress}
+                                    onChange={(e) =>
+                                      setEditingEvent({
+                                        ...editingEvent,
+                                        eventAddress: e.target.value,
+                                      })
+                                    }
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor="eventLocation">
+                                    Ubicación
+                                  </Label>
+                                  <GoogleMaps
+                                    eventLocation={editingEvent.eventLocation}
+                                    eventAddress={editingEvent.eventAddress}
+                                    setEventAddress={(address: string) =>
+                                      setEditingEvent({
+                                        ...editingEvent,
+                                        eventAddress: address,
+                                      })
+                                    }
+                                    setEventLocation={handleLocationChange}
+                                  />
+                                </div>
+                                <div className="flex justify-end space-x-2">
+                                  <Button
+                                    onClick={() =>
+                                      handleUpdateEvent(editingEvent)
+                                    }
+                                  >
+                                    Guardar
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => setEditingEvent(null)}
+                                  >
+                                    Cancelar
+                                  </Button>
+                                </div>
+                              </div>
+                            )}
+                          </DialogContent>
+                        </Dialog>
+                        <Button
+                          className="w-full"
+                          variant={event.highlight ? 'default' : 'outline'}
+                          onClick={() => handleToggleHighlight(event.id)}
+                        >
+                          {event.highlight ? 'Quitar Destacado' : 'Destacar'}
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </ScrollArea>
         </div>
-      </div>
+      )}
     </div>
   );
 }

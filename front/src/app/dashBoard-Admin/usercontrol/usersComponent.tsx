@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import { Session } from '@/context/AuthContext'
+=======
+>>>>>>> 55b17464711f90fa3b83d0c879427f94471d4153
 import React from 'react'
 import { Button } from '../../../components/ui/button'
 

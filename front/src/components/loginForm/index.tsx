@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
+import toast from 'react-hot-toast';
 interface ILoginUser {
   email: string;
   password: string;
@@ -22,8 +23,9 @@ interface ILoginError {
 function LoginForm() {
   // const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const route = useRouter();
+  
 
-  const { setToken, setSession } = useAuth();
+  const { setToken, setSession , userSession} = useAuth();
   const [loginUser, setLoginUser] = useState<ILoginUser>({
     email: '',
     password: '',
@@ -38,6 +40,7 @@ function LoginForm() {
       console.log('Formulario válido. Enviando datos...');
 
       try {
+<<<<<<< HEAD
         const response = await fetch(
           `https://web-ft-52-back-1.onrender.com/auth/login`,
           {
@@ -46,6 +49,12 @@ function LoginForm() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(loginUser),
+=======
+        const response = await fetch(`http://localhost:${port}/users/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+>>>>>>> 55b17464711f90fa3b83d0c879427f94471d4153
           },
         );
 
@@ -61,21 +70,19 @@ function LoginForm() {
 
         const data = await response.json();
         if (data.redirect === true) {
-          window.alert(
-            'No has terminado de completar tu registro al iniciar sesion con el servicio de google ,te invitamos a completarlo',
-          );
+         toast.success("Te invitamos a completar un formulario para completar tu resgistro!")
           handleClickGoogle();
           return;
         }
 
         setSession(data.user);
         setToken(data.token);
-        window.alert('has iniciado sesion exitosamente');
+        toast.success(`Bienvenido ${userSession?.name}!`);
         route.push('/');
         return;
       } catch (error) {
         console.error('Error en el inicio de sesión:', error);
-        setErrors({ email: 'Error en el inicio de sesión' });
+       toast.error("Error en el inicio de sesión intentalo mas tarde")
       }
     } else {
       setErrors(validationErrors);

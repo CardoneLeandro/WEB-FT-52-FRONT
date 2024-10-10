@@ -1,4 +1,5 @@
 'use client';
+<<<<<<< HEAD
 import React from 'react';
 // import { useState } from 'react';
 // import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
@@ -13,8 +14,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 //   TableRow,
 // } from '@/components/ui/table';
 // import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useAuth } from '@/context/AuthContext';
+=======
 
+import { useEffect, useState } from 'react';
+import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+>>>>>>> 55b17464711f90fa3b83d0c879427f94471d4153
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
+
+<<<<<<< HEAD
 // const aportes = [
 //   {
 //     aporte: 'Donación',
@@ -35,35 +46,30 @@ import { useAuth } from '@/context/AuthContext';
 //     paymentMethod: 'Bank Transfer',
 //   },
 // ];
+=======
+>>>>>>> 55b17464711f90fa3b83d0c879427f94471d4153
 
-const upcomingEvents = [
-  { id: 1, name: 'Evento 1', date: '2023-07-15' },
-  { id: 2, name: 'Evento 2', date: '2023-07-22' },
-  { id: 3, name: 'Evento 3', date: '2023-07-29' },
-];
 
 export default function PanelAdmin() {
+<<<<<<< HEAD
   // const [showDonations, setShowDonations] = useState(false);
+=======
+>>>>>>> 55b17464711f90fa3b83d0c879427f94471d4153
   const { userSession } = useAuth();
-
+  const Router = useRouter()
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header con gradiente y estilos */}
-      <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center rounded-t-xl py-10">
-        <div className="container mx-auto">
-          <h1 className="text-2xl font-bold text-white">
-            Panel de Administración de Usuarios
-          </h1>
-        </div>
+    <div className="container mx-auto p-6">
+      <div className="container mx-auto">
+        <h1 className="text-2xl font-bold mb-6">
+          Panel de Administración de Eventos
+        </h1>
       </div>
 
-      {/* Contenido principal */}
       <div className="flex-grow bg-gray-100 py-6">
         <div className="container mx-auto px-4 max-w-7xl">
           <Card>
             <CardContent className="p-6 rounded-b-xl shadow-xl">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Sección de Información del Usuario */}
                 <Card className="shadow-md">
                   <CardHeader>
                     <CardTitle>Información del Usuario</CardTitle>
@@ -84,7 +90,6 @@ export default function PanelAdmin() {
                   </CardContent>
                 </Card>
 
-                {/* Sección de Próximos Eventos */}
                 <Card className="shadow-md">
                   <CardHeader>
                     <CardTitle className="cursor-default">
@@ -93,17 +98,33 @@ export default function PanelAdmin() {
                   </CardHeader>
                   <CardContent className="cursor-default">
                     <ul className="space-y-2">
-                      {upcomingEvents.map((event) => (
-                        <li
-                          key={event.id}
-                          className="flex justify-between items-center bg-white p-3 rounded shadow-sm"
-                        >
-                          <span>{event.name}</span>
-                          <span className="text-sm text-gray-500">
-                            {event.date}
-                          </span>
-                        </li>
-                      ))}
+                      {userSession?.assistantEvents?.length > 0 ? (
+                        userSession.assistantEvents.map((assistantEvents) => (
+                          <li
+                            key={assistantEvents.eventId}
+                            className="flex justify-between items-center bg-white p-3 rounded shadow-sm"
+                          >
+                            <span>{assistantEvents.title}</span>
+                            <span className="text-sm text-gray-500">
+                              {new Date(
+                                assistantEvents.eventDate,
+                              ).toLocaleDateString()}
+                            </span>
+                            <Button
+                              onClick={() =>
+                                Router.push(
+                                  `/eventdetail/${assistantEvents.eventId}`,
+                                )
+                              }
+                              variant="default"
+                            >
+                              Ver Evento{' '}
+                            </Button>
+                          </li>
+                        ))
+                      ) : (
+                        <p>Aun no te has inscripto a ningun evento.</p>
+                      )}
                     </ul>
                   </CardContent>
                 </Card>

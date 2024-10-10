@@ -11,16 +11,17 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { HeartIcon } from 'lucide-react';
+import {  HeartIcon } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { donate } from '@/app/donations/mercadoPago';
 
 export default function Home() {
-  const { token, userSession } = useAuth();
+  const {setPaymentInfo} = useAuth();
 
   const donateFunction = donate;
 
   async function donation(formData: FormData) {
+<<<<<<< HEAD
     const title = formData.get('message') as string;
     const amount = Number(formData.get('amount'));
 
@@ -47,6 +48,14 @@ export default function Home() {
       return;
     }
   }
+=======
+    const title: string = formData.get('message') as string;
+    const amount: number = Number(formData.get('amount'));
+    console.log("Antes de setPaymentInfo:", { title, amount });
+    setPaymentInfo({ title, amount });
+    await donateFunction({ title, amount });}
+  
+>>>>>>> 55b17464711f90fa3b83d0c879427f94471d4153
 
   return (
     <div className="min-h-screen bg-gradient-to-b to-white flex items-center justify-center p-4">

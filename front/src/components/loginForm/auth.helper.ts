@@ -13,6 +13,7 @@ interface IUserObject {
 // Función para enviar los datos del usuario
 export const postUserSessionData = async (userObject: IUserObject) => {
   try {
+<<<<<<< HEAD
     const response = await fetch(
       'https://web-ft-52-back-1.onrender.com/auth/auth0/signup',
       {
@@ -21,6 +22,12 @@ export const postUserSessionData = async (userObject: IUserObject) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(userObject),
+=======
+    const response = await fetch('http://localhost:3003/users/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+>>>>>>> 55b17464711f90fa3b83d0c879427f94471d4153
       },
     );
 

@@ -1,51 +1,216 @@
-import React from 'react';
+'use client';
 
-const DonationHistory = () => {
-  const donations = [
-    { id: 1, date: '2024-09-25', amount: 50 },
-    { id: 2, date: '2024-08-14', amount: 100 },
-    { id: 3, date: '2024-07-30', amount: 75 },
-  ];
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
-  const totalAmount = donations.reduce(
-    (acc, donation) => acc + donation.amount,
-    0,
+type AdminDonation = {
+  id: string;
+  title: string;
+  amount: number;
+  status: 'active' | 'pending';
+  createdAt: string;
+};
+
+const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+
+export default function AdminDonaciones() {
+  const [donations, setDonations] = useState<AdminDonation[]>([]);
+  const [filteredDonations, setFilteredDonations] = useState<AdminDonation[]>(
+    [],
   );
+  const [statusFilter, setStatusFilter] = useState<
+    'todas' | 'active' | 'pending'
+  >('todas');
+  const [nameFilter, setNameFilter] = useState('');
+  const { userSession, token } = useAuth();
+
+  const fetchDonations = async (): Promise<void> => {
+    if (!userSession) return;
+
+    try {
+      const response = await fetch(`http://localhost:${port}/auth/donations`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setDonations(data);
+      } else {
+        console.error('Error fetching donations:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching donations:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDonations();
+  }, [userSession]);
+
+  const handleConfirmPayment = async (id: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:${port}/auth/payment/donation/confirm/${id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (response.ok) {
+        await fetchDonations();
+      } else {
+        console.error('Error confirming payment:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error confirming payment:', error);
+    }
+  };
+
+  const handleCancelPayment = async (id: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:${port}/auth/payment/donation/reject/${id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (response.ok) {
+        await fetchDonations();
+      } else {
+        console.error('Error canceling payment:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error canceling payment:', error);
+    }
+  };
+
+  useEffect(() => {
+    const filtered = donations
+      .filter((donation) => {
+        if (statusFilter === 'active') return donation.status === 'active';
+        if (statusFilter === 'pending') return donation.status === 'pending';
+        return true;
+      })
+      .filter((donation) =>
+        donation.title.toLowerCase().includes(nameFilter.toLowerCase()),
+      );
+
+    setFilteredDonations(filtered);
+  }, [statusFilter, nameFilter, donations]);
 
   return (
-    <div className="min-h-screen flex justify-center items-start bg-gray-100">
-      <div className="p-0 w-full flex flex-col justify-between h-[90vh]">
-        <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center  py-10 w-full">
-          <div className="container mx-auto">
-            <h1 className="text-2xl font-bold">Historial de Donaciones</h1>
-          </div>
-        </div>
-
-        <div className="w-full p-10">
-          <div className="flex justify-between font-semibold text-gray-700 text-2xl border-b pb-2">
-            <span>Fecha</span>
-            <span>Monto</span>
-          </div>
-        </div>
-
-        <ul className="space-y-4 flex-grow w-full p-10 pt-0">
-          {donations.map((donation) => (
-            <li
-              key={donation.id}
-              className="flex justify-between text-gray-700 border-b pb-2"
-            >
-              <span>{donation.date}</span>
-              <span>${donation.amount}</span>
-            </li>
-          ))}
-        </ul>
-
-        <div className="mt-6 text-right text-3xl font-medium text-gray-800 self-end w-full p-10">
-          <span>Total: ${totalAmount}</span>
-        </div>
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">
+        Panel de Administración de Donaciones
+      </h1>
+      <div className="flex space-x-4 mb-6">
+        <Select
+          value={statusFilter}
+          onValueChange={(value) =>
+            setStatusFilter(value as 'todas' | 'active' | 'pending')
+          }
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filtrar por estado" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="todas">Todas</SelectItem>
+            <SelectItem value="active">Aceptadas</SelectItem>
+            <SelectItem value="pending">Pendientes</SelectItem>
+          </SelectContent>
+        </Select>
+        <Input
+          type="text"
+          placeholder="Buscar por nombre"
+          value={nameFilter}
+          onChange={(e) => setNameFilter(e.target.value)}
+          className="max-w-sm"
+        />
+      </div>
+      <div className="border rounded-lg shadow">
+        <ScrollArea className="h-[70vh]">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Título</TableHead>
+                <TableHead>Monto</TableHead>
+                <TableHead>Estado</TableHead>
+                <TableHead>Fecha</TableHead>
+                <TableHead>Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredDonations.map((donation) => (
+                <TableRow key={donation.id}>
+                  <TableCell>{donation.title}</TableCell>
+                  <TableCell>${donation.amount}</TableCell>
+                  <TableCell>
+                    {donation.status === 'active' ? 'Aceptada' : 'Pendiente'}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(donation.createdAt).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    {donation.status === 'pending' && (
+                      <div className="flex space-x-2">
+                        <Button
+                          className="w-full"
+                          variant={'constructive'}
+                          onClick={() => handleConfirmPayment(donation.id)}
+                        >
+                          Aprobar
+                        </Button>
+                        <Button
+                          className="w-full"
+                          variant="destructive"
+                          onClick={() => handleCancelPayment(donation.id)}
+                        >
+                          Cancelar
+                        </Button>
+                      </div>
+                    )}
+                    {donation.status === 'active' && (
+                      <span className="text-green-600 font-medium">
+                        Aprobada
+                      </span>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </ScrollArea>
       </div>
     </div>
   );
-};
-
-export default DonationHistory;
+}

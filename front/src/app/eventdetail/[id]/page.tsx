@@ -3,31 +3,19 @@
 import { useEffect, useState } from 'react';
 import EventCardDetail from '@/components/events/eventDetail/indext';
 import getEventById from '@/utils/eventsdetail';
+import { Event } from '@/context/AuthContext';
 
-interface Event {
-  id: string;
-  highlight: boolean;
-  createDate: Date;
-  status: string;
-  title: string;
-  eventDate: Date;
-  eventLocation: string;
-  description: string;
-  price: number;
-  stock: number;
-  images: string[];
-}
 
 const EventDetailPage = ({ params }: { params: { id: string } }) => {
-  const [event, setEvent] = useState<Event | null>(null);
+  const [event, setEvent] = useState<Event | null>();
 
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const fetchedEvent = await getEventById(params.id);
+        const fetchedEvent: Event|null = await getEventById(params.id);
         setEvent(fetchedEvent);
       } catch (error) {
-        console.error('Error fetching event:', error);
+        window.console.error('error', error);
       }
     };
 
@@ -40,7 +28,11 @@ const EventDetailPage = ({ params }: { params: { id: string } }) => {
     return <div>Evento no disponible</div>;
   }
 
-  return <EventCardDetail {...event} />;
+  return (
+    <div className="flex justify-center items-center min-h-screen nim-w-screen ">
+      <EventCardDetail {...event} />;
+    </div>
+  );
 };
 
 export default EventDetailPage;

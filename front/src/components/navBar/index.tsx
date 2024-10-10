@@ -11,16 +11,15 @@ function NavBar() {
   const [dropDownMenu, setDropDownMenu] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { userSession } = useAuth();
+  const { userSession , token } = useAuth();
 
   const handleDropDownMenu = () => {
     setDropDownMenu(!dropDownMenu);
   };
 
   useEffect(() => {
-    console.log('navbar', userSession);
   }),
-    [userSession];
+    [token];
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
   };
@@ -73,9 +72,8 @@ function NavBar() {
                 <AvatarImage
                   src={userSession?.image}
                   onClick={handleDropDownMenu}
-                  onMouseEnter={() => setDropDownMenu(true)}
                 />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback onClick={handleDropDownMenu}>CN</AvatarFallback>
               </Avatar>
             )) || (
               <FaRegUserCircle
@@ -85,7 +83,7 @@ function NavBar() {
             )}
 
             {dropDownMenu && (
-              <div onMouseLeave={() => setDropDownMenu(false)}>
+              <div>
                 <DropDownMenu />
               </div>
             )}
