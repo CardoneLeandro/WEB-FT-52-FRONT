@@ -58,6 +58,7 @@ export interface Event {
   stock: number;
   images: string[];
   assistantEvents: Assistance[];
+  key?: string;
 }
 
 interface AuthContextType {
