@@ -164,7 +164,7 @@ const EventCardDetail: React.FC<Event> = ({
               <p className="text-muted-foreground text-lg">{description}</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex items-center space-x-3">
-                  <FaMapMarkerAlt className="text-primary text-xl" />
+                  <FaMapMarkerAlt className="text-blue-500 text-xl" />
                   <span className="font-medium text-lg">
                     {address || eventAddress}
                   </span>
@@ -176,18 +176,18 @@ const EventCardDetail: React.FC<Event> = ({
                       className="text-primary hover:text-primary/80 transition-colors"
                       title="Ver dirección"
                     >
-                      <FaMapMarkerAlt className="text-xl" />
+                      <FaMapMarkerAlt className="text-xl text-blue-500" />
                     </a>
                   )}
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FaCalendarAlt className="text-primary text-xl" />
+                  <FaCalendarAlt className="text-blue-500 text-xl" />
                   <span className="text-lg">
                     {new Date(eventDate).toLocaleDateString()}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FaClock className="text-primary text-xl" />
+                  <FaClock className="text-blue-500 text-xl" />
                   <span className="text-lg">
                     {new Date(eventDate).toLocaleTimeString([], {
                       hour: '2-digit',
@@ -196,11 +196,11 @@ const EventCardDetail: React.FC<Event> = ({
                   </span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FaTicketAlt className="text-primary text-xl" />
+                  <FaTicketAlt className=" text-xl text-blue-500" />
                   <span className="text-lg">{stock} lugares disponibles</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FaDollarSign className="text-primary text-xl" />
+                  <FaDollarSign className="text-blue-500 text-xl" />
                   <span className="text-lg">
                     {price > 0 ? `$${price}` : 'Gratuito'}
                   </span>
