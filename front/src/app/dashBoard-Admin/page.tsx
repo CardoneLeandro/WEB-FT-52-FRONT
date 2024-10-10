@@ -32,7 +32,7 @@ export default function PanelAdmin() {
           <Card className="shadow-xl">
             <CardHeader className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center rounded-t-xl">
               <Avatar className="w-16 h-16 shadow-xl">
-                <AvatarImage src={userSession?.image} alt="User Image" />
+                <AvatarImage src={userSession?.image ?? ''} alt="User Image" />
                 <AvatarFallback>{userSession?.image}</AvatarFallback>
               </Avatar>
               <CardTitle className="text-3xl font-bold text-white cursor-default">
