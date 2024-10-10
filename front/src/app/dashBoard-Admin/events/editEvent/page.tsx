@@ -6,7 +6,7 @@ function EditEvent() {
   const [title, setTitle] = useState('');
   const [eventDate, setEventDate] = useState('');
   const [eventLocation, setEventLocation] = useState('');
-  const [stock, setStock] = useState('');
+
   const [stock, setStock] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
