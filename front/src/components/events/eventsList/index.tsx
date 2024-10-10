@@ -1,5 +1,6 @@
-'use client';
-import React, { useEffect, useState } from 'react';
+"use client";
+
+import React, { useEffect, useState, useCallback } from 'react';
 import EventCard from '../eventCard';
 import { Button } from '@/components/ui/button';
 
@@ -25,33 +26,33 @@ export type EventsListProps = {
   showLimitedEvents?: boolean;
 };
 
-const EventsList = ({
+export default function EventsList({
   initialEvents,
   selectedMonth,
   selectedYear,
   search,
   showLimitedEvents,
-}: EventsListProps) => {
+}: EventsListProps) {
   const [events, setEvents] = useState<Event[]>(initialEvents || []);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [filters, setFilters] = useState({
+    month: selectedMonth,
+    year: selectedYear,
+    search: search,
+  });
 
-  useEffect(() => {
-    setEvents(initialEvents || []);
-  }, [initialEvents]);
-
-  const fetchEvents = async (page: number) => {
+  const fetchEvents = useCallback(async (currentPage: number, currentFilters: typeof filters) => {
     if (showLimitedEvents) return;
 
-    const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
     setLoading(true);
     try {
-      let url = `http://localhost:3003/events?page=${page}&limit=6`;
+      let url = `http://localhost:3003/events?page=${currentPage}&limit=6`;
 
-      if (selectedMonth) url += `&month=${selectedMonth}`;
-      if (selectedYear) url += `&year=${selectedYear}`;
-      if (search) url += `&title=${search}`;
+      if (currentFilters.month) url += `&month=${currentFilters.month}`;
+      if (currentFilters.year) url += `&year=${currentFilters.year}`;
+      if (currentFilters.search) url += `&title=${currentFilters.search}`;
 
       const res = await fetch(url);
       const data = await res.json();
@@ -63,13 +64,22 @@ const EventsList = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [showLimitedEvents]);
+
+  useEffect(() => {
+    setFilters({
+      month: selectedMonth,
+      year: selectedYear,
+      search: search,
+    });
+    setPage(1); 
+  }, [selectedMonth, selectedYear, search]);
 
   useEffect(() => {
     if (!showLimitedEvents) {
-      fetchEvents(page);
+      fetchEvents(page, filters);
     }
-  }, [page, selectedMonth, selectedYear, search, showLimitedEvents]);
+  }, [page, filters, showLimitedEvents, fetchEvents]);
 
   const handleNextPage = () => {
     if (page < totalPages) {
@@ -99,7 +109,7 @@ const EventsList = ({
 
   return (
     <div>
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 ">
         {filteredEvents.map((event) => (
           <EventCard
             id={event.id}
@@ -123,7 +133,7 @@ const EventsList = ({
       </div>
 
       {!showLimitedEvents && !loading && (
-        <div className="flex justify-between items-center mt-4">
+        <div className="flex justify-between items-center mt-4 gap-4">
           <Button
             onClick={handlePrevPage}
             disabled={page === 1}
@@ -147,6 +157,4 @@ const EventsList = ({
       {loading && <p>Cargando eventos...</p>}
     </div>
   );
-};
-
-export default EventsList;
+}

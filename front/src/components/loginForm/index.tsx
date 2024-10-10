@@ -23,9 +23,8 @@ interface ILoginError {
 function LoginForm() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const route = useRouter();
-  
 
-  const { setToken, setSession , userSession} = useAuth();
+  const { setToken, setSession, userSession } = useAuth();
   const [loginUser, setLoginUser] = useState<ILoginUser>({
     email: '',
     password: '',
@@ -40,27 +39,31 @@ function LoginForm() {
       console.log('Formulario válido. Enviando datos...');
 
       try {
-        const response = await fetch(`http://localhost:${port}/users/auth/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `http://localhost:${port}/users/auth/login`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(loginUser),
           },
-          body: JSON.stringify(loginUser),
-        });
+        );
 
         if (!response.ok) {
           const errorData = await response.json();
           console.error('ERROR EN LA RESPUESTA DEL SERVIDOR:', errorData);
-          window.alert(
-            'ERROR EN LA RESPUESTA DEL SERVIDOR: ' + errorData.message,
-          );
+          toast.error('Ups mail o contraseña no validos intentalo de nuevo');
           route.push('/login');
           return;
         }
 
         const data = await response.json();
+
         if (data.redirect === true) {
-         toast.success("Te invitamos a completar un formulario para completar tu resgistro!")
+          toast.success(
+            'Te invitamos a rellenar un formulario para completar tu resgistro!',
+          );
           handleClickGoogle();
           return;
         }
@@ -72,7 +75,7 @@ function LoginForm() {
         return;
       } catch (error) {
         console.error('Error en el inicio de sesión:', error);
-       toast.error("Error en el inicio de sesión intentalo mas tarde")
+        toast.error('Error en el inicio de sesión intentalo mas tarde');
       }
     } else {
       setErrors(validationErrors);

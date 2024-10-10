@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import toast from 'react-hot-toast';
 
 type AdminDonation = {
   id: string;
@@ -83,6 +84,7 @@ export default function AdminDonaciones() {
 
       if (response.ok) {
         await fetchDonations();
+        toast.success("Donacion Aceptada")
       } else {
         console.error('Error confirming payment:', response.statusText);
       }
@@ -106,6 +108,7 @@ export default function AdminDonaciones() {
 
       if (response.ok) {
         await fetchDonations();
+        toast.success("Donacion Rechazada")
       } else {
         console.error('Error canceling payment:', response.statusText);
       }
