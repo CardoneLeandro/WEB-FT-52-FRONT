@@ -161,16 +161,12 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   useEffect(() => {
     // Cargar datos del localStorage
     const storedToken = localStorage.getItem('token');
-    const storedSession = JSON.parse(
-      localStorage.getItem('userSession') || 'null',
-    );
-    const storedPaymentInfo = JSON.parse(
-      localStorage.getItem('paymentInfo') || 'null',
-    );
-
-    if (storedToken && storedSession) {
+    const storedSession = JSON.parse(localStorage.getItem('userSession') || 'null');
+    const storedPaymentInfo = JSON.parse(localStorage.getItem('paymentInfo') || 'null');
+  
+    // Recuperar sesión
+    if (storedSession) {
       setSession(storedSession);
-      setToken(storedToken);
     } else {
       setSession({
         id: null,
@@ -187,14 +183,14 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         assistantEvents: [],
       });
       localStorage.removeItem('userSession');
-      setToken(null);
     }
-
+  
     // Cargar paymentInfo desde localStorage
     if (storedPaymentInfo) {
       setPaymentInfo(storedPaymentInfo);
     }
-
+  
+    // Cargar eventos
     getEvents();
   }, []);
 
@@ -202,10 +198,10 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     if (donation) {
       setSession((prevSession) => {
         if (prevSession) {
-          return {
-            ...prevSession,
-            donations: [...prevSession.donations, donation],
-          };
+          const updatedDonations = [...prevSession.donations, donation];
+          const updatedSession = { ...prevSession, donations: updatedDonations };
+          localStorage.setItem('userSession', JSON.stringify(updatedSession)); // Guardar en localStorage
+          return updatedSession;
         }
         return prevSession;
       });
