@@ -39,7 +39,7 @@ const EventCardDetail: React.FC<Event> = ({
   const [address, setAddress] = useState<string>('');
   const { userSession, token, setAssistance } = useAuth();
   const router = useRouter();
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+
   const [appointed, setAppointed] = useState<boolean>(false);
 
   const extractCoordinatesFromURL = (url: string) => {

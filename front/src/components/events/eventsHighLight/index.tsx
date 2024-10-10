@@ -28,7 +28,6 @@ const HighlightEvent: React.FC<Event> = ({
   const [address, setAddress] = useState<string>('');
   const [appointed, setAppointed] = useState<boolean>(false);
   const { userSession, token, setAssistance } = useAuth();
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
   const extractCoordinatesFromURL = (url: string) => {
     try {

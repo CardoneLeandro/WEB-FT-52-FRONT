@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, createContext, useContext } from 'react';
-const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+
 
 interface AuthContextProps {
   children: React.ReactNode;

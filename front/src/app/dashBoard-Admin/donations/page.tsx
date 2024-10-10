@@ -29,8 +29,6 @@ type AdminDonation = {
   createdAt: string;
 };
 
-const port = process.env.NEXT_PUBLIC_APP_API_PORT;
-
 export default function AdminDonaciones() {
   const [donations, setDonations] = useState<AdminDonation[]>([]);
   const [filteredDonations, setFilteredDonations] = useState<AdminDonation[]>(

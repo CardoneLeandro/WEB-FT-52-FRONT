@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { signOut } from 'next-auth/react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -173,8 +172,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         Agregar y eliminar usuarios
                       </a>
                     </li>
-                    <li>                      
-                    </li>
+                    <li></li>
                   </ul>
                 )}
               </div>

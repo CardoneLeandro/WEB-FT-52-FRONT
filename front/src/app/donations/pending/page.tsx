@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 
 export default function PaymentPending() {
   const redirect = useRouter();
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+
   const [disabled, setDisabled] = useState(true);
   const { userSession, token, paymentInfo, setPaymentInfo, setDonation } =
     useAuth();
