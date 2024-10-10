@@ -65,7 +65,6 @@
 
 import NextAuth, { NextAuthOptions, DefaultSession } from 'next-auth';
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google';
-import { NextApiRequest, NextApiResponse } from 'next';
 
 declare module 'next-auth' {
   interface Session {
@@ -86,7 +85,7 @@ declare module 'next-auth' {
   }
 }
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -114,9 +113,6 @@ const authOptions: NextAuthOptions = {
   },
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  return await NextAuth(req, res, authOptions);
-}
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };
