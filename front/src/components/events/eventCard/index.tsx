@@ -160,7 +160,7 @@ const EventCard: React.FC<Event> = ({
             className="ml-4 flex justify-center"
             style={{ height: '180px', width: '180px' }}
           >
-            {images ? (
+            {images && images.length > 0 ? (
               <Image
                 src={images[0]}
                 alt={title}

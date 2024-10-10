@@ -2,20 +2,20 @@
 import React, { useEffect, useState } from 'react';
 import EventCard from '../eventCard';
 import { Button } from '@/components/ui/button';
-
-export type Event = {
-  id: string;
-  highlight: boolean;
-  createDate: Date;
-  status: string;
-  title: string;
-  eventDate: Date;
-  eventLocation: string;
-  eventAddress: string;
-  price: number;
-  stock: number;
-  images: string[];
-};
+import { Event } from '@/context/AuthContext';
+// export type Event = {
+//   id: string;
+//   highlight: boolean;
+//   createDate: Date;
+//   status: string;
+//   title: string;
+//   eventDate: Date;
+//   eventLocation: string;
+//   eventAddress: string;
+//   price: number;
+//   stock: number;
+//   images: string[];
+// };
 
 export type EventsListProps = {
   initialEvents: Event[];
@@ -99,7 +99,7 @@ const EventsList = ({
   return (
     <div>
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
-        {filteredEvents.map((event) => (
+        {filteredEvents.map((event: Event) => (
           <EventCard
             id={event.id}
             key={event.id}
@@ -112,10 +112,13 @@ const EventsList = ({
             eventAddress={event.eventAddress}
             price={event.price}
             stock={event.stock}
+            vacancy={event.vacancy}
+            description={event.description}
+            assistantEvents={event.assistantEvents}
             images={
               event.images && event.images.length > 0
-                ? event.images[0]
-                : '/path/to/placeholder-image.jpg'
+                ? [event.images[0]]
+                : ['/path/to/placeholder-image.jpg']
             }
           />
         ))}
