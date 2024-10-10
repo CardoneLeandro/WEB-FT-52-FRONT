@@ -48,7 +48,7 @@ export interface Event {
   id: string;
   highlight: boolean;
   createDate: Date;
-  status: string;
+  status: boolean;
   vacancy: boolean;
   title: string;
   description: string;
@@ -198,19 +198,22 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     getEvents();
   }, []);
 
-const handleSetDonations = (donation: Donation) => {
-  if (donation) {
-    setSession((prevSession) => {
-      if (prevSession) {
-        const updatedDonations = [...prevSession.donations, donation];
-        const updatedSession = { ...prevSession, donations: updatedDonations };
-        localStorage.setItem('userSession', JSON.stringify(updatedSession)); // Guardar en localStorage
-        return updatedSession;
-      }
-      return prevSession;
-    });
-  }
-};
+  const handleSetDonations = (donation: Donation) => {
+    if (donation) {
+      setSession((prevSession) => {
+        if (prevSession) {
+          const updatedDonations = [...prevSession.donations, donation];
+          const updatedSession = {
+            ...prevSession,
+            donations: updatedDonations,
+          };
+          localStorage.setItem('userSession', JSON.stringify(updatedSession)); // Guardar en localStorage
+          return updatedSession;
+        }
+        return prevSession;
+      });
+    }
+  };
 
   const handleSetAssistance = (updatedAssistance: Assistance[]) => {
     if (updatedAssistance.length > 0) {
@@ -218,7 +221,10 @@ const handleSetDonations = (donation: Donation) => {
         if (prevSession) {
           // eslint-disable-next-line no-unused-vars
           const { assistantEvents, ...rest } = prevSession;
-          const updatedSession = { assistantEvents: updatedAssistance, ...rest };
+          const updatedSession = {
+            assistantEvents: updatedAssistance,
+            ...rest,
+          };
           return updatedSession;
         }
         return prevSession;
