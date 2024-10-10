@@ -25,6 +25,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { LuAlertCircle } from 'react-icons/lu';
+import Link from 'next/link';
 
 export default function UserDashboard() {
   const [showDonations, setShowDonations] = useState(false);
@@ -130,6 +131,12 @@ export default function UserDashboard() {
                         ¡La comunidad está llena de vida! Hay eventos
                         esperándote.
                       </h2>
+                      <Link href="/eventsPage" passHref>
+                        <Button variant="outline" className="flex items-center">
+                          Ver todos los eventos
+                          <CalendarIcon className="ml-2 h-4 w-4" />
+                        </Button>
+                      </Link>
                     </div>
                   )}
                 </CardContent>
