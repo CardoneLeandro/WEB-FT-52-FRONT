@@ -46,7 +46,7 @@ export default function Home() {
       const activeEvents: Event[] = [];
 
       allEvents?.forEach((event) => {
-        if (event.highlight && event.status === 'active') {
+        if (event.highlight === true && event.status === 'active') {
           newHighlight.push(event);
         } else if (!event.highlight && event.status === 'active') {
           activeEvents.push(event);
@@ -54,7 +54,6 @@ export default function Home() {
           newMoments.push(event);
         }
       });
-
       setHighlight(newHighlight);
       setMoments(newMoments);
 

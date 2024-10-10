@@ -47,7 +47,7 @@ export interface Event {
   id: string;
   highlight: boolean;
   createDate: Date;
-  status: boolean;
+  status: string;
   vacancy: boolean;
   title: string;
   description: string;
@@ -93,7 +93,7 @@ const AuthContext = createContext<AuthContextType>({
     image: null,
     providerAccountId: '',
     creatorId: '',
-    status: null,
+    status: '',
     phone: '',
     address: '',
     donations: [],
@@ -128,7 +128,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     image: null,
     providerAccountId: '',
     creatorId: '',
-    status: null,
+    status: '',
     phone: '',
     address: '',
     donations: [],
@@ -180,7 +180,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         image: null,
         providerAccountId: '',
         creatorId: '',
-        status: null,
+        status: '',
         phone: '',
         address: '',
         donations: [],
@@ -252,7 +252,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         image: null,
         providerAccountId: '',
         creatorId: '',
-        status: null,
+        status: '',
         phone: '',
         address: '',
         donations: [],
@@ -327,7 +327,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
       image: null,
       providerAccountId: '',
       creatorId: '',
-      status: null,
+      status: '',
       phone: '',
       address: '',
       donations: [],
