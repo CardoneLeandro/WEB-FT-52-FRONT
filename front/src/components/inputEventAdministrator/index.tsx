@@ -120,7 +120,7 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
           toast.success('El evento se ha creado exitosamente', {
             position: 'bottom-center',
           });
-          alert(`Evento creado exitosamente. Ver en Google Maps: ${googleMapsLink}`);
+          
         } else {
           toast.error('Error al crear el evento', {
             position: 'bottom-center',

@@ -155,14 +155,14 @@ const HighlightEvent: React.FC<Event> = ({
             <CardTitle className="text-2xl font-bold text-gray-900 line-clamp-2">
               {title}
             </CardTitle>
-            <CardDescription className="text-gray-600">
+            <CardDescription className="text-gray-700">
               <div className="flex items-center mt-2">
                 <CalendarIcon className="mr-2 text-blue-500 flex-shrink-0" />
-                <span className="font-semibold mr-1">Fecha:</span>
+                <span className="font-semibold mr-1 text-black">Fecha:</span>
                 <span>{new Date(eventDate).toLocaleDateString()}</span>
               </div>
               <div className="flex items-center mt-2">
-                <span className="font-semibold mr-1">Ver en GoogleMaps</span>
+               
                 <a
                   href={googleMapsLink || eventLocation}
                   target="_blank"
@@ -171,11 +171,11 @@ const HighlightEvent: React.FC<Event> = ({
                   <MapPinIcon className="mr-2 text-blue-500 flex-shrink-0" />
                 </a>
 
-                <span className="line-clamp-1">{eventAddress}</span>
+                <span className="font-semibold mr-1 text-black">{eventAddress}</span>
               </div>
               <div className="flex items-center mt-2">
                 <ClockIcon className="mr-2 text-blue-500 flex-shrink-0" />
-                <span className="font-semibold mr-1">Hora:</span>
+                <span className="font-semibold mr-1 text-black">Hora:</span>
                 <span>
                   {new Date(eventDate).toLocaleTimeString([], {
                     hour: '2-digit',
