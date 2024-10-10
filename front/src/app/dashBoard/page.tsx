@@ -16,21 +16,15 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
-
-
 export default function UserDashboard() {
   const [showDonations, setShowDonations] = useState(false);
-  const { userSession , token } = useAuth();
-  const Router = useRouter()
+  const { userSession, token } = useAuth();
+  const Router = useRouter();
   useEffect(() => {
-    if (
-      (userSession.role !== "user" ) ||
-      !token
-    ) {
+    if (userSession.role !== 'user' || !token) {
       Router.push('/');
     }
   }, [userSession, token, Router]);
-
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 ">
@@ -39,7 +33,7 @@ export default function UserDashboard() {
           <Card className="shadow-xl">
             <CardHeader className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center rounded-t-xl">
               <Avatar className=" w-16 h-16 shadow-xl">
-                <AvatarImage src={userSession?.image} alt="User Image" />
+                <AvatarImage src={userSession?.image ?? ''} alt="User Image" />
                 <AvatarFallback>{userSession?.image}</AvatarFallback>
               </Avatar>
               <CardTitle className="text-3xl font-bold text-white cursor-default">
@@ -86,15 +80,25 @@ export default function UserDashboard() {
                           >
                             <span>{assistantEvents.title}</span>
                             <span className="text-sm text-gray-500">
-                              {new Date(assistantEvents.eventDate).toLocaleDateString()}
+                              {new Date(
+                                assistantEvents.eventDate,
+                              ).toLocaleDateString()}
                             </span>
-                            <Button onClick={() => Router.push(`/eventdetail/${assistantEvents.eventId}`)} variant="default">Ver Evento </Button>
+                            <Button
+                              onClick={() =>
+                                Router.push(
+                                  `/eventdetail/${assistantEvents.eventId}`,
+                                )
+                              }
+                              variant="default"
+                            >
+                              Ver Evento{' '}
+                            </Button>
                           </li>
                         ))
                       ) : (
                         <p>Aun no te has inscripto a ningun evento.</p>
                       )}
-
                     </ul>
                   </CardContent>
                 </Card>
@@ -123,7 +127,6 @@ export default function UserDashboard() {
                             <TableHead>Descripcion</TableHead>
                             <TableHead>Fecha</TableHead>
                             <TableHead>Total</TableHead>
-                           
                           </TableRow>
                         </TableHeader>
                         <TableBody>
