@@ -12,23 +12,23 @@ import {
 } from '@/components/ui/card';
 import { MapPin } from 'lucide-react';
 import { HoverCard, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Event } from '@/context/AuthContext';
+// interface EventCardProps {
+//   id: string;
+//   key: string;
+//   highlight: boolean;
+//   createDate: Date;
+//   status: string;
+//   title: string;
+//   eventDate: Date;
+//   eventLocation: string;
+//   eventAddress: string;
+//   price: number;
+//   stock: number;
+//   images: string;
+// }
 
-interface EventCardProps {
-  id: string;
-  key: string;
-  highlight: boolean;
-  createDate: Date;
-  status: string;
-  title: string;
-  eventDate: Date;
-  eventLocation: string;
-  eventAddress: string;
-  price: number;
-  stock: number;
-  images: string;
-}
-
-const EventCard: React.FC<EventCardProps> = ({
+const EventCard: React.FC<Event> = ({
   id,
   key,
   highlight,

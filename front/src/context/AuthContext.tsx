@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, createContext, useContext } from 'react';
 
-
 interface AuthContextProps {
   children: React.ReactNode;
 }
