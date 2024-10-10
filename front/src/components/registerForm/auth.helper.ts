@@ -3,7 +3,7 @@ export async function register(
   setToken: (token: string) => void,
   setSession: (user: any) => void,
   redirect: any,
-) {
+): Promise<void> {
   try {
     const response = await fetch(
       `https://web-ft-52-back-1.onrender.com/users/auth/signup`,
