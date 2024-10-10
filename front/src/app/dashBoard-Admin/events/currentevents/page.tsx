@@ -44,7 +44,7 @@ export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { setEvent, setAdminEvent, token, logout } = useAuth();
+
   const { setEvent, setAdminEvent, token, logout } = useAuth();
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
 
