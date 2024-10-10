@@ -3,7 +3,7 @@ interface IInputEventAdProps {
   eventDate: string;
   eventLocation: string;
   description: string;
-  images: [string] | null;
+  images: string[];
   eventAddress: string;
   price: string;
   stock: string;
