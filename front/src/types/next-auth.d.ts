@@ -1,22 +1,22 @@
-// src/types/next-auth.d.ts
+import 'next-auth';
+import { DefaultSession } from 'next-auth';
+import { GoogleProfile } from 'next-auth/providers/google';
 
-import NextAuth from "next-auth";
-
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session {
+    accessToken?: string;
     user: {
-      idToken?: string; // Agrega idToken aquí
-    } & DefaultUser;
+      name?: string;
+      email?: string;
+      image?: string;
+      providerAccountId?: string;
+      profile?: GoogleProfile;
+    } & DefaultSession['user'];
   }
 
   interface JWT {
-    idToken?: string; // Agrega idToken aquí
-  }
-}
-import 'next-auth';
-
-declare module 'next-auth' {
-  interface SignInResponse {
-    idToken?: string; // Añadir idToken al tipo
+    accessToken?: string;
+    providerAccountId?: string;
+    profile?: GoogleProfile;
   }
 }
