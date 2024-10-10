@@ -33,8 +33,6 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
   const [image, setImage] = useState<string>('');
   const [showMap, setShowMap] = useState<boolean>(false);
 
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
-
   const formik = useFormik({
     initialValues: {
       title,
@@ -71,7 +69,14 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
         eventAddress,
       } = values;
 
-      if (!title || !eventDate || !eventLocation || !description || !image || !eventAddress) {
+      if (
+        !title ||
+        !eventDate ||
+        !eventLocation ||
+        !description ||
+        !image ||
+        !eventAddress
+      ) {
         toast.error('Todos los campos son obligatorios.', {
           position: 'bottom-center',
         });
@@ -85,7 +90,10 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
         return;
       }
 
-      const cleanedDateString = values.eventDate.replace(/(\d+)(th|st|nd|rd)/, '$1');
+      const cleanedDateString = values.eventDate.replace(
+        /(\d+)(th|st|nd|rd)/,
+        '$1',
+      );
       const eventDateConverted = new Date(cleanedDateString);
 
       const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventLocation)}`;
@@ -104,7 +112,7 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
 
       try {
         const response = await fetch(
-          `http://localhost:${port}/auth/events/create`,
+          `https://web-ft-52-back-1.onrender.com/auth/events/create`,
           {
             method: 'POST',
             headers: {
@@ -116,8 +124,10 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
         );
 
         if (response.status === 441) {
-          toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
-          logout()
+          toast.error(
+            `Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`,
+          );
+          logout();
           signOut({ callbackUrl: '/' });
         }
 
@@ -127,7 +137,6 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
           toast.success('El evento se ha creado exitosamente', {
             position: 'bottom-center',
           });
-          
         } else {
           toast.error('Error al crear el evento', {
             position: 'bottom-center',
@@ -168,7 +177,9 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
 
   return (
     <div className="p-4 space-y-4">
-      <h1 className="font-bold text-[28px] text-gray-500 mb-4">Crear evento:</h1>
+      <h1 className="font-bold text-[28px] text-gray-500 mb-4">
+        Crear evento:
+      </h1>
 
       <form onSubmit={formik.handleSubmit} className="flex flex-row gap-8">
         <div className="w-1/2">
@@ -184,7 +195,9 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
             )}
 
             <DatePickerDemo
-              onChange={(date: string) => formik.setFieldValue('eventDate', date)}
+              onChange={(date: string) =>
+                formik.setFieldValue('eventDate', date)
+              }
             />
             {formik.touched.eventDate && formik.errors.eventDate && (
               <div className="text-red-500">{formik.errors.eventDate}</div>
@@ -248,8 +261,14 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
             {showMap && (
               <div className="mt-4 w-full items-start">
                 <GoogleMap
-                  setEventLocation={(location) => formik.setFieldValue('eventLocation', location)}
-                  setEventAddress={(address) => formik.setFieldValue('eventAddress', address)}
+                  eventLocation={formik.values.eventLocation}
+                  eventAddress={formik.values.eventAddress}
+                  setEventLocation={(location) =>
+                    formik.setFieldValue('eventLocation', location)
+                  }
+                  setEventAddress={(address) =>
+                    formik.setFieldValue('eventAddress', address)
+                  }
                 />
               </div>
             )}
@@ -257,7 +276,9 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
         </div>
 
         <div className="w-1/2 flex flex-col items-start">
-          <h2 className="font-bold text-[24px] text-gray-500 mb-2">Previsualización:</h2>
+          <h2 className="font-bold text-[24px] text-gray-500 mb-2">
+            Previsualización:
+          </h2>
           <div className="border p-4 rounded-lg shadow-lg max-w-sm">
             <img
               src={image || 'https://via.placeholder.com/400'}
@@ -300,6 +321,6 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
       </div>
     </div>
   );
-}
+};
 
 export default InputEventAd;

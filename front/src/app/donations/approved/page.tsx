@@ -9,14 +9,14 @@ import toast from 'react-hot-toast';
 
 export default function PaymentSuccess() {
   const redirect = useRouter();
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+
   const [disabled, setDisabled] = useState(true);
   const { userSession, token, paymentInfo, setPaymentInfo, setDonation, logout } =
     useAuth();
 
   const pay = async (params: PaymentInfo, token: string | null) => {
     const response = await fetch(
-      `http://localhost:${port}/payments/pay-donations/success`,
+      `https://web-ft-52-back-1.onrender.com/payments/pay-donations/success`,
       {
         method: 'POST',
         headers: {

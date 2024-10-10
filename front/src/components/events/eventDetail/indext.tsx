@@ -50,7 +50,7 @@ const EventCardDetail: React.FC<Event> = ({
   const [address, setAddress] = useState<string>('');
   const { userSession, token, setAssistance, logout } = useAuth();
   const router = useRouter();
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+
   const [appointed, setAppointed] = useState<boolean>(false);
 
   const extractCoordinatesFromURL = (url: string) => {
@@ -117,7 +117,7 @@ const EventCardDetail: React.FC<Event> = ({
 
     try {
       const response = await fetch(
-        `http://localhost:${port}/events/updateattendance/${id}`,
+        `https://web-ft-52-back-1.onrender.com/events/updateattendance/${id}`,
         {
           method: 'POST',
           headers: {
@@ -129,8 +129,10 @@ const EventCardDetail: React.FC<Event> = ({
       );
 
       if (response.status === 441) {
-        toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
-        logout()
+        toast.error(
+          `Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`,
+        );
+        logout();
         signOut({ callbackUrl: '/' });
       }
 

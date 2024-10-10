@@ -12,23 +12,23 @@ import {
 } from '@/components/ui/card';
 import { MapPin } from 'lucide-react';
 import { HoverCard, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Event } from '@/context/AuthContext';
+// interface EventCardProps {
+//   id: string;
+//   key: string;
+//   highlight: boolean;
+//   createDate: Date;
+//   status: string;
+//   title: string;
+//   eventDate: Date;
+//   eventLocation: string;
+//   eventAddress: string;
+//   price: number;
+//   stock: number;
+//   images: string;
+// }
 
-interface EventCardProps {
-  id: string;
-  key: string;
-  highlight: boolean;
-  createDate: Date;
-  status: string;
-  title: string;
-  eventDate: Date;
-  eventLocation: string;
-  eventAddress: string;
-  price: number;
-  stock: number;
-  images: string;
-}
-
-const EventCard: React.FC<EventCardProps> = ({
+const EventCard: React.FC<Event> = ({
   id,
   key,
   highlight,
@@ -93,6 +93,34 @@ const EventCard: React.FC<EventCardProps> = ({
     }
   }, [eventLocation]);
 
+  const handleHighlightToggle = async () => {
+    setHighlighted(!highlighted);
+
+    try {
+      const response = await fetch(
+        'https://web-ft-52-back-1.onrender.com/events/highlight',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            eventId: id,
+            highlight: !highlighted,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar el estado del evento');
+      }
+
+      const data = await response.json();
+      console.log('Evento actualizado:', data);
+    } catch (error) {
+      console.error('Error al enviar la solicitud:', error);
+    }
+  };
 
   const handleViewDetails = () => {
     router.push(`/eventdetail/${id}`);
@@ -114,9 +142,9 @@ const EventCard: React.FC<EventCardProps> = ({
       <CardContent className="flex-grow relative">
         <div className="flex flex-col items-center">
           <div className="mb-4" style={{ height: '250px', width: '320px' }}>
-            {images ? (
+            {images && images.length > 0 ? (
               <Image
-                src={images}
+                src={images[0]}
                 alt={title}
                 width={320}
                 height={250}

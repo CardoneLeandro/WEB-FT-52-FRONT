@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, createContext, useContext } from 'react';
-const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
 interface AuthContextProps {
   children: React.ReactNode;
@@ -59,6 +58,7 @@ export interface Event {
   stock: number;
   images: string[];
   assistantEvents: Assistance[];
+  key?: string;
 }
 
 interface AuthContextType {
@@ -93,7 +93,7 @@ const AuthContext = createContext<AuthContextType>({
     image: null,
     providerAccountId: '',
     creatorId: '',
-    status: null,
+    status: '',
     phone: '',
     address: '',
     donations: [],
@@ -128,7 +128,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     image: null,
     providerAccountId: '',
     creatorId: '',
-    status: null,
+    status: '',
     phone: '',
     address: '',
     donations: [],
@@ -145,7 +145,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const getEvents = async () => {
     try {
       const res = await fetch(
-        `http://localhost:${port}/events/getactiveandinactivehighlight`,
+        `https://web-ft-52-back-1.onrender.com/events/getactiveandinactivehighlight`,
       );
       if (res.ok) {
         const data = await res.json();
@@ -180,7 +180,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         image: null,
         providerAccountId: '',
         creatorId: '',
-        status: null,
+        status: '',
         phone: '',
         address: '',
         donations: [],
@@ -198,19 +198,22 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     getEvents();
   }, []);
 
-const handleSetDonations = (donation: Donation) => {
-  if (donation) {
-    setSession((prevSession) => {
-      if (prevSession) {
-        const updatedDonations = [...prevSession.donations, donation];
-        const updatedSession = { ...prevSession, donations: updatedDonations };
-        localStorage.setItem('userSession', JSON.stringify(updatedSession)); // Guardar en localStorage
-        return updatedSession;
-      }
-      return prevSession;
-    });
-  }
-};
+  const handleSetDonations = (donation: Donation) => {
+    if (donation) {
+      setSession((prevSession) => {
+        if (prevSession) {
+          const updatedDonations = [...prevSession.donations, donation];
+          const updatedSession = {
+            ...prevSession,
+            donations: updatedDonations,
+          };
+          localStorage.setItem('userSession', JSON.stringify(updatedSession)); // Guardar en localStorage
+          return updatedSession;
+        }
+        return prevSession;
+      });
+    }
+  };
 
   const handleSetAssistance = (updatedAssistance: Assistance[]) => {
     if (updatedAssistance.length > 0) {
@@ -218,7 +221,10 @@ const handleSetDonations = (donation: Donation) => {
         if (prevSession) {
           // eslint-disable-next-line no-unused-vars
           const { assistantEvents, ...rest } = prevSession;
-          const updatedSession = { assistantEvents: updatedAssistance, ...rest };
+          const updatedSession = {
+            assistantEvents: updatedAssistance,
+            ...rest,
+          };
           return updatedSession;
         }
         return prevSession;
@@ -246,7 +252,7 @@ const handleSetDonations = (donation: Donation) => {
         image: null,
         providerAccountId: '',
         creatorId: '',
-        status: null,
+        status: '',
         phone: '',
         address: '',
         donations: [],
@@ -321,7 +327,7 @@ const handleSetDonations = (donation: Donation) => {
       image: null,
       providerAccountId: '',
       creatorId: '',
-      status: null,
+      status: '',
       phone: '',
       address: '',
       donations: [],

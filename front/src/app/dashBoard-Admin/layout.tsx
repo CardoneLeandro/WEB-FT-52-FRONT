@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { signOut } from 'next-auth/react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -22,10 +21,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    if(userSession.role && token) {
-      if(userSession.role !== 'admin' && userSession.role !== 'superadmin' || !token) {
-        router.push('/')
-    }}
+    if (userSession.role && token) {
+      if (
+        (userSession.role !== 'admin' && userSession.role !== 'superadmin') ||
+        !token
+      ) {
+        router.push('/');
+      }
+    }
   }, [userSession, token, router]);
 
   return (
@@ -168,7 +171,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         href="/dashBoard-Admin/usercontrol"
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
-                        Agregar y eliminar usuarios
+                        Gestión de usuarios
                       </a>
                     </li>
                     <li></li>

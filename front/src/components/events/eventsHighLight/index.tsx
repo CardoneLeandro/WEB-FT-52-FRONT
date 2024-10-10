@@ -98,7 +98,7 @@ const HighlightEvent: React.FC<Event> = ({
 
     try {
       const response = await fetch(
-        `http://localhost:${port}/events/updateattendance/${id}`,
+        `https://web-ft-52-back-1.onrender.com/events/updateattendance/${id}`,
         {
           method: 'POST',
           headers: {
@@ -110,8 +110,10 @@ const HighlightEvent: React.FC<Event> = ({
       );
 
       if (response.status === 441) {
-        toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
-        logout()
+        toast.error(
+          `Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`,
+        );
+        logout();
         signOut({ callbackUrl: '/' });
       }
       if (!response.ok) {
