@@ -28,14 +28,16 @@ export default function PaymentSuccess() {
     );
 
     if (response.status === 441) {
-      toast.error(`Su cuenta ha sido suspendida, por favor contáctese con nosotros via Email`);
-      logout();
+      toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
+      logout()
       signOut({ callbackUrl: '/' });
     }
+
 
     const data = await response.json();
     return data;
   };
+  
 
   useEffect(() => {
     if (!paymentInfo) return;
@@ -50,23 +52,15 @@ export default function PaymentSuccess() {
         if (data.ok) {
           const { donation } = data;
           setDonation(donation);
-          
-          // Guardar donación en localStorage
-          const updatedSession = {
-            ...userSession,
-            donations: [...userSession.donations, donation],
-          };
-          localStorage.setItem('userSession', JSON.stringify(updatedSession));
-          
           setPaymentInfo(null);
           setDisabled(false);
-          toast.success(`¡Gracias por tu donación, ${userSession.name}!`);
+          toast.success(`Gracias por tu donacion ${userSession.name}!`);
           redirect.push('/');
         }
       })
       .catch((error) => {
         toast.error(
-          'Ups, hubo un error al procesar tu pago. Por favor, intenta nuevamente.',
+          'Ups hubo un error al procesar tu pago. Por favor, intenta nuevamente.',
         );
         redirect.push('/');
       });
