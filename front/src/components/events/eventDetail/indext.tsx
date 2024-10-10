@@ -18,8 +18,19 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-import { Event, Assistance } from '@/context/AuthContext';
+import { Event } from '@/context/AuthContext';
 import toast from 'react-hot-toast';
+import { signOut } from 'next-auth/react';
+import {
+  BadgeDollarSign,
+  CalendarIcon,
+  ClockIcon,
+  DollarSign,
+  DollarSignIcon,
+  MapPinIcon,
+  RockingChair,
+  WalletCards,
+} from 'lucide-react';
 
 const EventCardDetail: React.FC<Event> = ({
   id,
@@ -37,7 +48,7 @@ const EventCardDetail: React.FC<Event> = ({
 }) => {
   const [googleMapsLink, setGoogleMapsLink] = useState<string>('');
   const [address, setAddress] = useState<string>('');
-  const { userSession, token, setAssistance } = useAuth();
+  const { userSession, token, setAssistance, logout } = useAuth();
   const router = useRouter();
 
   const [appointed, setAppointed] = useState<boolean>(false);
@@ -116,6 +127,15 @@ const EventCardDetail: React.FC<Event> = ({
           body: JSON.stringify({ creator: userSession.creatorId }),
         },
       );
+
+      if (response.status === 441) {
+        toast.error(
+          `Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`,
+        );
+        logout();
+        signOut({ callbackUrl: '/' });
+      }
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error('ERROR EN LA RESPUESTA DEL SERVIDOR:', errorData);
@@ -164,30 +184,27 @@ const EventCardDetail: React.FC<Event> = ({
               <p className="text-muted-foreground text-lg">{description}</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex items-center space-x-3">
-                  <FaMapMarkerAlt className="text-blue-500 text-xl" />
-                  <span className="font-medium text-lg">
-                    {address || eventAddress}
-                  </span>
                   {eventLocation && (
                     <a
-                      href={googleMapsLink}
+                      href={eventLocation}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-primary hover:text-primary/80 transition-colors"
                       title="Ver dirección"
                     >
-                      <FaMapMarkerAlt className="text-xl text-blue-500" />
+                      <MapPinIcon className="mr-2 text-blue-500 flex-shrink-0" />
                     </a>
                   )}
+                  <span className="text-lg ">{eventAddress}</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FaCalendarAlt className="text-blue-500 text-xl" />
+                  <CalendarIcon className="mr-2 text-blue-500 flex-shrink-0" />
                   <span className="text-lg">
                     {new Date(eventDate).toLocaleDateString()}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FaClock className="text-blue-500 text-xl" />
+                  <ClockIcon className="mr-2 text-blue-500 flex-shrink-0" />
                   <span className="text-lg">
                     {new Date(eventDate).toLocaleTimeString([], {
                       hour: '2-digit',
@@ -196,11 +213,11 @@ const EventCardDetail: React.FC<Event> = ({
                   </span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FaTicketAlt className=" text-xl text-blue-500" />
+                  <RockingChair className="mr-2 text-blue-500 flex-shrink-0" />
                   <span className="text-lg">{stock} lugares disponibles</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FaDollarSign className="text-blue-500 text-xl" />
+                  <BadgeDollarSign className="mr-2 text-blue-500 flex-shrink-0 " />
                   <span className="text-lg">
                     {price > 0 ? `$${price}` : 'Gratuito'}
                   </span>
@@ -221,7 +238,7 @@ const EventCardDetail: React.FC<Event> = ({
                 className={`w-full sm:w-auto text-lg py-6 ${
                   appointed
                     ? 'bg-red-500 hover:bg-red-600'
-                    : 'bg-primary hover:bg-primary/90'
+                    : 'bg-transparent text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-300'
                 }`}
                 disabled={!vacancy && !appointed}
               >

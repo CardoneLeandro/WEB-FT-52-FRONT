@@ -127,55 +127,60 @@ const EventCard: React.FC<Event> = ({
   };
 
   return (
-    <Card className="flex-shrink-0 shadow-md">
+    <Card className="flex-shrink-0 shadow-md max-w-sm flex flex-col justify-between">
       <CardHeader>
         <div className="flex justify-between items-center">
-          <CardTitle className="cursor-default">{title}</CardTitle>
+          <CardTitle className="cursor-default truncate max-w-full">
+            {title}
+          </CardTitle>
         </div>
-        <CardDescription className="cursor-default">
+        <CardDescription className="cursor-default font-semibold text-gray-800">
           <time>{new Date(eventDate).toLocaleDateString()}</time>
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="justify-between items-center flex flex-col">
-          <div>
-            <p>Dirección: {eventAddress}</p>
-            {eventLocation ? (
-              <p className="flex items-center mb-4 cursor-pointer">
-                Ver ubicación en Google Maps
-                <a
-                  href={googleMapsLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 underline"
-                >
-                  <MapPin className="mr-2 h-4 w-4" />
-                </a>
-              </p>
-            ) : (
-              <p>Ubicación no disponible</p>
-            )}
-          </div>
-          <div
-            className="ml-4 flex justify-center"
-            style={{ height: '180px', width: '180px' }}
-          >
+
+      <CardContent className="flex-grow relative">
+        <div className="flex flex-col items-center">
+          <div className="mb-4" style={{ height: '250px', width: '320px' }}>
             {images && images.length > 0 ? (
               <Image
                 src={images[0]}
                 alt={title}
-                width={180}
-                height={180}
-                className="rounded-md object-cover mx-auto"
+                width={320}
+                height={250}
+                className="rounded-md object-cover"
                 style={{ maxWidth: '100%', maxHeight: '100%' }}
               />
             ) : (
               <p>No image available</p>
             )}
           </div>
+
+          <div className="relative flex items-center justify-center">
+            <p className="text-lg relative z-10">
+              <span className="font-semibold text-gray-800">Dirección:</span>{' '}
+              {eventAddress}
+            </p>
+            {eventLocation && (
+              <a
+                href={eventLocation}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute text-blue-900 underline flex items-center"
+                style={{
+                  left: '-20px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                }}
+              >
+                <MapPin className="h-4 w-4 opacity-50" />
+              </a>
+            )}
+          </div>
         </div>
       </CardContent>
-      <CardFooter className="flex flex-row gap-x-4 items-center justify-center">
+
+      <CardFooter className="flex flex-row gap-x-4 items-center justify-center mt-auto">
         <HoverCard>
           <HoverCardTrigger asChild>
             <Button variant={'outline'} onClick={handleViewDetails}>

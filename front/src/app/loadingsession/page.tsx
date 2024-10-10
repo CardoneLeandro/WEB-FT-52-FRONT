@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 interface IUserObject {
   providerAccountId: string;
@@ -39,7 +40,7 @@ export default function LoadingSessions() {
       setHasFetched(true);
     } else if (status !== 'authenticated') {
       console.log('ERROR EN EL USE EFFECT DE CARGA DE SESION', session, status);
-      alert('ERROR EN EL USE EFFECT DE CARGA DE SESION');
+     
       router.push('/login');
     }
   }, [session, status, router, hasFetched]);
@@ -60,9 +61,7 @@ export default function LoadingSessions() {
       if (!response.ok) {
         const errorData = await response.json();
         console.error('ERROR EN LA RESPUESTA DEL SERVIDOR:', errorData);
-        window.alert(
-          'ERROR EN LA RESPUESTA DEL SERVIDOR: ' + errorData.message,
-        );
+       toast.error("Ups Ocurrio un error intentalo mas tarde")
         router.push('/login');
         return;
       }
@@ -86,7 +85,7 @@ export default function LoadingSessions() {
       return;
     } catch (error) {
       console.error('Error al enviar los datos al backend:', error);
-      window.alert('Error al enviar los datos al backend.');
+      toast.error('Error al enviar los datos del formulario.');
     }
   };
 

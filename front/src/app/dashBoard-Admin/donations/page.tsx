@@ -20,11 +20,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { toast } from 'react-hot-toast';
+import { signOut } from 'next-auth/react';
 
 type AdminDonation = {
   id: string;
-  title: string;
+  email: string;
   amount: number;
+  date: string;
   status: 'active' | 'pending';
   createdAt: string;
 };
@@ -38,7 +41,7 @@ export default function AdminDonaciones() {
     'todas' | 'active' | 'pending'
   >('todas');
   const [nameFilter, setNameFilter] = useState('');
-  const { userSession, token } = useAuth();
+  const { userSession, token, logout } = useAuth();
 
   const fetchDonations = async (): Promise<void> => {
     if (!userSession) return;
@@ -81,9 +84,14 @@ export default function AdminDonaciones() {
           },
         },
       );
-
+      if (response.status === 441) {
+        toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
+        logout()
+        signOut({ callbackUrl: '/' });
+      }
       if (response.ok) {
         await fetchDonations();
+        toast.success("Donacion Aceptada")
       } else {
         console.error('Error confirming payment:', response.statusText);
       }
@@ -105,8 +113,15 @@ export default function AdminDonaciones() {
         },
       );
 
+      if (response.status === 441) {
+        toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
+        logout()
+        signOut({ callbackUrl: '/' });
+      }
+
       if (response.ok) {
         await fetchDonations();
+        toast.success("Donacion Rechazada")
       } else {
         console.error('Error canceling payment:', response.statusText);
       }
@@ -116,15 +131,11 @@ export default function AdminDonaciones() {
   };
 
   useEffect(() => {
-    const filtered = donations
-      .filter((donation) => {
-        if (statusFilter === 'active') return donation.status === 'active';
-        if (statusFilter === 'pending') return donation.status === 'pending';
-        return true;
-      })
-      .filter((donation) =>
-        donation.title.toLowerCase().includes(nameFilter.toLowerCase()),
-      );
+    const filtered = donations.filter((donation) => {
+      if (statusFilter === 'active') return donation.status === 'active';
+      if (statusFilter === 'pending') return donation.status === 'pending';
+      return true;
+    });
 
     setFilteredDonations(filtered);
   }, [statusFilter, nameFilter, donations]);
@@ -152,7 +163,7 @@ export default function AdminDonaciones() {
         </Select>
         <Input
           type="text"
-          placeholder="Buscar por nombre"
+          placeholder="Buscar por nombre de usuario"
           value={nameFilter}
           onChange={(e) => setNameFilter(e.target.value)}
           className="max-w-sm"
@@ -163,7 +174,7 @@ export default function AdminDonaciones() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Título</TableHead>
+                <TableHead>Correo del Usuario</TableHead>
                 <TableHead>Monto</TableHead>
                 <TableHead>Estado</TableHead>
                 <TableHead>Fecha</TableHead>
@@ -173,14 +184,12 @@ export default function AdminDonaciones() {
             <TableBody>
               {filteredDonations.map((donation) => (
                 <TableRow key={donation.id}>
-                  <TableCell>{donation.title}</TableCell>
+                  <TableCell>{donation.email}</TableCell>
                   <TableCell>${donation.amount}</TableCell>
                   <TableCell>
                     {donation.status === 'active' ? 'Aceptada' : 'Pendiente'}
                   </TableCell>
-                  <TableCell>
-                    {new Date(donation.createdAt).toLocaleDateString()}
-                  </TableCell>
+                  <TableCell>{donation.date}</TableCell>
                   <TableCell>
                     {donation.status === 'pending' && (
                       <div className="flex space-x-2">

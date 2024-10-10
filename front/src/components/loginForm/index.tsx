@@ -21,8 +21,9 @@ interface ILoginError {
 }
 
 function LoginForm() {
-
   const route = useRouter();
+
+  const { setToken, setSession, userSession } = useAuth();
 
   const { setToken, setSession, userSession } = useAuth();
   const [loginUser, setLoginUser] = useState<ILoginUser>({
@@ -53,17 +54,16 @@ function LoginForm() {
         if (!response.ok) {
           const errorData = await response.json();
           console.error('ERROR EN LA RESPUESTA DEL SERVIDOR:', errorData);
-          window.alert(
-            'ERROR EN LA RESPUESTA DEL SERVIDOR: ' + errorData.message,
-          );
+          toast.error('Ups mail o contraseña no validos intentalo de nuevo');
           route.push('/login');
           return;
         }
 
         const data = await response.json();
+
         if (data.redirect === true) {
           toast.success(
-            'Te invitamos a completar un formulario para completar tu resgistro!',
+            'Te invitamos a rellenar un formulario para completar tu resgistro!',
           );
           handleClickGoogle();
           return;

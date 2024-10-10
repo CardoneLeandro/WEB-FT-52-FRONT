@@ -14,6 +14,8 @@ import { CalendarIcon, MapPinIcon, ClockIcon, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import { Event, useAuth } from '@/context/AuthContext';
 import toast from 'react-hot-toast';
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const HighlightEvent: React.FC<Event> = ({
   id,
@@ -27,8 +29,9 @@ const HighlightEvent: React.FC<Event> = ({
   const [googleMapsLink, setGoogleMapsLink] = useState<string>('');
   const [address, setAddress] = useState<string>('');
   const [appointed, setAppointed] = useState<boolean>(false);
-  const { userSession, token, setAssistance } = useAuth();
-
+  const { userSession, token, setAssistance, logout } = useAuth();
+  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+  const router = useRouter();
   const extractCoordinatesFromURL = (url: string) => {
     try {
       const queryString = new URL(url).searchParams.get('query');
@@ -39,6 +42,9 @@ const HighlightEvent: React.FC<Event> = ({
       console.error('Error al crear URL:', error);
       return [];
     }
+  };
+  const handleViewDetails = () => {
+    router.push(`/eventdetail/${id}`);
   };
 
   const getAddressFromCoordinates = async (coordinates: string[]) => {
@@ -102,6 +108,14 @@ const HighlightEvent: React.FC<Event> = ({
           body: JSON.stringify({ creator: userSession.creatorId }),
         },
       );
+
+      if (response.status === 441) {
+        toast.error(
+          `Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`,
+        );
+        logout();
+        signOut({ callbackUrl: '/' });
+      }
       if (!response.ok) {
         const errorData = await response.json();
         console.error('ERROR EN LA RESPUESTA DEL SERVIDOR:', errorData);
@@ -149,32 +163,35 @@ const HighlightEvent: React.FC<Event> = ({
         </div>
         <div className="md:w-1/2 flex flex-col h-full">
           {' '}
-          {/* Full height for content */}
           <CardHeader className="flex-grow-0">
             <CardTitle className="text-2xl font-bold text-gray-900 line-clamp-2">
               {title}
             </CardTitle>
-            <CardDescription className="text-gray-600">
+            <CardDescription className="text-gray-700">
               <div className="flex items-center mt-2">
                 <CalendarIcon className="mr-2 text-blue-500 flex-shrink-0" />
-                <span className="font-semibold mr-1">Fecha:</span>
+                <span className="font-semibold mr-1 text-black">Fecha:</span>
                 <span>{new Date(eventDate).toLocaleDateString()}</span>
               </div>
               <div className="flex items-center mt-2">
-                <span className="font-semibold mr-1">Ver en GoogleMaps</span>
-                <a
-                  href={googleMapsLink || eventLocation}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <MapPinIcon className="mr-2 text-blue-500 flex-shrink-0" />
-                </a>
-
-                <span className="line-clamp-1">{eventAddress}</span>
+                {eventLocation && (
+                  <a
+                    href={eventLocation}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:text-primary/80 transition-colors"
+                    title="Ver dirección"
+                  >
+                    <MapPinIcon className="mr-2 text-blue-500 flex-shrink-0" />
+                  </a>
+                )}
+                <span className="font-semibold mr-1 text-black">
+                  {eventAddress}
+                </span>
               </div>
               <div className="flex items-center mt-2">
                 <ClockIcon className="mr-2 text-blue-500 flex-shrink-0" />
-                <span className="font-semibold mr-1">Hora:</span>
+                <span className="font-semibold mr-1 text-black">Hora:</span>
                 <span>
                   {new Date(eventDate).toLocaleTimeString([], {
                     hour: '2-digit',
@@ -188,8 +205,8 @@ const HighlightEvent: React.FC<Event> = ({
             <p className="text-gray-700">{description}</p>
           </CardContent>
           <CardFooter className="flex-grow-0">
-            <Button className="w-full" onClick={handleEventAsistance}>
-              Asistiré
+            <Button variant={'outline'} onClick={handleViewDetails}>
+              Ver detalles
             </Button>
           </CardFooter>
         </div>

@@ -21,17 +21,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (
-      (userSession?.role !== 'superadmin' && userSession?.role !== 'admin') ||
-      !token
-    ) {
-      router.push('/');
-    }
+    if(userSession.role && token) {
+      if(userSession.role !== 'admin' && userSession.role !== 'superadmin' || !token) {
+        router.push('/')
+    }}
   }, [userSession, token, router]);
 
   return (
-    <div className="flex min-h-screen mb-20">
-      <div className="w-64 flex flex-col border-e bg-white min-h-screen justify-between  p-4 mb-44">
+    <div className="flex max-h-screen mb-20 ">
+      <div className="w-64 flex flex-col border-e  min-h-screen justify-between  p-4 mb-44">
         <Button variant={'default'}>
           <Link href="/">Volver a inicio</Link>
         </Button>

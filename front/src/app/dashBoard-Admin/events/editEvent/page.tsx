@@ -7,6 +7,7 @@ function EditEvent() {
   const [eventDate, setEventDate] = useState('');
   const [eventLocation, setEventLocation] = useState('');
   const [stock, setStock] = useState('');
+  const [stock, setStock] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [images, setImages] = useState<string[]>(['']); // Cambiado de string | null a string[]
@@ -15,12 +16,10 @@ function EditEvent() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center py-10">
-        <div className="container mx-auto">
-          <h1 className="text-2xl font-bold text-white">
-            Panel de AdministraciÃ³n de Eventos
-          </h1>
-        </div>
+      <div className="container mx-auto">
+        <h1 className="text-2xl font-bold mb-6">
+          Panel de Administración de Eventos
+        </h1>
       </div>
       <div className="flex flex-col">
         <InputEventAd

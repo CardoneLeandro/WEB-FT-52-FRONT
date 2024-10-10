@@ -1,5 +1,6 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+
+import React, { useEffect, useState, useCallback } from 'react';
 import EventCard from '../eventCard';
 import { Button } from '@/components/ui/button';
 import { Event } from '@/context/AuthContext';
@@ -25,50 +26,63 @@ export type EventsListProps = {
   showLimitedEvents?: boolean;
 };
 
-const EventsList = ({
+export default function EventsList({
   initialEvents,
   selectedMonth,
   selectedYear,
   search,
   showLimitedEvents,
-}: EventsListProps) => {
+}: EventsListProps) {
   const [events, setEvents] = useState<Event[]>(initialEvents || []);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [filters, setFilters] = useState({
+    month: selectedMonth,
+    year: selectedYear,
+    search: search,
+  });
+
+  const fetchEvents = useCallback(
+    async (currentPage: number, currentFilters: typeof filters) => {
+      if (showLimitedEvents) return;
+
+      setLoading(true);
+      try {
+        let url = `https://web-ft-52-back-1.onrender.com/events?page=${page}&limit=6`;
+
+        if (currentFilters.month) url += `&month=${currentFilters.month}`;
+        if (currentFilters.year) url += `&year=${currentFilters.year}`;
+        if (currentFilters.search) url += `&title=${currentFilters.search}`;
+
+        const res = await fetch(url);
+        const data = await res.json();
+
+        setEvents(data.events);
+        setTotalPages(data.totalPages);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [showLimitedEvents],
+  );
 
   useEffect(() => {
-    setEvents(initialEvents || []);
-  }, [initialEvents]);
-
-  const fetchEvents = async (page: number) => {
-    if (showLimitedEvents) return;
-
-    setLoading(true);
-    try {
-      let url = `https://web-ft-52-back-1.onrender.com/events?page=${page}&limit=6`;
-
-      if (selectedMonth) url += `&month=${selectedMonth}`;
-      if (selectedYear) url += `&year=${selectedYear}`;
-      if (search) url += `&title=${search}`;
-
-      const res = await fetch(url);
-      const data = await res.json();
-
-      setEvents(data.events);
-      setTotalPages(data.totalPages);
-    } catch (error) {
-      console.error('Error fetching events:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setFilters({
+      month: selectedMonth,
+      year: selectedYear,
+      search: search,
+    });
+    setPage(1);
+  }, [selectedMonth, selectedYear, search]);
 
   useEffect(() => {
     if (!showLimitedEvents) {
-      fetchEvents(page);
+      fetchEvents(page, filters);
     }
-  }, [page, selectedMonth, selectedYear, search, showLimitedEvents]);
+  }, [page, filters, showLimitedEvents, fetchEvents]);
 
   const handleNextPage = () => {
     if (page < totalPages) {
@@ -98,7 +112,7 @@ const EventsList = ({
 
   return (
     <div>
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 ">
         {filteredEvents.map((event: Event) => (
           <EventCard
             id={event.id}
@@ -125,7 +139,7 @@ const EventsList = ({
       </div>
 
       {!showLimitedEvents && !loading && (
-        <div className="flex justify-between items-center mt-4">
+        <div className="flex justify-between items-center mt-4 gap-4">
           <Button
             onClick={handlePrevPage}
             disabled={page === 1}
@@ -149,6 +163,4 @@ const EventsList = ({
       {loading && <p>Cargando eventos...</p>}
     </div>
   );
-};
-
-export default EventsList;
+}
