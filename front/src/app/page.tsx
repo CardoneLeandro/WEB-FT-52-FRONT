@@ -4,7 +4,13 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
 import { useInView } from 'react-intersection-observer';
 import { useAnimation } from 'framer-motion';
 import HighlightEvent from '@/components/events/eventsHighLight';
@@ -54,7 +60,10 @@ export default function Home() {
 
       const sortedIncommingEvents = activeEvents
         .filter((event) => new Date(event.eventDate) >= today)
-        .sort((a, b) => new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime())
+        .sort(
+          (a, b) =>
+            new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime(),
+        )
         .slice(0, 3);
 
       setIncommingEvents(sortedIncommingEvents);
@@ -73,8 +82,13 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8">
       {/* Eventos Destacados */}
       <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">Eventos Destacados</h2>
-        <Carousel opts={{ align: 'start', loop: true }} className="w-full max-w-5xl mx-auto">
+        <h2 className="text-3xl font-bold mb-6 text-gray-800">
+          Eventos Destacados
+        </h2>
+        <Carousel
+          opts={{ align: 'start', loop: true }}
+          className="w-full max-w-5xl mx-auto"
+        >
           <CarouselContent>
             {highlight.length > 0 ? (
               highlight.map((event) => (
@@ -93,9 +107,11 @@ export default function Home() {
 
       {/* Próximos Eventos */}
       <section className="mb-12">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">Próximos Eventos</h2>
+        <h2 className="text-3xl font-bold mb-6 text-gray-800">
+          Próximos Eventos
+        </h2>
         <div className="flex flex-row mx-auto p-2 justify-center">
-          <NearbyEvents setEvents={incommingEvents} />
+          <NearbyEvents events={incommingEvents} />
         </div>
         <div className="flex justify-center mt-6">
           <Link href="/eventsPage" passHref>
@@ -109,12 +125,20 @@ export default function Home() {
 
       {/* Momentos Destacados */}
       <section ref={ref}>
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">Momentos destacados</h2>
-        <Carousel opts={{ align: 'start', loop: true }} className="w-full max-w-5xl mx-auto">
+        <h2 className="text-3xl font-bold mb-6 text-gray-800">
+          Momentos destacados
+        </h2>
+        <Carousel
+          opts={{ align: 'start', loop: true }}
+          className="w-full max-w-5xl mx-auto"
+        >
           <CarouselContent>
             {moments.length > 0 ? (
               moments.map((event) => (
-                <CarouselItem key={event.id} className="md:basis-1/2 lg:basis-1/3">
+                <CarouselItem
+                  key={event.id}
+                  className="md:basis-1/2 lg:basis-1/3"
+                >
                   <div className="p-1">
                     <FeaturedEventCard
                       id={event.id}
