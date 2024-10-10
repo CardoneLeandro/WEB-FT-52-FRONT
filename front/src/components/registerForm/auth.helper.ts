@@ -1,8 +1,8 @@
 export async function register(
   dataNewUser: IRegisterUser,
   setToken: (token: string) => void,
-  setSession: (user: any) => void,
-  redirect: any,
+  setSession: (user: IRegisterUser) => void,
+  redirect: { push: (path: string) => void },
 ): Promise<void> {
   try {
     const response = await fetch(
