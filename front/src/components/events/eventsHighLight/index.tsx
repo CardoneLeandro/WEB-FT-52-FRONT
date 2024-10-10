@@ -111,7 +111,7 @@ const HighlightEvent: React.FC<Event> = ({
         );
       }
       const data = await response.json();
-      setAssistance(data.assistance);
+      setAssistance(data.assistantEvents);
       setAppointed(!appointed);
       toast.success(
         appointed ? 'Ya no asistirás al evento' : '¡Asistirás al evento!',

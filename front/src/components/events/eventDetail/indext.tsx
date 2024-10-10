@@ -123,8 +123,9 @@ const EventCardDetail: React.FC<Event> = ({
           'No se pudo actualizar el evento. Por favor, intenta de nuevo.',
         );
       }
+      console.log('eventDetail/index => funcion para apuntarse response OK')
       const data = await response.json();
-      setAssistance(data.assistance);
+      setAssistance(data.assistantEvents);
       setAppointed(!appointed);
       toast.success(
         appointed ? 'Ya no asistirás al evento' : '¡Asistirás al evento!',

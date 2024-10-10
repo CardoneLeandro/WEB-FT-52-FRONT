@@ -25,6 +25,7 @@ export default function Home() {
   const [incommingEvents, setIncommingEvents] = useState<Event[]>([]);
 
   useEffect(() => {
+    console.log('USEEFFECT HOME => TOKEN, USERSESSION', token, userSession);
     if (userSession?.status === 'pending') {
       redirect.push('/formpage');
     }
