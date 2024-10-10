@@ -32,8 +32,6 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
   const [image, setImage] = useState<string>('');
   const [showMap, setShowMap] = useState<boolean>(false);
 
-
-
   const formik = useFormik({
     initialValues: {
       title,
@@ -257,6 +255,8 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
             {showMap && (
               <div className="mt-4 w-full items-start">
                 <GoogleMap
+                  eventLocation={formik.values.eventLocation}
+                  eventAddress={formik.values.eventAddress}
                   setEventLocation={(location) =>
                     formik.setFieldValue('eventLocation', location)
                   }
