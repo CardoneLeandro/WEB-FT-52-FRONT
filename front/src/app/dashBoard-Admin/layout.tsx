@@ -22,12 +22,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (
-      (userSession?.role !== 'superadmin' && userSession?.role !== 'admin') ||
-      !token
-    ) {
-      router.push('/');
-    }
+    if(userSession.role && token) {
+      if(userSession.role !== 'admin' && userSession.role !== 'superadmin' || !token) {
+        router.push('/')
+    }}
   }, [userSession, token, router]);
 
   return (

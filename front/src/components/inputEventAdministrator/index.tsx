@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import IInputEventAdProps from '@/interfaces/IInputEventAdProps';
 import toast from 'react-hot-toast';
 import GoogleMap from '../GoogleMaps';
+import { signOut } from 'next-auth/react';
 
 export const InputEventAd: React.FC<IInputEventAdProps> = ({
   title,
@@ -28,7 +29,7 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
   setStock,
   setPrice,
 }) => {
-  const { setEvent, token, userSession } = useAuth();
+  const { setEvent, token, userSession, logout } = useAuth();
   const [image, setImage] = useState<string>('');
   const [showMap, setShowMap] = useState<boolean>(false);
 
@@ -113,6 +114,12 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
             body: JSON.stringify(eventData),
           },
         );
+
+        if (response.status === 441) {
+          toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
+          logout()
+          signOut({ callbackUrl: '/' });
+        }
 
         if (response.ok) {
           const data = await response.json();

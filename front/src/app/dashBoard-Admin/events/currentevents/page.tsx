@@ -24,6 +24,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import GoogleMaps from '@/components/GoogleMaps';
 import toast from 'react-hot-toast';
+import { signOut } from 'next-auth/react';
 
 interface Event {
   id: string;
@@ -42,7 +43,7 @@ export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { setEvent, setAdminEvent, token } =
+  const { setEvent, setAdminEvent, token, logout } =
     useAuth();
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
 
@@ -77,6 +78,12 @@ export default function EventsPage() {
           },
         },
       );
+
+      if (response.status === 441) {
+        toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
+        logout()
+        signOut({ callbackUrl: '/' });
+      }
 
       if (!response.ok) {
         throw new Error('Error updating highlight status');
@@ -113,6 +120,13 @@ export default function EventsPage() {
           body: JSON.stringify(updatedEvent),
         },
       );
+
+      if (response.status === 441) {
+        toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
+        logout()
+        signOut({ callbackUrl: '/' });
+      }
+
       if (!response.ok) {
         toast.error("error al editar el evento")
       }

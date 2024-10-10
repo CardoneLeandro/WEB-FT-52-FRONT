@@ -20,7 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
+import { signOut } from 'next-auth/react';
 
 type AdminDonation = {
   id: string;
@@ -42,7 +43,7 @@ export default function AdminDonaciones() {
     'todas' | 'active' | 'pending'
   >('todas');
   const [nameFilter, setNameFilter] = useState('');
-  const { userSession, token } = useAuth();
+  const { userSession, token, logout } = useAuth();
 
   const fetchDonations = async (): Promise<void> => {
     if (!userSession) return;
@@ -82,7 +83,11 @@ export default function AdminDonaciones() {
           },
         },
       );
-
+      if (response.status === 441) {
+        toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
+        logout()
+        signOut({ callbackUrl: '/' });
+      }
       if (response.ok) {
         await fetchDonations();
         toast.success("Donacion Aceptada")
@@ -106,6 +111,12 @@ export default function AdminDonaciones() {
           },
         },
       );
+
+      if (response.status === 441) {
+        toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
+        logout()
+        signOut({ callbackUrl: '/' });
+      }
 
       if (response.ok) {
         await fetchDonations();

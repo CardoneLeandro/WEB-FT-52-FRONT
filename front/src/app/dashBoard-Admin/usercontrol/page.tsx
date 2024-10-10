@@ -21,6 +21,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import toast from 'react-hot-toast';
+import { signOut } from 'next-auth/react';
 
 interface User {
   id: string;
@@ -39,10 +41,11 @@ export default function AdminPanel() {
     'all' | 'active' | 'inactive'
   >('all');
   const [nameFilter, setNameFilter] = useState('');
-  const { userSession, token } = useAuth();
+  const { userSession, token, logout } = useAuth();
 
   const fetchUsers = async () => {
     try {
+      console.log('Funcion fetchUsers', token);
       const response = await fetch('http://localhost:3003/auth/user/get/all', {
         headers: {
           'Content-Type': 'application/json',
@@ -101,6 +104,12 @@ export default function AdminPanel() {
         },
       );
 
+      // if (response.status === 441) {
+      //   toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
+      //   logout()
+      //   signOut({ callbackUrl: '/' });
+      // }
+
       if (response.ok) {
         const updatedUser = {
           ...currentUser,
@@ -131,6 +140,12 @@ export default function AdminPanel() {
           },
         },
       );
+
+      if (response.status === 441) {
+        toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
+        logout()
+        signOut({ callbackUrl: '/' });
+      }
 
       if (response.ok) {
         const updatedUser = await response.json();

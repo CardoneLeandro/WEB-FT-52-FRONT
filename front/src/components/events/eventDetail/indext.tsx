@@ -18,8 +18,9 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-import { Event, Assistance } from '@/context/AuthContext';
+import { Event } from '@/context/AuthContext';
 import toast from 'react-hot-toast';
+import { signOut } from 'next-auth/react';
 import {
   BadgeDollarSign,
   CalendarIcon,
@@ -47,7 +48,7 @@ const EventCardDetail: React.FC<Event> = ({
 }) => {
   const [googleMapsLink, setGoogleMapsLink] = useState<string>('');
   const [address, setAddress] = useState<string>('');
-  const { userSession, token, setAssistance } = useAuth();
+  const { userSession, token, setAssistance, logout } = useAuth();
   const router = useRouter();
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const [appointed, setAppointed] = useState<boolean>(false);
@@ -126,6 +127,13 @@ const EventCardDetail: React.FC<Event> = ({
           body: JSON.stringify({ creator: userSession.creatorId }),
         },
       );
+
+      if (response.status === 441) {
+        toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
+        logout()
+        signOut({ callbackUrl: '/' });
+      }
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error('ERROR EN LA RESPUESTA DEL SERVIDOR:', errorData);

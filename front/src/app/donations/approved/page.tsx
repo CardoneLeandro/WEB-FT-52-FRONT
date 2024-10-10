@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { useAuth, PaymentInfo } from '@/context/AuthContext';
 import { CheckCircle } from 'lucide-react';
+import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -10,7 +11,7 @@ export default function PaymentSuccess() {
   const redirect = useRouter();
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const [disabled, setDisabled] = useState(true);
-  const { userSession, token, paymentInfo, setPaymentInfo, setDonation } =
+  const { userSession, token, paymentInfo, setPaymentInfo, setDonation, logout } =
     useAuth();
 
   const pay = async (params: PaymentInfo, token: string | null) => {
@@ -25,9 +26,18 @@ export default function PaymentSuccess() {
         body: JSON.stringify(params),
       },
     );
+
+    if (response.status === 441) {
+      toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
+      logout()
+      signOut({ callbackUrl: '/' });
+    }
+
+
     const data = await response.json();
     return data;
   };
+  
 
   useEffect(() => {
     if (!paymentInfo) return;

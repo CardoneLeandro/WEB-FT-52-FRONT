@@ -93,31 +93,6 @@ const EventCard: React.FC<EventCardProps> = ({
     }
   }, [eventLocation]);
 
-  const handleHighlightToggle = async () => {
-    setHighlighted(!highlighted);
-
-    try {
-      const response = await fetch('http://localhost:3003/events/highlight', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          eventId: id,
-          highlight: !highlighted,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al actualizar el estado del evento');
-      }
-
-      const data = await response.json();
-      console.log('Evento actualizado:', data);
-    } catch (error) {
-      console.error('Error al enviar la solicitud:', error);
-    }
-  };
 
   const handleViewDetails = () => {
     router.push(`/eventdetail/${id}`);

@@ -8,11 +8,11 @@ import { useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 function SignupForm() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const router = useRouter();
-  const { userSession, setSession, setToken , token } = useAuth();
+  const { userSession, setSession, setToken , token, logout } = useAuth();
 
   const { data: session } = useSession();
 
@@ -76,7 +76,11 @@ function SignupForm() {
             body: JSON.stringify(formData),
           },
         );
-
+        if (response.status === 441) {
+          toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
+          logout()
+          signOut({ callbackUrl: '/' });
+        }
         if (response.ok) {
           const data = await response.json();
           setSession(data.user);
