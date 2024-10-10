@@ -8,13 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 
-
-
 export default function PanelAdmin() {
   const { userSession } = useAuth();
-  const Router = useRouter()
+  const Router = useRouter();
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 ">
       <div className="container mx-auto">
         <h1 className="text-2xl font-bold mb-6">
           Panel de Administración de Eventos
@@ -46,36 +44,40 @@ export default function PanelAdmin() {
                   </CardContent>
                 </Card>
 
-                <Card className="shadow-md">
+                <Card className="shadow-md flex flex-col">
                   <CardHeader>
                     <CardTitle className="cursor-default">
                       Próximos Eventos
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="cursor-default">
+                  <CardContent className="cursor-default flex-grow overflow-y-auto max-h-[300px]">
                     <ul className="space-y-2">
                       {userSession?.assistantEvents?.length > 0 ? (
-                        userSession.assistantEvents.map((assistantEvents) => (
+                        userSession.assistantEvents.map((assistantEvent) => (
                           <li
-                            key={assistantEvents.eventId}
-                            className="flex justify-between items-center bg-white p-3 rounded shadow-sm"
+                            key={assistantEvent.eventId}
+                            className="flex items-center bg-white p-3 rounded shadow-sm"
                           >
-                            <span>{assistantEvents.title}</span>
-                            <span className="text-sm text-gray-500">
-                              {new Date(
-                                assistantEvents.eventDate,
-                              ).toLocaleDateString()}
+                            <span className="flex-grow truncate mr-2">
+                              {assistantEvent.title}
                             </span>
-                            <Button
-                              onClick={() =>
-                                Router.push(
-                                  `/eventdetail/${assistantEvents.eventId}`,
-                                )
-                              }
-                              variant="default"
-                            >
-                              Ver Evento{' '}
-                            </Button>
+                            <div className="flex items-center space-x-2 flex-shrink-0">
+                              <span className="text-sm text-gray-500 w-24 text-right">
+                                {new Date(
+                                  assistantEvent.eventDate,
+                                ).toLocaleDateString()}
+                              </span>
+                              <Button
+                                onClick={() =>
+                                  Router.push(
+                                    `/eventdetail/${assistantEvent.eventId}`,
+                                  )
+                                }
+                                variant="default"
+                              >
+                                Ver Evento
+                              </Button>
+                            </div>
                           </li>
                         ))
                       ) : (

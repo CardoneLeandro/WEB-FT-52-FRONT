@@ -20,6 +20,16 @@ import {
 
 import { Event, Assistance } from '@/context/AuthContext';
 import toast from 'react-hot-toast';
+import {
+  BadgeDollarSign,
+  CalendarIcon,
+  ClockIcon,
+  DollarSign,
+  DollarSignIcon,
+  MapPinIcon,
+  RockingChair,
+  WalletCards,
+} from 'lucide-react';
 
 const EventCardDetail: React.FC<Event> = ({
   id,
@@ -123,7 +133,7 @@ const EventCardDetail: React.FC<Event> = ({
           'No se pudo actualizar el evento. Por favor, intenta de nuevo.',
         );
       }
-      console.log('eventDetail/index => funcion para apuntarse response OK')
+      console.log('eventDetail/index => funcion para apuntarse response OK');
       const data = await response.json();
       setAssistance(data.assistantEvents);
       setAppointed(!appointed);
@@ -164,10 +174,6 @@ const EventCardDetail: React.FC<Event> = ({
               <p className="text-muted-foreground text-lg">{description}</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex items-center space-x-3">
-                  <FaMapMarkerAlt className="text-primary text-xl" />
-                  <span className="font-medium text-lg">
-                    {address || eventAddress}
-                  </span>
                   {eventLocation && (
                     <a
                       href={googleMapsLink}
@@ -176,18 +182,19 @@ const EventCardDetail: React.FC<Event> = ({
                       className="text-primary hover:text-primary/80 transition-colors"
                       title="Ver dirección"
                     >
-                      <FaMapMarkerAlt className="text-xl" />
+                      <MapPinIcon className="mr-2 text-blue-500 flex-shrink-0" />
                     </a>
                   )}
+                  <span className="text-lg ">{address || eventAddress}</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FaCalendarAlt className="text-primary text-xl" />
+                  <CalendarIcon className="mr-2 text-blue-500 flex-shrink-0" />
                   <span className="text-lg">
                     {new Date(eventDate).toLocaleDateString()}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FaClock className="text-primary text-xl" />
+                  <ClockIcon className="mr-2 text-blue-500 flex-shrink-0" />
                   <span className="text-lg">
                     {new Date(eventDate).toLocaleTimeString([], {
                       hour: '2-digit',
@@ -196,11 +203,11 @@ const EventCardDetail: React.FC<Event> = ({
                   </span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FaTicketAlt className="text-primary text-xl" />
+                  <RockingChair className="mr-2 text-blue-500 flex-shrink-0" />
                   <span className="text-lg">{stock} lugares disponibles</span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FaDollarSign className="text-primary text-xl" />
+                  <BadgeDollarSign className="mr-2 text-blue-500 flex-shrink-0 " />
                   <span className="text-lg">
                     {price > 0 ? `$${price}` : 'Gratuito'}
                   </span>
@@ -221,15 +228,15 @@ const EventCardDetail: React.FC<Event> = ({
                 className={`w-full sm:w-auto text-lg py-6 ${
                   appointed
                     ? 'bg-red-500 hover:bg-red-600'
-                    : 'bg-primary hover:bg-primary/90'
+                    : 'bg-transparent text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-300'
                 }`}
                 disabled={!vacancy && !appointed}
               >
                 {appointed
                   ? 'Cancelar asistencia'
                   : vacancy
-                  ? 'Asistir'
-                  : 'No hay cupos disponibles'}
+                    ? 'Asistir'
+                    : 'No hay cupos disponibles'}
               </Button>
             </CardFooter>
           </div>
@@ -240,4 +247,3 @@ const EventCardDetail: React.FC<Event> = ({
 };
 
 export default EventCardDetail;
-
