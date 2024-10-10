@@ -30,6 +30,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0 height=device-height initial-scale=1.5"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -39,7 +45,7 @@ export default function RootLayout({
               <ShowComponent>
                 <NavBar />
               </ShowComponent>
-              <main className="flex-grow">
+              <main className=" flex-grow">
                 {children}
 
                 <Toaster />

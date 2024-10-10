@@ -14,6 +14,7 @@ import { CalendarIcon, MapPinIcon, ClockIcon, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import { Event, useAuth } from '@/context/AuthContext';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const HighlightEvent: React.FC<Event> = ({
   id,
@@ -29,7 +30,7 @@ const HighlightEvent: React.FC<Event> = ({
   const [appointed, setAppointed] = useState<boolean>(false);
   const { userSession, token, setAssistance } = useAuth();
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
-
+  const router = useRouter();
   const extractCoordinatesFromURL = (url: string) => {
     try {
       const queryString = new URL(url).searchParams.get('query');
@@ -40,6 +41,9 @@ const HighlightEvent: React.FC<Event> = ({
       console.error('Error al crear URL:', error);
       return [];
     }
+  };
+  const handleViewDetails = () => {
+    router.push(`/eventdetail/${id}`);
   };
 
   const getAddressFromCoordinates = async (coordinates: string[]) => {
@@ -150,7 +154,6 @@ const HighlightEvent: React.FC<Event> = ({
         </div>
         <div className="md:w-1/2 flex flex-col h-full">
           {' '}
-          {/* Full height for content */}
           <CardHeader className="flex-grow-0">
             <CardTitle className="text-2xl font-bold text-gray-900 line-clamp-2">
               {title}
@@ -162,16 +165,13 @@ const HighlightEvent: React.FC<Event> = ({
                 <span>{new Date(eventDate).toLocaleDateString()}</span>
               </div>
               <div className="flex items-center mt-2">
-               
+                <MapPinIcon className="mr-2 text-blue-500 flex-shrink-0" />
+                <span className="font-semibold mr-1">{eventAddress}</span>
                 <a
                   href={googleMapsLink || eventLocation}
                   target="_blank"
                   rel="noopener noreferrer"
-                >
-                  <MapPinIcon className="mr-2 text-blue-500 flex-shrink-0" />
-                </a>
-
-                <span className="font-semibold mr-1 text-black">{eventAddress}</span>
+                ></a>
               </div>
               <div className="flex items-center mt-2">
                 <ClockIcon className="mr-2 text-blue-500 flex-shrink-0" />
@@ -189,8 +189,8 @@ const HighlightEvent: React.FC<Event> = ({
             <p className="text-gray-700">{description}</p>
           </CardContent>
           <CardFooter className="flex-grow-0">
-            <Button className="w-full" onClick={handleEventAsistance}>
-              Asistiré
+            <Button variant={'outline'} onClick={handleViewDetails}>
+              Ver detalles
             </Button>
           </CardFooter>
         </div>

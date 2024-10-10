@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-
 export default function PaymentSuccess() {
   const redirect = useRouter();
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
@@ -45,12 +44,14 @@ export default function PaymentSuccess() {
           setDonation(donation);
           setPaymentInfo(null);
           setDisabled(false);
-          toast.success(`Gracias por tu donacion ${userSession.name}!` );
+          toast.success(`Gracias por tu donacion ${userSession.name}!`);
           redirect.push('/');
         }
       })
       .catch((error) => {
-        toast.error('Ups hubo un error al procesar tu pago. Por favor, intenta nuevamente.');
+        toast.error(
+          'Ups hubo un error al procesar tu pago. Por favor, intenta nuevamente.',
+        );
         redirect.push('/');
       });
   }, [paymentInfo, userSession, token]);
