@@ -63,7 +63,7 @@
 //   },
 // };
 
-import NextAuth, { NextAuthOptions } from 'next-auth';
+import NextAuth, { NextAuthOptions, DefaultSession } from 'next-auth';
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -114,7 +114,7 @@ const authOptions: NextAuthOptions = {
   },
 };
 
-export default async function NextApiRequestHandler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
