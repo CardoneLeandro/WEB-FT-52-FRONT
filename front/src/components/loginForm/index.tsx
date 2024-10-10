@@ -25,7 +25,6 @@ function LoginForm() {
 
   const { setToken, setSession, userSession } = useAuth();
 
-  const { setToken, setSession, userSession } = useAuth();
   const [loginUser, setLoginUser] = useState<ILoginUser>({
     email: '',
     password: '',
