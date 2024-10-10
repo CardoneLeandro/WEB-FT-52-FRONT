@@ -67,6 +67,25 @@ import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider, { GoogleProfile } from 'next-auth/providers/google';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+declare module 'next-auth' {
+  interface Session {
+    accessToken?: string;
+    user: {
+      name?: string;
+      email?: string;
+      image?: string;
+      providerAccountId?: string;
+      profile?: GoogleProfile;
+    } & DefaultSession['user'];
+  }
+
+  interface JWT {
+    accessToken?: string;
+    providerAccountId?: string;
+    profile?: GoogleProfile;
+  }
+}
+
 const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
@@ -95,7 +114,7 @@ const authOptions: NextAuthOptions = {
   },
 };
 
-export default async function handler(
+export default async function NextApiRequestHandler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
