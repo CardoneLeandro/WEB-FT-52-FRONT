@@ -189,7 +189,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </div>
 
-      {/* Content */}
       <div className="flex-1">{children}</div>
     </div>
   );

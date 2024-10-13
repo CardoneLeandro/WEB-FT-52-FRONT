@@ -31,7 +31,7 @@ export function usePostUserSessionData() {
       }
 
       const data = await response.json();
-      console.log('Datos enviados exitosamente al backend.', data);
+
       setToken(data.token);
       setSession(data.user);
       return data;

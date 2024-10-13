@@ -16,10 +16,6 @@ function SignupForm() {
   const { data: session } = useSession();
 
   useEffect(() => {
-    console.log(
-      'USEEFFECT, userSession ==========================>',
-      userSession,
-    );
     if (!userSession) {
       router.push('/login');
       return;
@@ -62,7 +58,7 @@ function SignupForm() {
           email: userSession?.email,
           ...values,
         };
-        console.log('FORMDATA =================================>:', formData);
+
         const response = await fetch(
           `https://web-ft-52-back-1.onrender.com/users/auth0/completeregister`,
 

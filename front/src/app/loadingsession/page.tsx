@@ -39,8 +39,6 @@ export default function LoadingSessions() {
       postUserSessionData(userObject);
       setHasFetched(true);
     } else if (status !== 'authenticated') {
-      console.log('ERROR EN EL USE EFFECT DE CARGA DE SESION', session, status);
-     
       router.push('/login');
     }
   }, [session, status, router, hasFetched]);
@@ -61,16 +59,13 @@ export default function LoadingSessions() {
       if (!response.ok) {
         const errorData = await response.json();
         console.error('ERROR EN LA RESPUESTA DEL SERVIDOR:', errorData);
-       toast.error("Ups Ocurrio un error intentalo mas tarde")
+        toast.error('Ups Ocurrio un error intentalo mas tarde');
         router.push('/login');
         return;
       }
 
       const data = await response.json();
-      console.log(
-        'RESULTADO DEL CONDICIONAL DE ESTADO DE USER, DATA.USER',
-        data.user,
-      );
+
       if (data.user.status === 'pending') {
         setSession(data.user);
         setToken(data.token);
@@ -78,7 +73,6 @@ export default function LoadingSessions() {
         return;
       }
 
-      console.log('USER SESSION TOKEN', data.token);
       setSession(data.user);
       setToken(data.token);
       router.push('/');

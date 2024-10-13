@@ -33,7 +33,7 @@ function EventsPage() {
       }
 
       const data = await response.json();
-      console.log('Data received:', data);
+
       setEvents(data.events);
       setFilteredEvents(data.events);
     } catch (error) {
@@ -66,50 +66,48 @@ function EventsPage() {
   const hasFilters = selectedMonth || selectedYear || search;
   return (
     <div className="w-full">
-    <div className="container mx-auto flex flex-col mt-4">
-      <h1 className="text-3xl mt-4 font-bold">
-        Participa de nuestros eventos:
-      </h1>
-      <div className="flex flex-row gap-10 justify-start mt-4">
-        <div className="flex flex-row gap-8">
-          <ComboboxDemo onChange={setSelectedMonth} value={selectedMonth} />
-          <ComboboxDemoYear onChange={setSelectedYear} value={selectedYear} />
-          <div className="flex w-auto max-w-sm items-center space-x-2">
-            <Input
-              type="text"
-              placeholder="Buscar eventos"
-              value={search}
-              onChange={handleSearch}
-              className="text-gray-500 font-semibold"
-            />
-            
-            {hasFilters && (
-              <Button onClick={clearFilters} variant={'destructive'}>
-                Limpiar filtros
-              </Button>
-            )}
+      <div className="container mx-auto flex flex-col mt-4">
+        <h1 className="text-3xl mt-4 font-bold">
+          Participa de nuestros eventos:
+        </h1>
+        <div className="flex flex-row gap-10 justify-start mt-4">
+          <div className="flex flex-row gap-8">
+            <ComboboxDemo onChange={setSelectedMonth} value={selectedMonth} />
+            <ComboboxDemoYear onChange={setSelectedYear} value={selectedYear} />
+            <div className="flex w-auto max-w-sm items-center space-x-2">
+              <Input
+                type="text"
+                placeholder="Buscar eventos"
+                value={search}
+                onChange={handleSearch}
+                className="text-gray-500 font-semibold"
+              />
+
+              {hasFilters && (
+                <Button onClick={clearFilters} variant={'destructive'}>
+                  Limpiar filtros
+                </Button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      
-      
-      <div className="mt-8 mb-6 gap-12">
-        {filteredEvents.length === 0 ? (
-          <div className="flex justify-center items-center mt-6">
-            <EventAlert />
-          </div>
-        ) : (
-          <EventsList
-            initialEvents={events}
-            selectedMonth={selectedMonth}
-            selectedYear={selectedYear}
-            search={search}
-          />
-        )}
+
+        <div className="mt-8 mb-6 gap-12">
+          {filteredEvents.length === 0 ? (
+            <div className="flex justify-center items-center mt-6">
+              <EventAlert />
+            </div>
+          ) : (
+            <EventsList
+              initialEvents={events}
+              selectedMonth={selectedMonth}
+              selectedYear={selectedYear}
+              search={search}
+            />
+          )}
+        </div>
       </div>
     </div>
-  </div>
-  
   );
 }
 

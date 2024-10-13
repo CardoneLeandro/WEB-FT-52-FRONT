@@ -36,8 +36,6 @@ function LoginForm() {
     const validationErrors = validateLoginForm(loginUser);
 
     if (Object.keys(validationErrors).length === 0) {
-      console.log('Formulario válido. Enviando datos...');
-
       try {
         const response = await fetch(
           `https://web-ft-52-back-1.onrender.com/users/auth/login`,

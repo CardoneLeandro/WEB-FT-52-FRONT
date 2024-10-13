@@ -9,7 +9,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 
-// Imágenes para el carrusel
+
 const images = [
   'https://via.placeholder.com/600x400?text=Image+1',
   'https://via.placeholder.com/600x400?text=Image+2',

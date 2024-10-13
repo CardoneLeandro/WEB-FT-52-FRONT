@@ -31,7 +31,6 @@ export default function Home() {
   const [incommingEvents, setIncommingEvents] = useState<Event[]>([]);
 
   useEffect(() => {
-    console.log('USEEFFECT HOME => TOKEN, USERSESSION', token, userSession);
     if (userSession?.status === 'pending') {
       redirect.push('/formpage');
     }
@@ -80,7 +79,6 @@ export default function Home() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Eventos Destacados */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold mb-6 text-gray-800">
           Eventos Destacados
@@ -105,7 +103,6 @@ export default function Home() {
         </Carousel>
       </section>
 
-      {/* Próximos Eventos */}
       <section className="mb-12">
         <h2 className="text-3xl font-bold mb-6 text-gray-800">
           Próximos Eventos
@@ -123,7 +120,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Momentos Destacados */}
       <section ref={ref}>
         <h2 className="text-3xl font-bold mb-6 text-gray-800">
           Momentos destacados

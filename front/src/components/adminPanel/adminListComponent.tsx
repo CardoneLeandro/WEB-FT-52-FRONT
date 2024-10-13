@@ -11,10 +11,9 @@ export interface Item {
   id: string;
   title: string;
   description: string;
-  status: string; // 'active' | 'partialactive' | 'pending' | 'banned' | 'inactive' | 'rejected';
-  role?: string; // 'user' | 'admin' | 'superadmin'
-  highlight: boolean; // true | false
-  avatarUrl?: string;
+  status: string;
+  role?: string;
+  highlight: boolean;
   image?: string;
   eventDate?: string;
   price?: string;

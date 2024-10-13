@@ -10,5 +10,5 @@ export default function Page() {
     router.push('/');
   }, [router]);
 
-  return <div>{/* Puedes agregar contenido aquí si lo necesitas */}</div>;
+  return <div>{/* No contiene nada */}</div>;
 }

@@ -6,11 +6,11 @@ interface AuthContextProps {
   children: React.ReactNode;
 }
 export interface Assistance {
-  eventId: string; // ID DEL EVENTO
-  id: string; // ID DE LA ASISTENCIA
-  status: string; // SI ESTA ACTIVA ES PORQUE EL USUARIO ESTA APUNTADO
-  title: string; // TITULO DEL EVENTO
-  eventDate: Date; // FECHA DEL EVENTO
+  eventId: string;
+  id: string;
+  status: string;
+  title: string;
+  eventDate: Date;
 }
 export interface AdminDonation {
   id: string;
@@ -159,7 +159,6 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    // Cargar datos del localStorage
     const storedToken = localStorage.getItem('token');
     const storedSession = JSON.parse(
       localStorage.getItem('userSession') || 'null',
@@ -190,7 +189,6 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
       setToken(null);
     }
 
-    // Cargar paymentInfo desde localStorage
     if (storedPaymentInfo) {
       setPaymentInfo(storedPaymentInfo);
     }
@@ -207,7 +205,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
             ...prevSession,
             donations: updatedDonations,
           };
-          localStorage.setItem('userSession', JSON.stringify(updatedSession)); // Guardar en localStorage
+          localStorage.setItem('userSession', JSON.stringify(updatedSession));
           return updatedSession;
         }
         return prevSession;
@@ -219,7 +217,6 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     if (updatedAssistance.length > 0) {
       setSession((prevSession) => {
         if (prevSession) {
-          // eslint-disable-next-line no-unused-vars
           const { assistantEvents, ...rest } = prevSession;
           const updatedSession = {
             assistantEvents: updatedAssistance,
@@ -235,9 +232,9 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const handleSetPayment = (params: PaymentInfo | null) => {
     setPaymentInfo(params);
     if (params) {
-      localStorage.setItem('paymentInfo', JSON.stringify(params)); // Guardar en localStorage
+      localStorage.setItem('paymentInfo', JSON.stringify(params));
     } else {
-      localStorage.removeItem('paymentInfo'); // Limpiar localStorage si es null
+      localStorage.removeItem('paymentInfo');
     }
   };
 
@@ -260,7 +257,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
       });
       localStorage.removeItem('token');
       localStorage.removeItem('userSession');
-      localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo también si no hay token
+      localStorage.removeItem('paymentInfo');
     } else {
       localStorage.setItem('token', newToken);
     }
@@ -272,7 +269,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
       setToken(null);
       localStorage.removeItem('token');
       localStorage.removeItem('userSession');
-      localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo también si no hay sesión
+      localStorage.removeItem('paymentInfo');
     } else {
       localStorage.setItem('userSession', JSON.stringify(userSession));
     }
@@ -335,7 +332,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     });
     localStorage.removeItem('token');
     localStorage.removeItem('userSession');
-    localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo al cerrar sesión
+    localStorage.removeItem('paymentInfo');
   };
 
   return (

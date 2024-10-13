@@ -10,7 +10,7 @@ function EditEvent() {
   const [stock, setStock] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
-  const [images, setImages] = useState<string[]>(['']); // Cambiado de string | null a string[]
+  const [images, setImages] = useState<string[]>(['']);
 
   const [eventAddress, setEventAddress] = useState('');
 

@@ -106,11 +106,7 @@ export default function AdminPanel() {
         },
       );
 
-      // if (response.status === 441) {
-      //   toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
-      //   logout()
-      //   signOut({ callbackUrl: '/' });
-      // }
+     
 
       if (response.ok) {
         const updatedUser = {

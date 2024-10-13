@@ -13,20 +13,6 @@ import {
 import { MapPin } from 'lucide-react';
 import { HoverCard, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Event } from '@/context/AuthContext';
-// interface EventCardProps {
-//   id: string;
-//   key: string;
-//   highlight: boolean;
-//   createDate: Date;
-//   status: string;
-//   title: string;
-//   eventDate: Date;
-//   eventLocation: string;
-//   eventAddress: string;
-//   price: number;
-//   stock: number;
-//   images: string;
-// }
 
 const EventCard: React.FC<Event> = ({
   id,
@@ -78,7 +64,7 @@ const EventCard: React.FC<Event> = ({
       const address = data.results[0].formatted_address;
       setGoogleMapsLink(
         `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`,
-      ); // Formato del enlace
+      );
       return address;
     }
     return `${lat}, ${lng}`;
@@ -116,7 +102,6 @@ const EventCard: React.FC<Event> = ({
       }
 
       const data = await response.json();
-      console.log('Evento actualizado:', data);
     } catch (error) {
       console.error('Error al enviar la solicitud:', error);
     }
