@@ -22,7 +22,7 @@ const developers = [
     github: 'https://github.com/FernandoCampellone',
   },
   {
-    name: 'santiago Gamma',
+    name: 'Santiago Gama',
     role: 'Backend',
     github: 'https://github.com/Gamma1404',
   },
