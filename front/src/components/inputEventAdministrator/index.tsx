@@ -115,6 +115,7 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
           },
         );
 
+        //isBanned(response.status)? "una cosa" : "y sino otra";
         if (response.status === 441) {
           toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
           logout()
