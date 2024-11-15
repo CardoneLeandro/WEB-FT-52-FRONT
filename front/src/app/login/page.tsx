@@ -1,9 +1,11 @@
-import LoginForm from '../../components/loginForm/index'
+import LoginForm from '../../components/loginForm/index';
 
 function login() {
-
-
-  return <LoginForm />
+  return (
+    <div>
+      <LoginForm />
+    </div>
+  );
 }
 
-export default login
+export default login;

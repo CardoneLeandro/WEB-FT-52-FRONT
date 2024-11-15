@@ -91,16 +91,10 @@ function LoginForm() {
   };
 
   return (
-    <div className="flex flex-row w-full h-screen bg-white wap-4">
-      <div className="flex flex-col p-6 justify-center w-1/2  ">
-        <div className=" p-4 rounded-xl shadow-lg  ">
-          <Image
-            alt="Descripción de la imagen"
-            src="/image/Logo.png"
-            width={75}
-            height={50}
-            className=" mx-auto"
-          />
+    <div className="flex flex-row w-full max-h-screen justify-between bg-white gap-4">
+      <div className="flex flex-col p-6 justify-center  ">
+        <div className=" p-4 rounded-xl  max-h-screen  ">
+          
           <h1 className="mt-6 text-2xl font-serif text-gray-900 sm:text-3xl md:text-4xl mx-auto text-center">
             Bienvenidos a Movimiento Juvenil Peregrino
           </h1>
@@ -163,50 +157,57 @@ function LoginForm() {
             </div>
           </form>
           <div className="flex flex-col items-center gap-4 w-full">
-            <div className="flex flex-row items-center gap-4 justify-center w-full mt-10">
+            <div className="flex flex-col items-center gap-4 justify-center w-full bg-purple-400">
+              <div className='flex flex-row gap-6 bg-red-500'>
+
               <Button
                 onClick={handleSubmit}
                 type="submit"
                 className="inline-block w-full max-w-xs"
                 variant={'outline'}
-              >
+                >
                 Ingresar
               </Button>
-              <button
+              <Button
                 onClick={handleClickGoogle}
                 type="button"
                 className="flex items-center justify-center w-full max-w-xs px-2 py-3 border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-100 focus:border-blue-600 transition duration-300 ease-in-out"
-              >
+                >
                 <FcGoogle className="w-6 h-6" />
                 <span className="ml-3 text-sm font-medium text-gray-700">
                   Continuar con Google
                 </span>
-              </button>
-            </div>
-            <p className="mt-6 text-sm text-gray-500 sm:mt-0 mb-6">
+              </Button>
+                </div>
+              <div className='flex flex-col bg-green-400'>
+
+            <h1 className="mt-6 text-sm text-gray-500 sm:mt-0 mb-6 text-center px-4">
               No tienes una cuenta? Puedes registrarte
               <Link
                 href={'/register'}
                 className="text-blue-500 font-bold hover:underline hover:text-blue-600 ml-1"
-              >
+                >
                 Aquí
               </Link>
               .
-            </p>
+            </h1>
             <Link
               href="/"
-              className="text-gray-700 font-bold hover:underline hover:text-blue-500 ml-1 "
-            >
+              className="text-gray-700 font-bold hover:underline hover:text-blue-500 ml-1 text-center "
+              >
               Ir a inicio
             </Link>
+                </div>
+              </div>
           </div>
         </div>
       </div>
-      <div className="w-1/2">
-        <img
+      <div className="w-full md:w-1/2 h-64 md:h-auto relative items-center justify-center">
+      <Image
           alt="Descripción de la imagen"
           src="/image/logo-viejo-nuevo.jpg"
-          className="w-full h-full object-cover"
+          layout="fill"
+          objectFit="cover"
         />
       </div>
     </div>
