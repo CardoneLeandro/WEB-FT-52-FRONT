@@ -43,8 +43,7 @@ export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { setEvent, setAdminEvent, token, logout } =
-    useAuth();
+  const { setEvent, setAdminEvent, token, logout } = useAuth();
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
 
   const getEvents = async () => {
@@ -80,8 +79,10 @@ export default function EventsPage() {
       );
 
       if (response.status === 441) {
-        toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
-        logout()
+        toast.error(
+          `Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`,
+        );
+        logout();
         signOut({ callbackUrl: '/' });
       }
 
@@ -101,9 +102,9 @@ export default function EventsPage() {
 
       setEvent(updatedEvent);
       setAdminEvent(updatedEvent);
-      toast.success("Evento Destacado con exito!")
+      toast.success('Evento Destacado con exito!');
     } catch (err) {
-      toast.error("Ups,error al destacar el evento")
+      toast.error('Ups,error al destacar el evento');
     }
   };
 
@@ -122,13 +123,15 @@ export default function EventsPage() {
       );
 
       if (response.status === 441) {
-        toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
-        logout()
+        toast.error(
+          `Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`,
+        );
+        logout();
         signOut({ callbackUrl: '/' });
       }
 
       if (!response.ok) {
-        toast.error("error al editar el evento")
+        toast.error('error al editar el evento');
       }
       const updatedEventData = await response.json();
       setEvents((prevEvents) =>
@@ -148,7 +151,7 @@ export default function EventsPage() {
     if (editingEvent) {
       setEditingEvent({ ...editingEvent, eventLocation: location });
     }
-    toast.success("Evento editado con exito!")
+    toast.success('Evento editado con exito!');
   };
 
   return (
