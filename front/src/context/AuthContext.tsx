@@ -211,19 +211,17 @@ const handleSetDonations = (donation: Donation) => {
     });
   }
 };
-
-  const handleSetAssistance = (updatedAssistance: Assistance[]) => {
-    if (updatedAssistance.length > 0) {
-      setSession((prevSession) => {
+  const handleSetAssistance = (updatedAssistance: Assistance[]) => {  
+    setSession((prevSession) => {
         if (prevSession) {
           // eslint-disable-next-line no-unused-vars
           const { assistantEvents, ...rest } = prevSession;
           const updatedSession = { assistantEvents: updatedAssistance, ...rest };
+          localStorage.setItem('userSession', JSON.stringify(updatedSession));
           return updatedSession;
         }
         return prevSession;
       });
-    }
   };
 
   const handleSetPayment = (params: PaymentInfo | null) => {
