@@ -13,7 +13,6 @@ function DropDownMenu() {
   };
 
   useEffect(() => {
-    console.log('USE EFFECT DROPDOWN MENU', userSession);
     if (token === null) {
       return;
     }
@@ -30,14 +29,14 @@ function DropDownMenu() {
         </Link>
       ) : (
         <>
-        {(userSession?.role === 'user') && (
-          <Link
-            href="/dashBoard"
-            className="px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md transition-colors duration-300"
-          >
-            Mi perfil
-          </Link>
-            )}
+          {userSession?.role === 'user' && (
+            <Link
+              href="/dashBoard"
+              className="px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md transition-colors duration-300"
+            >
+              Mi perfil
+            </Link>
+          )}
           {(userSession?.role === 'superadmin' ||
             userSession?.role === 'admin') && (
             <Link

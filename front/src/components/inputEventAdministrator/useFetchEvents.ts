@@ -17,7 +17,9 @@ export function useFetchEvents() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const response = await fetch('http://localhost:3005/events');
+        const response = await fetch(
+          'https://web-ft-52-back-1.onrender.com/events',
+        );
         if (!response.ok) {
           throw new Error('Error fetching events');
         }

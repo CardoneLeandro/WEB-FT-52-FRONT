@@ -21,10 +21,10 @@ interface ILoginError {
 }
 
 function LoginForm() {
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const route = useRouter();
 
   const { setToken, setSession, userSession } = useAuth();
+
   const [loginUser, setLoginUser] = useState<ILoginUser>({
     email: '',
     password: '',
@@ -36,11 +36,9 @@ function LoginForm() {
     const validationErrors = validateLoginForm(loginUser);
 
     if (Object.keys(validationErrors).length === 0) {
-      console.log('Formulario válido. Enviando datos...');
-
       try {
         const response = await fetch(
-          `http://localhost:${port}/users/auth/login`,
+          `https://web-ft-52-back-1.onrender.com/users/auth/login`,
           {
             method: 'POST',
             headers: {

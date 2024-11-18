@@ -49,7 +49,6 @@ function MyMap({ setEventLocation, setEventAddress }: MyMapProps) {
         const geocoder = new google.maps.Geocoder();
         geocoder.geocode({ location: { lat, lng } }, (results, status) => {
           if (status === 'OK' && results && results[0]) {
-            console.log('la prima de fer.........,', results);
             setEventAddress(results[0].formatted_address);
           }
         });

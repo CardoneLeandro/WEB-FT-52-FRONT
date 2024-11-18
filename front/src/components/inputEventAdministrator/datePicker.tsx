@@ -18,7 +18,7 @@ export function DatePickerDemo({ onChange }: DatePickerProps) {
   const [date, setDate] = React.useState<Date>();
   const handleDateChange = (selectedDate: Date | undefined) => {
     setDate(selectedDate);
-    // Llama a la función onChange solo si se selecciona una fecha
+
     if (selectedDate) {
       onChange(format(selectedDate, 'PPP'));
     }

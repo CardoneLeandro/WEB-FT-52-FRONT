@@ -34,8 +34,8 @@ export function InputFile({ onImageUpload }: InputFileProps) {
       if (response.ok) {
         const data = await response.json();
         const imageUrl = data.secure_url;
-        console.log('URL de la imagen:', imageUrl); // Depuración
-        onImageUpload(imageUrl); // Envía la URL al componente padre
+
+        onImageUpload(imageUrl);
         setLoading(false);
         toast.dismiss(toastId);
         toast.success('Imagen cargada con éxito', {
@@ -52,7 +52,7 @@ export function InputFile({ onImageUpload }: InputFileProps) {
     } catch (error) {
       console.error('Error en la carga de la imagen:', error);
     } finally {
-      setLoading(false); // Finaliza la carga
+      setLoading(false); 
     }
   };
 

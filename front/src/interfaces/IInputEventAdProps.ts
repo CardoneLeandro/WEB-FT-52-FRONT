@@ -3,7 +3,7 @@ interface IInputEventAdProps {
   eventDate: string;
   eventLocation: string;
   description: string;
-  images: [string] | null;
+  images: string[];
   eventAddress: string;
   price: string;
   stock: string;
@@ -12,7 +12,7 @@ interface IInputEventAdProps {
   setEventDate: React.Dispatch<React.SetStateAction<string>>;
   setEventLocation: React.Dispatch<React.SetStateAction<string>>;
   setDescription: React.Dispatch<React.SetStateAction<string>>;
-  setImages: React.Dispatch<React.SetStateAction<string | null>>;
+  setImages: React.Dispatch<React.SetStateAction<string[]>>;
   setPrice: React.Dispatch<React.SetStateAction<string>>;
   setStock: React.Dispatch<React.SetStateAction<string>>;
   setEventAddress: React.Dispatch<React.SetStateAction<string>>;

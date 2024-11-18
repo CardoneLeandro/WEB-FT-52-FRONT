@@ -14,22 +14,19 @@ interface IUserObject {
 }
 
 export default function LoadingSessions() {
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const { setToken, setSession, userSession } = useAuth();
   const router = useRouter();
   const { data: session, status } = useSession();
 
-  const [hasFetched, setHasFetched] = useState(false); 
+  const [hasFetched, setHasFetched] = useState(false);
 
   useEffect(() => {
-   
     if (userSession?.status === 'pending') {
       router.push('/formpage');
       return;
     }
 
-    if (status === 'loading') return; 
-
+    if (status === 'loading') return;
 
     if (status === 'authenticated' && session.user && !hasFetched) {
       const userObject: IUserObject = {
@@ -40,10 +37,8 @@ export default function LoadingSessions() {
         image: session.user.image || '',
       };
       postUserSessionData(userObject);
-      setHasFetched(true); 
+      setHasFetched(true);
     } else if (status !== 'authenticated') {
-      console.log('ERROR EN EL USE EFFECT DE CARGA DE SESION', session, status);
-     
       router.push('/login');
     }
   }, [session, status, router, hasFetched]);
@@ -51,7 +46,7 @@ export default function LoadingSessions() {
   const postUserSessionData = async (userObject: IUserObject) => {
     try {
       const response = await fetch(
-        `http://localhost:${port}/users/auth0/signup`,
+        `https://web-ft-52-back-1.onrender.com/users/auth0/signup`,
         {
           method: 'POST',
           headers: {
@@ -64,16 +59,13 @@ export default function LoadingSessions() {
       if (!response.ok) {
         const errorData = await response.json();
         console.error('ERROR EN LA RESPUESTA DEL SERVIDOR:', errorData);
-       toast.error("Ups Ocurrio un error intentalo mas tarde")
+        toast.error('Ups Ocurrio un error intentalo mas tarde');
         router.push('/login');
         return;
       }
 
       const data = await response.json();
-      console.log(
-        'RESULTADO DEL CONDICIONAL DE ESTADO DE USER, DATA.USER',
-        data.user,
-      );
+
       if (data.user.status === 'pending') {
         setSession(data.user);
         setToken(data.token);
@@ -81,7 +73,6 @@ export default function LoadingSessions() {
         return;
       }
 
-      console.log('USER SESSION TOKEN', data.token);
       setSession(data.user);
       setToken(data.token);
       router.push('/');

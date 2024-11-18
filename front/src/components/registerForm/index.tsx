@@ -19,7 +19,6 @@ interface IRegisterUser {
 }
 
 function FormRegister() {
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const { setToken, setSession } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -62,7 +61,7 @@ function FormRegister() {
       setLoading(true);
       try {
         const response = await fetch(
-          `http://localhost:${port}/users/auth/signup`,
+          `https://web-ft-52-back-1.onrender.com/users/auth/signup`,
           {
             method: 'POST',
             headers: {
@@ -82,7 +81,9 @@ function FormRegister() {
           router.push('/login');
         }
       } catch (error) {
-        toast.error('Hubo un problema al intentar registrarte por favor intentalo mas tarde')
+        toast.error(
+          'Hubo un problema al intentar registrarte por favor intentalo mas tarde',
+        );
       } finally {
         setLoading(false);
       }

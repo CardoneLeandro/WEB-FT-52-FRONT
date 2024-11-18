@@ -11,13 +11,9 @@ export interface Item {
   id: string;
   title: string;
   description: string;
-  status: string; // 'active' | 'partialactive' | 'pending' | 'banned' | 'inactive' | 'rejected';
-  // user => 'active' | 'partialactive' | 'pending' | 'banned' | 'inactive'
-  // donations => 'pending' | 'active' | 'rejected'
-  // events =>  'active' | 'inactive' 
-  role?: string; // 'user' | 'admin' | 'superadmin'
-  highlight: boolean; // true | false
-  avatarUrl?: string;
+  status: string;
+  role?: string;
+  highlight: boolean;
   image?: string;
   eventDate?: string;
   price?: string;
@@ -26,10 +22,6 @@ export interface Item {
   stock?: string;
   amount?: number;
   email?: string;
-  // ===== BORRAR =====
-  isActive: boolean;
-  isAdmin: boolean;
-  // ===== BORRAR =====
 }
 
 interface AdminListComponentProps {
@@ -40,11 +32,10 @@ interface AdminListComponentProps {
   getToggleLabel: (status: string) => string;
   getAdminToggleLabel?: (isAdmin: boolean) => string;
   onUpdateEvent?: (updatedEvent: Item) => void;
-  onConfirmPayment?: (id: string) => void;
-  onCancelPayment?: (id: string) => void;
+  onConfirmPayment?: (id: string) => Promise<void>;
+  onCancelPayment?: (id: string) => Promise<void>;
   onToggleHighlight: (item: Item) => void;
 }
-
 
 export default function AdminListComponent({
   type,
@@ -116,6 +107,17 @@ export default function AdminListComponent({
         console.error('Error canceling payment:', error);
       }
     }
+  };
+
+  const handleUpdateEvent = () => {
+    if (editingEvent && onUpdateEvent) {
+      onUpdateEvent(editingEvent);
+      setEditingEvent(null);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingEvent(null);
   };
 
   return (
@@ -196,7 +198,11 @@ export default function AdminListComponent({
                 {type !== 'donation' && (
                   <Button
                     onClick={handleToggleAction}
-                    variant={selectedItem.isActive ? 'destructive' : 'default'}
+                    variant={
+                      selectedItem.status === 'active'
+                        ? 'destructive'
+                        : 'default'
+                    }
                   >
                     {getToggleLabel(selectedItem.status)}
                   </Button>
@@ -206,9 +212,13 @@ export default function AdminListComponent({
                   getAdminToggleLabel && (
                     <Button
                       onClick={handleToggleAdminRole}
-                      variant={selectedItem.isAdmin ? 'destructive' : 'default'}
+                      variant={
+                        selectedItem.role === 'admin'
+                          ? 'destructive'
+                          : 'default'
+                      }
                     >
-                      {getAdminToggleLabel(selectedItem.isAdmin)}
+                      {getAdminToggleLabel(selectedItem.role === 'admin')}
                     </Button>
                   )}
                 <Button onClick={handleToggleAction}>
@@ -216,7 +226,9 @@ export default function AdminListComponent({
                 </Button>
                 {type === 'event' && (
                   <>
-                    <Button onClick={}>Editar</Button>
+                    <Button onClick={() => setEditingEvent(selectedItem)}>
+                      Editar
+                    </Button>
                     <Button onClick={handleToggleHighlight}>
                       {selectedItem.highlight ? 'No destacar' : 'Destacar'}
                     </Button>
@@ -257,7 +269,7 @@ export default function AdminListComponent({
                 type="date"
               />
               <Input
-                value={editingEvent.stock}
+                value={editingEvent.stock || ''}
                 onChange={(e) =>
                   setEditingEvent({
                     ...editingEvent,
@@ -268,7 +280,7 @@ export default function AdminListComponent({
                 type="number"
               />
               <Input
-                value={editingEvent.price}
+                value={editingEvent.price || ''}
                 onChange={(e) =>
                   setEditingEvent({
                     ...editingEvent,
@@ -279,7 +291,7 @@ export default function AdminListComponent({
                 type="number"
               />
               <Input
-                value={editingEvent.eventAddress}
+                value={editingEvent.eventAddress || ''}
                 onChange={(e) =>
                   setEditingEvent({
                     ...editingEvent,
@@ -296,15 +308,23 @@ export default function AdminListComponent({
                     eventLocation: e.target.value,
                   })
                 }
-                placeholder="Link de ubicación en Google"
+                placeholder="Ubicación del evento"
               />
-              <div className="mt-4">
-                <GoogleMaps setEventLocation={handleLocationChange} />
-              </div>
-              <div className="flex space-x-2 mt-4">
-                <Button onClick={handleUpdateEvent}>Guardar cambios</Button>
-                <Button variant="outline" onClick={handleCancelEdit}>
-                  Cancelar edición
+              <GoogleMaps
+                eventLocation={editingEvent.eventLocation ?? ''}
+                eventAddress={editingEvent.eventAddress ?? ''}
+                setEventAddress={(address: string) =>
+                  setEditingEvent({ ...editingEvent, eventAddress: address })
+                }
+                setEventLocation={(location: string) =>
+                  setEditingEvent({ ...editingEvent, eventLocation: location })
+                }
+              />
+
+              <div className="space-x-2">
+                <Button onClick={handleUpdateEvent}>Actualizar</Button>
+                <Button onClick={handleCancelEdit} variant="destructive">
+                  Cancelar
                 </Button>
               </div>
             </div>

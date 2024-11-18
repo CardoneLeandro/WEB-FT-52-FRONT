@@ -10,17 +10,12 @@ import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/button';
 import { signOut, useSession } from 'next-auth/react';
 function SignupForm() {
-  const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const router = useRouter();
-  const { userSession, setSession, setToken , token, logout } = useAuth();
+  const { userSession, setSession, setToken, token, logout } = useAuth();
 
   const { data: session } = useSession();
 
   useEffect(() => {
-    console.log(
-      'USEEFFECT, userSession ==========================>',
-      userSession,
-    );
     if (!userSession) {
       router.push('/login');
       return;
@@ -63,22 +58,24 @@ function SignupForm() {
           email: userSession?.email,
           ...values,
         };
-        console.log('FORMDATA =================================>:', formData);
+
         const response = await fetch(
-          `http://localhost:${port}/users/auth0/completeregister`,
-          
+          `https://web-ft-52-back-1.onrender.com/users/auth0/completeregister`,
+
           {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(formData),
           },
         );
         if (response.status === 441) {
-          toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
-          logout()
+          toast.error(
+            `Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`,
+          );
+          logout();
           signOut({ callbackUrl: '/' });
         }
         if (response.ok) {

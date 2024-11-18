@@ -23,7 +23,7 @@ export default function Home() {
   async function donation(formData: FormData) {
     const title: string = formData.get('message') as string;
     const amount: number = Number(formData.get('amount'));
-    console.log('Antes de setPaymentInfo:', { title, amount });
+
     setPaymentInfo({ title, amount });
     await donateFunction({ title, amount });
   }

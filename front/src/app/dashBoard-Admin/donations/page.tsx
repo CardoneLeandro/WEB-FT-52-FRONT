@@ -32,8 +32,6 @@ type AdminDonation = {
   createdAt: string;
 };
 
-const port = process.env.NEXT_PUBLIC_APP_API_PORT;
-
 export default function AdminDonaciones() {
   const [donations, setDonations] = useState<AdminDonation[]>([]);
   const [filteredDonations, setFilteredDonations] = useState<AdminDonation[]>(
@@ -49,12 +47,15 @@ export default function AdminDonaciones() {
     if (!userSession) return;
 
     try {
-      const response = await fetch(`http://localhost:${port}/auth/donations`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `https://web-ft-52-back-1.onrender.com/auth/donations`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -74,7 +75,7 @@ export default function AdminDonaciones() {
   const handleConfirmPayment = async (id: string) => {
     try {
       const response = await fetch(
-        `http://localhost:${port}/auth/payment/donation/confirm/${id}`,
+        `https://web-ft-52-back-1.onrender.com/auth/payment/donation/confirm/${id}`,
         {
           method: 'PATCH',
           headers: {
@@ -102,7 +103,7 @@ export default function AdminDonaciones() {
   const handleCancelPayment = async (id: string) => {
     try {
       const response = await fetch(
-        `http://localhost:${port}/auth/payment/donation/reject/${id}`,
+        `https://web-ft-52-back-1.onrender.com/auth/payment/donation/reject/${id}`,
         {
           method: 'PATCH',
           headers: {
