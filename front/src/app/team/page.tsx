@@ -26,11 +26,7 @@ const developers = [
     role: 'Backend',
     github: 'https://github.com/Gamma1404',
   },
-  {
-    name: 'Rodrigo Fernandez',
-    role: 'Frontend',
-    github: 'https://github.com/RodrigoFernandez26',
-  },
+  
   {
     name: 'Matias Lor',
     role: 'Frontend',
@@ -102,7 +98,7 @@ export default function TeamPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="mb-6 text-gray-500">
+            <p className="mb-12 text-gray-500 ">
               Al igual que los artistas que crean murales impresionantes,
               nuestro equipo de frontend diseñan experiencias visuales
               cautivadoras en cada página de nuestro sitio. Con dedicación y
@@ -110,7 +106,7 @@ export default function TeamPage() {
               haciendo que cada visitante se sienta bienvenido desde el primer
               clic.
             </p>
-            <div className="space-y-4">
+            <div className="space-y-4 mt-12">
               {developers
                 .filter((dev) => dev.role === 'Frontend')
                 .map((dev, index) => (
@@ -126,7 +122,7 @@ export default function TeamPage() {
 
 function DeveloperCard( {name, github}:{name:string, github:string} ) {
   return (
-    <div className="flex items-center space-x-4 p-2 rounded-lg hover:bg-secondary transition-colors">
+    <div className="flex items-center space-x-4 p-2 rounded-lg hover:bg-secondary transition-colors mt-6">
       <Avatar>
         <AvatarImage
           src={`https://github.com/${github.split('/').pop()}.png`}

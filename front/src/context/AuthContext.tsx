@@ -220,6 +220,7 @@ const handleSetDonations = (donation: Donation) => {
   }
 };
 
+
   const handleSetAssistance = (assistantEvents: Assistance[]) => {
       setSession((prevSession) => {
         if (prevSession) {

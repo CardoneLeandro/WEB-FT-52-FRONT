@@ -102,7 +102,8 @@ const EventCardDetail: React.FC<Event> = ({
     } else {
       setAppointed(false);
     }
-  }, [userSession.assistantEvents, id]);
+    console.log("=================!",userSession.assistantEvents);
+  }, [userSession, id]);
 
   const handleEventAsistance = async () => {
     if (!token) {
