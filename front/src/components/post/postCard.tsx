@@ -39,10 +39,10 @@ export default function PostCard({
         const data = await res.json();
         setFavorites(data);
       } else {
-        console.error("Error al agregar a favoritos:", res.statusText);
+        alert(res.statusText);
       }
     } catch (err) {
-      console.error("Error al enviar la solicitud:", err);
+      alert(`Error al enviar la solicitud: ${err}`,);
     }
   };
 
