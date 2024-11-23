@@ -38,6 +38,7 @@ export interface Session {
   address: string;
   donations: Donation[];
   assistantEvents: Assistance[];
+  favorites: string[];
 }
 export interface PaymentInfo {
   title: string | null;
@@ -72,6 +73,7 @@ interface AuthContextType {
   setSession: (userSession: Session) => void;
   setDonation: (donation: Donation) => void;
   setAssistance: (assistance: Assistance[]) => void;
+  setFavorites: (favorites: string[]) => void;
   setPaymentInfo: (paymentInfo: PaymentInfo | null) => void;
   setAdminDonation: (adminDonation: AdminDonation) => void;
   setAdminDonations: (adminDonations: AdminDonation[] | null) => void;
@@ -98,6 +100,7 @@ const AuthContext = createContext<AuthContextType>({
     address: '',
     donations: [],
     assistantEvents: [],
+    favorites: []
   },
   paymentInfo: null,
   adminDonations: null,
@@ -107,6 +110,7 @@ const AuthContext = createContext<AuthContextType>({
   setSession: () => {},
   setDonation: () => {},
   setAssistance: () => {},
+  setFavorites:() => {},
   setPaymentInfo: () => {},
   setAdminDonation: () => {},
   setAdminDonations: () => {},
@@ -117,9 +121,25 @@ const AuthContext = createContext<AuthContextType>({
   logout: () => {},
   getEvents: () => {},
 });
+ 
 export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
+  const clearSession = {
+    id: null,
+    role: null,
+    name: '',
+    email: '',
+    image: null,
+    providerAccountId: '',
+    creatorId: '',
+    status: null,
+    phone: '',
+    address: '',
+    donations: [],
+    assistantEvents: [],
+    favorites: []
+  };
   const [userSession, setSession] = useState<Session>({
     id: null,
     role: null,
@@ -133,6 +153,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     address: '',
     donations: [],
     assistantEvents: [],
+    favorites: []
   });
   const [token, setToken] = useState<string | null>(null);
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo | null>(null);
@@ -172,20 +193,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
       setSession(storedSession);
       setToken(storedToken);
     } else {
-      setSession({
-        id: null,
-        role: null,
-        name: '',
-        email: '',
-        image: null,
-        providerAccountId: '',
-        creatorId: '',
-        status: null,
-        phone: '',
-        address: '',
-        donations: [],
-        assistantEvents: [],
-      });
+      setSession(clearSession);
       localStorage.removeItem('userSession');
       setToken(null);
     }
@@ -212,18 +220,15 @@ const handleSetDonations = (donation: Donation) => {
   }
 };
 
-  const handleSetAssistance = (updatedAssistance: Assistance[]) => {
-    if (updatedAssistance.length > 0) {
+  const handleSetAssistance = (assistantEvents: Assistance[]) => {
       setSession((prevSession) => {
         if (prevSession) {
-          // eslint-disable-next-line no-unused-vars
-          const { assistantEvents, ...rest } = prevSession;
-          const updatedSession = { assistantEvents: updatedAssistance, ...rest };
+          const updatedSession = { ...prevSession, assistantEvents };
+          localStorage.setItem('userSession', JSON.stringify(updatedSession)); // Guardar en localStorage
           return updatedSession;
         }
         return prevSession;
       });
-    }
   };
 
   const handleSetPayment = (params: PaymentInfo | null) => {
@@ -238,20 +243,7 @@ const handleSetDonations = (donation: Donation) => {
   const handleSetToken = (newToken: string | null) => {
     setToken(newToken);
     if (!newToken) {
-      setSession({
-        id: '',
-        role: null,
-        name: '',
-        email: '',
-        image: null,
-        providerAccountId: '',
-        creatorId: '',
-        status: null,
-        phone: '',
-        address: '',
-        donations: [],
-        assistantEvents: [],
-      });
+      setSession(clearSession);
       localStorage.removeItem('token');
       localStorage.removeItem('userSession');
       localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo también si no hay token
@@ -311,22 +303,20 @@ const handleSetDonations = (donation: Donation) => {
     });
   };
 
+  const handleSetFavorites = (favorites: string[]) => {
+    setSession((prevSession) => {
+      if (prevSession) {
+        const updatedSession = { ...prevSession, favorites };
+        localStorage.setItem('userSession', JSON.stringify(updatedSession));
+        return updatedSession;
+      }
+      return prevSession;
+    });
+  }
+
   const logout = () => {
     setToken(null);
-    setSession({
-      id: null,
-      role: null,
-      name: '',
-      email: '',
-      image: null,
-      providerAccountId: '',
-      creatorId: '',
-      status: null,
-      phone: '',
-      address: '',
-      donations: [],
-      assistantEvents: [],
-    });
+    setSession(clearSession);
     localStorage.removeItem('token');
     localStorage.removeItem('userSession');
     localStorage.removeItem('paymentInfo'); // Limpiar paymentInfo al cerrar sesión
@@ -354,6 +344,7 @@ const handleSetDonations = (donation: Donation) => {
         setAdminEvent: handleAdminEvent,
         setAssistance: handleSetAssistance,
         getEvents,
+        setFavorites: handleSetFavorites
       }}
     >
       {children}
