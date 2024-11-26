@@ -40,8 +40,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           <ul className="mt-6 space-y-1">
             <Link href="/dashBoard-Admin">
-              <li className="block rounded-lg  px-4 py-2 text-sm font-medium text-gray-700">
-                PERFIL DEL ADMINISTRADOR
+              <li className="block rounded-lg  px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700">
+                Perfil Personal
               </li>
             </Link>
             <li>
@@ -86,6 +86,56 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
                         Ver y Editar Eventos
+                      </Link>
+                    </li>
+                    <li></li>
+                  </ul>
+                )}
+              </div>
+            </li>
+
+            <li>
+              <div>
+                <button
+                  onClick={() => toggleMenu('anuncios')}
+                  className="flex w-full items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                >
+                  <span className="text-sm font-medium"> Anuncios </span>
+                  <span
+                    className={`transition duration-300 ${
+                      activeMenu === 'anuncios' ? '-rotate-180' : ''
+                    }`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="size-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                {activeMenu === 'anuncios' && (
+                  <ul className="mt-2 space-y-1 px-4">
+                    <li>
+                      <Link
+                        href="/dashBoard-Admin/post/create"
+                        className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                      >
+                        Nuevo Anuncio
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/dashBoard-Admin/post/edit"
+                        className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                      >
+                        Ver y Editar Anuncion
                       </Link>
                     </li>
                     <li></li>
@@ -168,7 +218,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         href="/dashBoard-Admin/usercontrol"
                         className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                       >
-                        Agregar y eliminar usuarios
+                        Control de Usuarios
                       </a>
                     </li>
                     <li></li>

@@ -14,13 +14,11 @@ function EditEvent() {
   const [eventAddress, setEventAddress] = useState('');
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="container mx-auto">
-        <h1 className="text-2xl font-bold mb-6">
-          Panel de Administración de Eventos
-        </h1>
-      </div>
-      <div className="flex flex-col">
+    <div className="container mx-auto p-6 ">
+      <h1 className="text-2xl font-bold mb-6">
+        Panel de Administración de Eventos
+      </h1>
+      <div className="flex flex-col border rounded-lg shadow ">
         <InputEventAd
           title={title}
           eventDate={eventDate}

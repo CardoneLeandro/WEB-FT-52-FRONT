@@ -236,7 +236,7 @@ export default function AdminPanel() {
                       <Button
                         className="w-full"
                         variant={
-                          user.status === 'banned' ? 'default' : 'destructive'
+                          user.status === 'banned' ? 'constructive' : 'destructive'
                         }
                         onClick={() => handleToggleAction(user.id)}
                       >
@@ -245,7 +245,7 @@ export default function AdminPanel() {
                       <Button
                         className="w-full"
                         variant={
-                          user.role === 'admin' ? 'destructive' : 'default'
+                          user.role === 'admin' ? 'destructive' : 'constructive'
                         }
                         onClick={() => handleToggleAdminRole(user.id)}
                       >

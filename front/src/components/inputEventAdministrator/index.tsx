@@ -287,7 +287,7 @@ export const InputEventAd: React.FC<IInputEventAdProps> = ({
         <Button
           type="button"
           onClick={() => formik.resetForm()}
-          variant={'outline'}
+          variant={'destructive'}
         >
           Cancelar
         </Button>

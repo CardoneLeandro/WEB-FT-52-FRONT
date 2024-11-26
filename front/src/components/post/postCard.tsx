@@ -62,9 +62,11 @@ export default function PostCard({
       </div>
 
       <div className="text-lg ml-8">{content}</div>
-      <div className="relative flex w-full h-fit text-md justify-end px-4">
-        {author}
-      </div>
+      <div className="relative flex w-full gap-2 justify-end items-center px-4">
+              <div className='text-sm mb-0'>publicado por:</div>
+              <div className='text-md'>{author}</div>
+              </div>         
+           
     </div>
   );
 }

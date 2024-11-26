@@ -62,6 +62,18 @@ export interface Event {
   assistantEvents: Assistance[];
 }
 
+export interface Post {
+  id: string;
+  createDate: Date;
+  status: string;
+  title: string;
+  content: string;
+  author: string;
+  images: string[];
+  files: string[];
+  newStatus?: string;
+}
+
 interface AuthContextType {
   token: string | null;
   userSession: Session;
@@ -69,6 +81,7 @@ interface AuthContextType {
   adminDonations: AdminDonation[] | null;
   allEvents: Event[] | null;
   adminEvents: Event[] | null;
+  allPosts: Post[] | null;
   setToken: (token: string | null) => void;
   setSession: (userSession: Session) => void;
   setDonation: (donation: Donation) => void;
@@ -83,6 +96,7 @@ interface AuthContextType {
   setEvent: (event: Event) => void;
   logout: () => void;
   getEvents: () => void;
+  setAllPosts: (allPosts: Post[] | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -106,6 +120,7 @@ const AuthContext = createContext<AuthContextType>({
   adminDonations: null,
   allEvents: null,
   adminEvents: null,
+  allPosts: null,
   setToken: () => {},
   setSession: () => {},
   setDonation: () => {},
@@ -120,6 +135,7 @@ const AuthContext = createContext<AuthContextType>({
   setAdminEvent: () => {},
   logout: () => {},
   getEvents: () => {},
+  setAllPosts: () => {},
 });
  
 export const useAuth = () => useContext(AuthContext);
@@ -160,6 +176,7 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const [adminDonations, setAdminDonations] = useState<AdminDonation[] | null>(
     null,
   );
+  const [allPosts, setAllPosts] = useState<Post[] | null>(null);
   const [allEvents, setAllEvents] = useState<Event[] | null>(null);
   const [adminEvents, setAdminEvents] = useState<Event[] | null>(null);
 
@@ -281,6 +298,10 @@ const handleSetDonations = (donation: Donation) => {
     setAllEvents(allEvents);
   };
 
+  const handleSetAllPosts = (allPosts: Post[] | null) => {
+    setAllPosts(allPosts);
+  };
+
   const handleEvent = (updatedEvent: Event) => {
     setAllEvents((prevEvents) => {
       if (!prevEvents) return null;
@@ -344,7 +365,9 @@ const handleSetDonations = (donation: Donation) => {
         setAdminEvent: handleAdminEvent,
         setAssistance: handleSetAssistance,
         getEvents,
-        setFavorites: handleSetFavorites
+        setFavorites: handleSetFavorites,
+        allPosts,
+        setAllPosts: handleSetAllPosts
       }}
     >
       {children}

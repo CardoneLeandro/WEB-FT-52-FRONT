@@ -309,6 +309,7 @@ export default function EventsPage() {
                                 </div>
                                 <div className="flex justify-end space-x-2">
                                   <Button
+                                  variant='constructive'
                                     onClick={() =>
                                       handleUpdateEvent(editingEvent)
                                     }
@@ -316,7 +317,7 @@ export default function EventsPage() {
                                     Guardar
                                   </Button>
                                   <Button
-                                    variant="outline"
+                                    variant="destructive"
                                     onClick={() => setEditingEvent(null)}
                                   >
                                     Cancelar
@@ -328,7 +329,7 @@ export default function EventsPage() {
                         </Dialog>
                         <Button
                           className="w-full"
-                          variant={event.highlight ? 'default' : 'outline'}
+                          variant={event.highlight ? 'destructive' : 'constructive'}
                           onClick={() => handleToggleHighlight(event.id)}
                         >
                           {event.highlight ? 'Quitar Destacado' : 'Destacar'}

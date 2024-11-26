@@ -23,13 +23,13 @@ export default function PanelAdmin() {
     <div className="container mx-auto p-6 ">
       <div className="container mx-auto">
         <h1 className="text-2xl font-bold mb-6">
-          Panel de Administración de Eventos
+          Perfil del Administrador
         </h1>
       </div>
 
-      <div className="flex-grow bg-gray-100 py-6">
+      <div className="flex-grow py-6">
         <div className="container mx-auto px-4 max-w-7xl">
-          <Card className="shadow-xl">
+          <Card className="shadow-2xl">
             <CardHeader className="bg-gradient-to-r from-blue-500 to-green-500 flex justify-between items-center rounded-t-xl">
               <Avatar className="w-16 h-16 shadow-xl">
                 <AvatarImage src={userSession?.image} alt="User Image" />
