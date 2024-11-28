@@ -13,7 +13,7 @@ function NearbyEvents({ setEvents }) {
           eventLocation={event.eventLocation}
           eventAddress={event.eventAddress}
           price={event.price}
-          stock={event.stock}
+          stock={event.currentStock}
           images={
             event.images && event.images.length > 0
               ? event.images[0]

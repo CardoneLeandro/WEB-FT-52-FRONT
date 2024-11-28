@@ -91,34 +91,39 @@ function LoginForm() {
   };
 
   return (
-    <div className="flex flex-row w-full h-screen bg-white wap-4">
-      <div className="flex flex-col p-6 justify-center w-1/2  ">
-        <div className=" p-4 rounded-xl shadow-lg  ">
+    <div className="flex flex-row w-[100vw] h-screen wap-4 bg-white">
+      <div className="w-[50vw] max-w-[50vw] h-3/4 flex flex-col m-auto items-center justify-between ">
+        <div className="w-[10%] h-[13%] max-w-[50%] max-h-[13%] ">
+          {' '}
           <Image
             alt="Descripción de la imagen"
             src="/image/Logo.png"
             width={75}
             height={50}
-            className=" mx-auto"
-          />
-          <h1 className="mt-6 text-2xl font-serif text-gray-900 sm:text-3xl md:text-4xl mx-auto text-center">
+            className="mx-auto w-full h-full"
+          />{' '}
+        </div>
+
+        <div className="flex flex-col items-center w-full">
+          <h1 className="mt-6 text-2xl font-serif  sm:text-3xl md:text-4xl mx-auto text-center">
             Bienvenidos a Movimiento Juvenil Peregrino
           </h1>
-          <p className="mt-4 leading-relaxed text-gray-700 sm:text-2xl md:text-2xl text-center">
+          <p className="mt-4 leading-relaxed sm:text-2xl md:text-2xl text-center">
             &quot;Reconociéndonos testigos, ofrecemos nuestros dones a la
             iglesia.&quot;
           </p>
+        </div>
+
+        <div className="flex flex-col items-center w-3/4">
           <form
+            className="mt-4 flex flex-col gap-4 w-full h-auto "
             onSubmit={handleSubmit}
-            className="mt-8 grid grid-cols-6 gap-6 w-full ml-20"
           >
-            <div className="col-span-4">
-              <label
-                htmlFor="Email"
-                className="block text-sm font-medium text-gray-700"
-              >
+            <div className="col-span-4 w-full">
+              <label htmlFor="Email" className="block text-sm font-medium ">
                 Correo
               </label>
+
               <input
                 type="email"
                 id="Email"
@@ -127,7 +132,7 @@ function LoginForm() {
                 onChange={(e) =>
                   setLoginUser({ ...loginUser, email: e.target.value })
                 }
-                className={`mt-1 w-full p-4 border  ${
+                className={`mt-1 w-full p-3 border ${
                   errors.email ? 'border-red-500' : 'border-gray-400 rounded-sm'
                 } bg-white text-sm text-gray-400 shadow-sm`}
               />
@@ -151,7 +156,7 @@ function LoginForm() {
                 onChange={(e) =>
                   setLoginUser({ ...loginUser, password: e.target.value })
                 }
-                className={`mt-1 w-full p-4 border ${
+                className={`mt-1 w-full p-3 border ${
                   errors.password
                     ? 'border-red-500'
                     : 'border-gray-400 rounded-sm'
@@ -162,32 +167,34 @@ function LoginForm() {
               )}
             </div>
           </form>
-          <div className="flex flex-col items-center gap-4 w-full">
-            <div className="flex flex-row items-center gap-4 justify-center w-full mt-10">
-              <Button
-                onClick={handleSubmit}
-                type="submit"
-                className="inline-block w-full max-w-xs"
-                variant={'outline'}
-              >
-                Ingresar
-              </Button>
-              <button
-                onClick={handleClickGoogle}
-                type="button"
-                className="flex items-center justify-center w-full max-w-xs px-2 py-3 border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-100 focus:border-blue-600 transition duration-300 ease-in-out"
-              >
-                <FcGoogle className="w-6 h-6" />
-                <span className="ml-3 text-sm font-medium text-gray-700">
-                  Continuar con Google
-                </span>
-              </button>
-            </div>
-            <p className="mt-6 text-sm text-gray-500 sm:mt-0 mb-6">
+
+          <div className="flex flex-row  mt-2 gap-4 w-[90%] items-center">
+            <Button
+              onClick={handleSubmit}
+              type="submit"
+              className="inline-block w-full max-w-xs"
+              variant={'outline'}
+            >
+              Ingresar
+            </Button>
+            <button
+              onClick={handleClickGoogle}
+              type="button"
+              className="flex items-center justify-center h-10 w-full max-w-xs px-2 py-3 border border-blue-500 rounded-md shadow-sm bg-white hover:bg-blue-100 focus:border-blue-600 transition duration-300 ease-in-out"
+            >
+              <FcGoogle className="w-8 h-8" />
+              <span className="ml-3 text-sm font-medium text-gray-700">
+                Continuar con Google
+              </span>
+            </button>
+          </div>
+
+          <div className="flex flex-col items-center my-4 gap-2">
+            <p className=" text-sm text-gray-500 ">
               No tienes una cuenta? Puedes registrarte
               <Link
                 href={'/register'}
-                className="text-blue-500 font-bold hover:underline hover:text-blue-600 ml-1"
+                className="text-blue-500 font-bold hover:underline hover:text-blue-600 ml-1 "
               >
                 Aquí
               </Link>
@@ -202,7 +209,8 @@ function LoginForm() {
           </div>
         </div>
       </div>
-      <div className="w-1/2">
+
+      <div className="w-1/2 h-full">
         <img
           alt="Descripción de la imagen"
           src="/image/logo-viejo-nuevo.jpg"

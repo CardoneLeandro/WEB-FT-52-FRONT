@@ -25,6 +25,7 @@ import { Label } from '@/components/ui/label';
 import toast from 'react-hot-toast';
 import { signOut } from 'next-auth/react';
 import { Post } from '@/context/AuthContext';
+
 const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
 export default function PostsPage() {

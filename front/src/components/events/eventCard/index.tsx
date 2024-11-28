@@ -25,6 +25,7 @@ interface EventCardProps {
   eventAddress: string;
   price: number;
   stock: number;
+  currentStock: number;
   images: string;
 }
 
@@ -40,6 +41,7 @@ const EventCard: React.FC<EventCardProps> = ({
   eventAddress,
   price,
   stock,
+  currentStock,
   images,
 }) => {
   const router = useRouter();

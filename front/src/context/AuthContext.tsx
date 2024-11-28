@@ -1,5 +1,6 @@
 'use client';
 
+import { set } from 'date-fns';
 import React, { useState, useEffect, createContext, useContext } from 'react';
 const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
@@ -58,6 +59,7 @@ export interface Event {
   eventAddress: string;
   price: number;
   stock: number;
+  currentStock: number;
   images: string[];
   assistantEvents: Assistance[];
 }
@@ -82,6 +84,7 @@ interface AuthContextType {
   allEvents: Event[] | null;
   adminEvents: Event[] | null;
   allPosts: Post[] | null;
+  postButtonStatus: string;
   setToken: (token: string | null) => void;
   setSession: (userSession: Session) => void;
   setDonation: (donation: Donation) => void;
@@ -97,6 +100,7 @@ interface AuthContextType {
   logout: () => void;
   getEvents: () => void;
   setAllPosts: (allPosts: Post[] | null) => void;
+  setPostButtonStatus: (status: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -114,13 +118,14 @@ const AuthContext = createContext<AuthContextType>({
     address: '',
     donations: [],
     assistantEvents: [],
-    favorites: []
+    favorites: [],
   },
   paymentInfo: null,
   adminDonations: null,
   allEvents: null,
   adminEvents: null,
   allPosts: null,
+  postButtonStatus: '',
   setToken: () => {},
   setSession: () => {},
   setDonation: () => {},
@@ -136,11 +141,14 @@ const AuthContext = createContext<AuthContextType>({
   logout: () => {},
   getEvents: () => {},
   setAllPosts: () => {},
+  setPostButtonStatus: () => {},
+
 });
  
 export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
+console.log('CONTEXTO MONTADO')
   const clearSession = {
     id: null,
     role: null,
@@ -179,24 +187,27 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const [allPosts, setAllPosts] = useState<Post[] | null>(null);
   const [allEvents, setAllEvents] = useState<Event[] | null>(null);
   const [adminEvents, setAdminEvents] = useState<Event[] | null>(null);
+  const [postButtonStatus, setPostButtonStatus] = useState<string>('All');
 
   const getEvents = async () => {
     try {
       const res = await fetch(
         `http://localhost:${port}/events/getactiveandinactivehighlight`,
       );
-      if (res.ok) {
+      if (res.status === 200 || res.status === 201) {
         const data = await res.json();
         setAllEvents(data);
       } else {
-        setAllEvents(null);
+        setAllEvents([]);
       }
     } catch (error) {
       console.error('Error al obtener los eventos:', error);
+      setAllEvents([])
     }
   };
 
   useEffect(() => {
+    getEvents();
     // Cargar datos del localStorage
     const storedToken = localStorage.getItem('token');
     const storedSession = JSON.parse(
@@ -219,9 +230,12 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
     if (storedPaymentInfo) {
       setPaymentInfo(storedPaymentInfo);
     }
-
-    getEvents();
+    
   }, []);
+
+const handlePostButtonStatus = (status: string) => {
+  setPostButtonStatus(status);
+};
 
 const handleSetDonations = (donation: Donation) => {
   if (donation) {
@@ -367,7 +381,9 @@ const handleSetDonations = (donation: Donation) => {
         getEvents,
         setFavorites: handleSetFavorites,
         allPosts,
-        setAllPosts: handleSetAllPosts
+        setAllPosts: handleSetAllPosts,
+        postButtonStatus,
+        setPostButtonStatus: handlePostButtonStatus
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -13,9 +13,10 @@ import NearbyEvents from '@/components/nearbyEvents';
 import { CalendarIcon } from 'lucide-react';
 import { Event } from '@/context/AuthContext';
 
-export default function Home() {
+export default function Home(){
   const redirect = useRouter();
-  const { allEvents, token, userSession, getEvents } = useAuth();
+  
+  const { allEvents, userSession, getEvents } = useAuth();
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const controls = useAnimation();
   const today = new Date();
@@ -25,12 +26,11 @@ export default function Home() {
   const [incommingEvents, setIncommingEvents] = useState<Event[]>([]);
 
   useEffect(() => {
-    console.log('USEEFFECT HOME => TOKEN, USERSESSION', token, userSession);
     if (userSession?.status === 'pending') {
       redirect.push('/formpage');
     }
 
-    const fetchEvents = async () => {
+      const fetchEvents = async () => {
       if (!allEvents || allEvents.length === 0) {
         await getEvents();
       }
@@ -61,7 +61,7 @@ export default function Home() {
     };
 
     fetchEvents();
-  }, [allEvents, getEvents, userSession, redirect]);
+  }, [allEvents, userSession]);
 
   useEffect(() => {
     if (inView) {

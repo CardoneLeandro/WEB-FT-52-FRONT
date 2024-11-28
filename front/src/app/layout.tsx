@@ -7,6 +7,7 @@ import Footer from '../components/footer';
 import ShowComponent from '@/components/showComponents';
 import AuthProvider from '@/context/AuthContext';
 import { Toaster } from 'react-hot-toast';
+import React from 'react';
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
   variable: '--font-geist-sans',
